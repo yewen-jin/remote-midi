@@ -145,14 +145,28 @@
       const toggle = document.getElementById('theme-toggle');
       const root = document.documentElement;
 
+      function updateToggleLabel() {
+        const theme = root.getAttribute('data-theme');
+        const isNight =
+          theme === 'night' ||
+          (!theme && matchMedia('(prefers-color-scheme: dark)').matches);
+        toggle.textContent = isNight ? '☀ Day' : '☾ Night';
+        toggle.setAttribute(
+          'aria-label',
+          isNight ? 'Switch to day mode' : 'Switch to night mode',
+        );
+      }
+
       const saved = localStorage.getItem('theme');
       if (saved) root.setAttribute('data-theme', saved);
+      updateToggleLabel();
 
       toggle.addEventListener('click', () => {
         const current = root.getAttribute('data-theme');
         const next = current === 'night' ? 'day' : 'night';
         root.setAttribute('data-theme', next);
         localStorage.setItem('theme', next);
+        updateToggleLabel();
       });
     </script>
   </body>

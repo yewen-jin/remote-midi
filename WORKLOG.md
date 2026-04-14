@@ -271,3 +271,12 @@ All 21 tasks across 5 phases completed. 52 tests passing. Zero lint errors. Proj
 **Summary:** Redesigned browser client with neo-brutalist design system: hard edges (no border-radius), offset box-shadows, Space Mono font, day/night theme toggle with localStorage persistence, bold uppercase headings, accent buttons. All 68 tests passing.
 **Commit:** (pending)
 **Notes:** Added data-theme toggle (day/night) with system preference fallback via prefers-color-scheme. Button classes: btn, btn-outline, btn-accent, btn-sm. Google Fonts import for Space Mono.
+
+---
+
+## 2026-04-14T22:30:00Z — Accessibility audit and fixes
+
+**Status:** completed
+**Summary:** Fixed WCAG 2.1 AA contrast failures across day/night modes. Replaced all opacity-based text with explicit colour variables (--text-muted, --text-faint). Added :focus-visible outlines for keyboard navigation. Darkened status colours for day mode (green #146c43, amber #7c5800, red #b91c1c). Fixed btn-accent contrast (#bf360c). Theme toggle now shows current state. 68 tests passing.
+**Commit:** (pending)
+**Notes:** Day mode uses darker status/accent text colours; night mode keeps the original bright variants. All text now meets 4.5:1 contrast ratio on its background.

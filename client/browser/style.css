@@ -19,10 +19,13 @@
   --shadow-offset: 4px;
   --radius: 0px;
 
-  /* Status colours */
-  --status-ok: #06d6a0;
-  --status-warn: #ffd166;
-  --status-error: #ef476f;
+  /* Status colours — dark variants for day mode contrast (4.5:1+ on white) */
+  --status-ok: #146c43;
+  --status-warn: #7c5800;
+  --status-error: #b91c1c;
+  --accent-text: #c2410c;
+  --text-muted: #595959;
+  --text-faint: #767676;
 
   color-scheme: light dark;
 }
@@ -36,6 +39,12 @@
   --shadow: #ffffff;
   --surface: #000000;
   --muted: #111111;
+  --status-ok: #06d6a0;
+  --status-warn: #ffd166;
+  --status-error: #ef476f;
+  --accent-text: #ff5722;
+  --text-muted: #a0a0a0;
+  --text-faint: #888888;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -48,6 +57,12 @@
     --shadow: #ffffff;
     --surface: #000000;
     --muted: #111111;
+    --status-ok: #06d6a0;
+    --status-warn: #ffd166;
+    --status-error: #ef476f;
+    --accent-text: #ff5722;
+    --text-muted: #a0a0a0;
+    --text-faint: #888888;
   }
 }
 
@@ -90,8 +105,7 @@ header h1 {
 
 .subtitle {
   font-size: 0.85rem;
-  color: var(--fg);
-  opacity: 0.6;
+  color: var(--text-muted);
   margin-top: 0.5rem;
 }
 
@@ -212,8 +226,19 @@ select {
 }
 
 .btn:disabled {
-  opacity: 0.3;
+  opacity: 0.4;
   cursor: not-allowed;
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--accent-text);
+  outline-offset: 2px;
+}
+
+input[type='text']:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--accent-text);
+  outline-offset: 1px;
 }
 
 /* Outlined variant */
@@ -225,12 +250,12 @@ select {
 /* Accent variant */
 .btn-accent {
   color: #ffffff;
-  background: var(--accent);
+  background: #bf360c;
   border-color: var(--border);
 }
 
 .btn-accent:hover:not(:disabled) {
-  background: var(--accent-hover);
+  background: #a62e0a;
   transform: translate(2px, 2px);
   box-shadow: 2px 2px 0 var(--shadow);
 }
@@ -277,7 +302,7 @@ select {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  opacity: 0.5;
+  color: var(--text-muted);
 }
 
 .status-value {
@@ -299,7 +324,7 @@ select {
 
 .status-text {
   font-size: 0.8rem;
-  opacity: 0.6;
+  color: var(--text-muted);
   margin-top: 0.5rem;
 }
 
@@ -342,7 +367,7 @@ select {
 
 #activity-log:empty::after {
   content: 'No activity yet.';
-  opacity: 0.4;
+  color: var(--text-faint);
 }
 
 .log-entry {
@@ -355,26 +380,16 @@ select {
 }
 
 .log-time {
-  opacity: 0.4;
+  color: var(--text-faint);
   margin-right: 0.5rem;
 }
 
 .log-midi {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .log-info {
-  color: #1565c0;
-}
-
-[data-theme='night'] .log-info {
   color: var(--status-ok);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='day']) .log-info {
-    color: var(--status-ok);
-  }
 }
 
 .log-warn {
@@ -391,7 +406,7 @@ footer {
   text-align: center;
   margin-top: 3rem;
   font-size: 0.75rem;
-  opacity: 0.4;
+  color: var(--text-faint);
 }
 
 /* ── Mobile ──────────────────────────────────────────────────── */
