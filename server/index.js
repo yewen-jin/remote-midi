@@ -106,9 +106,15 @@ export function startServer(config = {}) {
   });
 }
 
-// Run directly when this file is the entry point
+// Run directly when this file is the entry point.
+// resolve() handles symlinks and PM2's script wrapping, where
+// process.argv[1] may not match import.meta.url directly.
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const currentFile = fileURLToPath(import.meta.url);
 const isMain =
-  process.argv[1] && import.meta.url === `file://${process.argv[1]}`;
+  process.argv[1] && resolve(process.argv[1]) === currentFile;
 
 if (isMain) {
   startServer().catch((err) => {
