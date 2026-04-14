@@ -121,6 +121,8 @@ describe('Integration', () => {
       port: 0,
       host: '127.0.0.1',
       pingIntervalMs: 60000, // Long interval to avoid noise in tests
+      maxConnectionsPerIp: 100, // High limit for tests (all from 127.0.0.1)
+      connectRateLimit: 200, // High rate limit for tests
     });
     port = server.httpServer.address().port;
   });
@@ -370,5 +372,64 @@ describe('Integration', () => {
     assert.equal(typeof body.uptime, 'number');
     assert.equal(typeof body.rooms, 'number');
     assert.equal(typeof body.connections, 'number');
+    assert.equal(typeof body.blockedConnections, 'number');
+    assert.equal(typeof body.throttledMessages, 'number');
+  });
+});
+
+describe('Integration — rate limiting', () => {
+  let rateLimitServer;
+  let rateLimitPort;
+
+  before(async () => {
+    rateLimitServer = await startServer({
+      port: 0,
+      host: '127.0.0.1',
+      pingIntervalMs: 60000,
+      maxConnectionsPerIp: 3,
+      connectRateLimit: 200, // High rate limit so we only test concurrent
+    });
+    rateLimitPort = rateLimitServer.httpServer.address().port;
+  });
+
+  after(async () => {
+    await rateLimitServer.close();
+  });
+
+  it('rejects connections beyond the per-IP concurrent limit', async () => {
+    const clients = [];
+
+    // Open 3 connections (at the limit)
+    for (let i = 0; i < 3; i++) {
+      const ws = new WebSocket(`ws://127.0.0.1:${rateLimitPort}/midi`);
+      await new Promise((resolve, reject) => {
+        ws.on('open', resolve);
+        ws.on('error', reject);
+      });
+      clients.push(ws);
+    }
+
+    // Fourth connection should be rejected
+    const ws4 = new WebSocket(`ws://127.0.0.1:${rateLimitPort}/midi`);
+    const errorMsg = await new Promise((resolve) => {
+      ws4.on('message', (data) => {
+        resolve(JSON.parse(data.toString()));
+      });
+      ws4.on('close', () => {
+        resolve({ type: 'closed' });
+      });
+    });
+
+    assert.ok(
+      errorMsg.type === 'error' || errorMsg.type === 'closed',
+      'Should receive error or close',
+    );
+    if (errorMsg.type === 'error') {
+      assert.match(errorMsg.message, /Too many connections/);
+    }
+
+    // Clean up
+    for (const c of clients) c.close();
+    ws4.close();
   });
 });

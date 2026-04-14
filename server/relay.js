@@ -49,9 +49,16 @@ export class Relay {
    * Handle a new WebSocket connection. Sets up message and close listeners.
    *
    * @param {WebSocket} ws
+   * @param {object} [messageLimiter] — optional message rate limiter
+   * @param {(ws: WebSocket) => boolean} [messageLimiter.onMessage]
    */
-  handleConnection(ws) {
+  handleConnection(ws, messageLimiter) {
     ws.on('message', (data, isBinary) => {
+      // Per-connection message rate limiting
+      if (messageLimiter && !messageLimiter.onMessage(ws)) {
+        return; // Silently drop — don't disconnect for MIDI clock bursts
+      }
+
       if (isBinary) {
         this.#handleBinary(ws, data);
       } else {

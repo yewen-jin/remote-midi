@@ -2,6 +2,8 @@ import { createServer } from 'node:http';
 import { WebSocketServer } from 'ws';
 import { Relay } from './relay.js';
 import { createHealthHandler } from './health.js';
+import { createConnectionLimiter, createMessageLimiter } from './rate-limit.js';
+import { createMessage, MessageType } from './protocol.js';
 
 /**
  * Start the MIDI relay server.
@@ -14,6 +16,10 @@ import { createHealthHandler } from './health.js';
  * @param {number} [config.pingTimeoutMs]
  * @param {number} [config.maxRooms]
  * @param {number} [config.maxClientsPerRoom]
+ * @param {number} [config.maxConnectionsPerIp]
+ * @param {number} [config.connectRateLimit]
+ * @param {number} [config.connectRateWindowMs]
+ * @param {number} [config.messageRateLimit]
  * @returns {Promise<{ httpServer: import('http').Server, wss: WebSocketServer, relay: Relay, close: () => Promise<void> }>}
  */
 export function startServer(config = {}) {
@@ -28,10 +34,31 @@ export function startServer(config = {}) {
   const maxClientsPerRoom =
     config.maxClientsPerRoom ??
     parseInt(process.env.MAX_CLIENTS_PER_ROOM || '20', 10);
+  const maxConnectionsPerIp =
+    config.maxConnectionsPerIp ??
+    parseInt(process.env.MAX_CONNECTIONS_PER_IP || '10', 10);
+  const connectRateLimit =
+    config.connectRateLimit ??
+    parseInt(process.env.CONNECT_RATE_LIMIT || '20', 10);
+  const connectRateWindowMs =
+    config.connectRateWindowMs ??
+    parseInt(process.env.CONNECT_RATE_WINDOW_MS || '60000', 10);
+  const messageRateLimit =
+    config.messageRateLimit ??
+    parseInt(process.env.MESSAGE_RATE_LIMIT || '500', 10);
 
   const startTime = Date.now();
   const relay = new Relay({ maxRooms, maxClientsPerRoom });
-  const healthHandler = createHealthHandler(relay, startTime);
+  const connectionLimiter = createConnectionLimiter({
+    maxConnectionsPerIp,
+    connectRateLimit,
+    connectRateWindowMs,
+  });
+  const messageLimiter = createMessageLimiter({ messageRateLimit });
+  const healthHandler = createHealthHandler(relay, startTime, {
+    connectionLimiter,
+    messageLimiter,
+  });
 
   const httpServer = createServer(healthHandler);
 
@@ -52,12 +79,28 @@ export function startServer(config = {}) {
     }
   }, pingIntervalMs);
 
-  wss.on('connection', (ws) => {
+  wss.on('connection', (ws, req) => {
+    const ip = req.socket.remoteAddress || 'unknown';
+
+    // Per-IP connection limiting
+    const result = connectionLimiter.onConnect(ip);
+    if (!result.allowed) {
+      ws.send(createMessage(MessageType.ERROR, { message: result.reason }));
+      ws.close(1008, result.reason);
+      return;
+    }
+
     ws.isAlive = true;
     ws.on('pong', () => {
       ws.isAlive = true;
     });
-    relay.handleConnection(ws);
+
+    ws.on('close', () => {
+      connectionLimiter.onDisconnect(ip);
+      messageLimiter.onDisconnect(ws);
+    });
+
+    relay.handleConnection(ws, messageLimiter);
   });
 
   wss.on('close', () => {
@@ -68,6 +111,7 @@ export function startServer(config = {}) {
   const close = () =>
     new Promise((resolve, reject) => {
       clearInterval(pingInterval);
+      connectionLimiter.cleanup();
 
       // Close all WebSocket connections
       for (const ws of wss.clients) {

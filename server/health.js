@@ -26,17 +26,32 @@ const MIME_TYPES = {
  *
  * @param {import('./relay.js').Relay} relay — the relay instance to report on
  * @param {number} startTime — timestamp (ms) when the server started
+ * @param {object} [limiters] — optional rate limiters for stats reporting
+ * @param {object} [limiters.connectionLimiter]
+ * @param {object} [limiters.messageLimiter]
  * @returns {(req: import('http').IncomingMessage, res: import('http').ServerResponse) => void}
  */
-export function createHealthHandler(relay, startTime) {
+export function createHealthHandler(relay, startTime, limiters = {}) {
+  const { connectionLimiter, messageLimiter } = limiters;
+
   return async (req, res) => {
     if (req.method === 'GET' && req.url === '/health') {
-      const body = JSON.stringify({
+      const health = {
         status: 'ok',
         uptime: Math.floor((Date.now() - startTime) / 1000),
         rooms: relay.getRoomCount(),
         connections: relay.getClientCount(),
-      });
+      };
+
+      if (connectionLimiter) {
+        health.blockedConnections =
+          connectionLimiter.stats().blockedConnections;
+      }
+      if (messageLimiter) {
+        health.throttledMessages = messageLimiter.stats().throttledMessages;
+      }
+
+      const body = JSON.stringify(health);
 
       res.writeHead(200, {
         'Content-Type': 'application/json',
