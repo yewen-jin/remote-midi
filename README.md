@@ -95,29 +95,26 @@ Uses Node's built-in test runner. All 44 tests passing:
 
 ## Deployment
 
-### Production setup (PM2 + Docker nginx)
+### Production setup (Docker)
 
-The production environment uses PM2 for the Node.js process and `nginxproxy/nginx-proxy` for routing and TLS.
+The relay runs as a Docker container alongside `nginxproxy/nginx-proxy` for automatic TLS and routing.
 
 ```bash
-# Clone and install
+# Clone
 git clone <your-repo-url> ~/remote-midi
-cd ~/remote-midi
-npm install --production
 
-# Start with PM2 (--env-file ensures .env is loaded)
-pm2 start ~/remote-midi/server/index.js --name midi-relay \
-  --node-args="--env-file=/home/<username>/remote-midi/.env"
-pm2 save
+# Add midi-relay service to your docker-compose.yml
+# (see deploy/docker-compose.service.yml for the service block)
 
-# Add the midi-relay-web container to your docker-compose.yml
-# (see deploy/deploy-guide.md for the full service block)
+# Build and start
 cd /srv/reverse-proxy
-docker compose up -d midi-relay-web
+docker compose up -d --build midi-relay
 
 # Verify
 curl https://your-domain.com/health
 ```
+
+To update after pulling changes: `docker compose up -d --build midi-relay`
 
 For detailed instructions, see [`deploy/deploy-guide.md`](deploy/deploy-guide.md).
 

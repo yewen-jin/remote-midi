@@ -8,14 +8,11 @@ Practical notes on testing, deployment, and usage based on the actual setup.
 
 - **VPS:** Krystal.io
 - **Domain:** `midi.datadadaist.space` (subdomain of `datadadaist.space`)
-- **nginx:** runs as a Docker container (shared with other apps, TLS already configured)
-- **Node.js apps:** managed by PM2 on the host — not Docker
-- **nginx routing:** via host IP/port (`proxy_pass http://127.0.0.1:3500`)
-- **Existing subdomain pattern:** `chat.datadadaist.space` already points to the same VPS — use that config as the reference when adding `midi.datadadaist.space`
+- **Reverse proxy:** `nginxproxy/nginx-proxy` Docker container with `acme-companion` for auto TLS
+- **Relay:** runs as a Docker container on the `proxy` network (same pattern as `chatroom-web`)
+- **docker-compose:** `/srv/reverse-proxy/docker-compose.yml`
 
 ### Adding the subdomain
-
-The VPS uses `nginxproxy/nginx-proxy` with `acme-companion` — routing and TLS are automatic based on Docker container environment variables. Follow the same pattern as `chat.datadadaist.space`.
 
 1. **DNS** — add an A record at your DNS provider:
    ```
@@ -25,60 +22,16 @@ The VPS uses `nginxproxy/nginx-proxy` with `acme-companion` — routing and TLS 
    TTL:   3600
    ```
 
-2. **nginx container config** — create `/srv/reverse-proxy/nginx-config/midi-relay-web.conf`:
-   ```nginx
-   server {
-       listen 80;
+2. **docker-compose** — add the `midi-relay` service to `/srv/reverse-proxy/docker-compose.yml`. See `deploy/docker-compose.service.yml` for the full block.
 
-       location / {
-           root /usr/share/nginx/html;
-           index index.html;
-       }
-
-       location /midi {
-           proxy_pass http://host.docker.internal:3500;
-           proxy_http_version 1.1;
-           proxy_set_header Upgrade $http_upgrade;
-           proxy_set_header Connection "upgrade";
-           proxy_set_header Host $host;
-           proxy_set_header X-Real-IP $remote_addr;
-           proxy_read_timeout 86400s;
-           proxy_send_timeout 86400s;
-       }
-
-       location /health {
-           proxy_pass http://host.docker.internal:3500;
-           proxy_set_header Host $host;
-       }
-   }
-   ```
-
-3. **docker-compose** — add to `/srv/reverse-proxy/docker-compose.yml` under `services:`:
-   ```yaml
-     midi-relay-web:
-       image: nginx:alpine
-       container_name: midi-relay-web
-       restart: unless-stopped
-       networks: [proxy]
-       environment:
-         VIRTUAL_HOST: <url>
-         LETSENCRYPT_HOST: <url>
-         LETSENCRYPT_EMAIL: <your-email>
-       volumes:
-         - /home/<username>/remote-midi/client/browser:/usr/share/nginx/html:ro
-         - /srv/reverse-proxy/nginx-config/midi-relay-web.conf:/etc/nginx/conf.d/default.conf:ro
-       extra_hosts:
-         - "host.docker.internal:host-gateway"
-   ```
-   > TLS is handled automatically by `acme-companion` — no manual certbot needed.
-
-4. **Start:**
+3. **Build and start:**
    ```bash
    cd /srv/reverse-proxy
-   docker compose up -d midi-relay-web
+   docker compose up -d --build midi-relay
    ```
+   TLS is provisioned automatically by `acme-companion`.
 
-5. **Verify** (allow a minute for TLS provisioning):
+4. **Verify** (allow a minute for TLS provisioning):
    ```bash
    curl https://midi.datadadaist.space/health
    ```
@@ -188,42 +141,20 @@ The format is always `ws://` or `wss://` — not `http://`.
 
 ## Deploying on the VPS
 
-### 1. Clone and install
+See [`deploy/deploy-guide.md`](../deploy/deploy-guide.md) for full step-by-step instructions.
+
+Quick summary:
 
 ```bash
+# Clone
 git clone <repo-url> ~/remote-midi
-cd ~/remote-midi
-npm install --production
-```
 
-### 2. Add nginx location blocks
+# Add midi-relay service to /srv/reverse-proxy/docker-compose.yml
+# (see deploy/docker-compose.service.yml for the service block)
 
-Add the contents of `deploy/nginx-location.conf` to your domain's `server {}` block in the nginx container config, then reload:
-
-```bash
-docker exec <nginx-container> nginx -s reload
-```
-
-### 3. Start with PM2
-
-```bash
-pm2 start ~/remote-midi/server/index.js --name midi-relay --node-args="--env-file=/home/<username>/remote-midi/.env"
-pm2 save
-```
-
-> **Important:** The `--node-args="--env-file=..."` flag is required. Without it, Node.js does not read the `.env` file and may inherit stray environment variables (e.g. `PORT` from another app).
-
-If PM2 isn't set up to survive reboots:
-```bash
-pm2 startup   # run the command it prints
-pm2 save
-```
-
-### 4. Verify
-
-```bash
-pm2 list
-curl https://your-domain.com/health
+# Build and start
+cd /srv/reverse-proxy
+docker compose up -d --build midi-relay
 ```
 
 ### Updating
@@ -231,29 +162,29 @@ curl https://your-domain.com/health
 ```bash
 cd ~/remote-midi
 git pull
-npm install --production
-pm2 restart midi-relay
+cd /srv/reverse-proxy
+docker compose up -d --build midi-relay
 ```
+
+> `--build` is required — Docker copies files at build time, so `git pull` alone won't update the running container.
 
 ### Logs
 
 ```bash
-pm2 logs midi-relay
+docker logs midi-relay -f
 ```
 
 ---
 
-## Serving the browser client from the VPS
+## Serving the browser client
 
-The `midi-relay-web` Docker container serves the browser client automatically — the volume mount maps `~/remote-midi/client/browser` into the container as static files.
+The relay server serves the browser client directly — the Dockerfile copies `client/browser/` into the container and the server serves static files on `/`.
 
 Once deployed:
 - `https://your-domain.com` → browser client page (anyone can open this in Chrome)
 - `wss://your-domain.com/midi` → relay WebSocket endpoint
 
 Users go to your domain, enter the room name, choose their role, and connect — no local files needed.
-
-> **Permissions:** the container runs nginx as a non-root user. Ensure the browser client files are world-readable: `chmod -R o+rX ~/remote-midi/client/browser` and the home directory is traversable: `chmod o+x /home/<username>`.
 
 ---
 

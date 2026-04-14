@@ -7,17 +7,14 @@ This guide covers the actual production environment:
 - **nginx** — `nginxproxy/nginx-proxy` Docker container at `/srv/reverse-proxy/`
 - **TLS** — `nginxproxy/acme-companion` container, auto-provisions Let's Encrypt certs
 - **Routing** — containers declare `VIRTUAL_HOST` env var; nginx-proxy picks them up automatically
-- **Node.js apps** — managed by **PM2 on the host**, not Docker
-- **Existing pattern** — `chat.datadadaist.space` uses `chatroom-web` container; MIDI relay follows the same pattern
+- **Relay** — runs as a Docker container on the `proxy` network (same pattern as `chatroom-web`)
 
 Traffic flow:
 ```
-internet → nginx-proxy (443) → midi-relay-web container (80) → host PM2 (127.0.0.1:3500)
+internet → nginx-proxy (443/TLS) → midi-relay container (3500) → WebSocket clients
 ```
 
-The `midi-relay-web` container is a plain nginx that proxies to the host via `host.docker.internal:3500`. nginx-proxy handles TLS termination and routing.
-
-If your setup is different (bare nginx, systemd, etc.) see the [Alternative setups](#alternative-setups) section below.
+No PM2, no host networking, no firewall changes needed.
 
 ---
 
@@ -27,40 +24,9 @@ If your setup is different (bare nginx, systemd, etc.) see the [Alternative setu
 
 ```bash
 git clone <your-repo-url> ~/remote-midi
-cd ~/remote-midi
 ```
 
-### 2. Install production dependencies
-
-```bash
-npm install --production
-```
-
-### 3. Start with PM2
-
-```bash
-pm2 start ~/remote-midi/server/index.js --name midi-relay --node-args="--env-file=/home/<username>/remote-midi/.env"
-pm2 save
-```
-
-> **Important:** Node.js does not read `.env` files automatically. The `--node-args="--env-file=..."` flag tells Node to load it. Without this, the server may inherit stray environment variables (e.g. `PORT` from another app).
-
-If PM2 isn't set up to survive reboots:
-
-```bash
-pm2 startup   # prints a command — copy and run it as instructed
-pm2 save
-```
-
-Verify it's running:
-
-```bash
-pm2 list
-ss -tlnp | grep 3500   # confirm it's on the right port
-curl http://127.0.0.1:3500/health
-```
-
-### 4. Add DNS A record
+### 2. Add DNS A record
 
 At your DNS provider, add:
 
@@ -71,81 +37,54 @@ Value: <VPS IP>    # find with: curl ifconfig.me
 TTL:   3600
 ```
 
-### 5. Create the nginx container config
-
-Create `/srv/reverse-proxy/nginx-config/midi-relay-web.conf`:
-
-```nginx
-server {
-    listen 80;
-
-    # Serve browser client (static files)
-    location / {
-        root /usr/share/nginx/html;
-        index index.html;
-    }
-
-    # WebSocket relay
-    location /midi {
-        proxy_pass http://host.docker.internal:3500;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_read_timeout 86400s;
-        proxy_send_timeout 86400s;
-    }
-
-    # Health check
-    location /health {
-        proxy_pass http://host.docker.internal:3500;
-        proxy_set_header Host $host;
-    }
-}
-```
-
-### 6. Add the service to docker-compose.yml
+### 3. Add the service to docker-compose.yml
 
 In `/srv/reverse-proxy/docker-compose.yml`, add under `services:`:
 
 ```yaml
-  midi-relay-web:
-    image: nginx:alpine
-    container_name: midi-relay-web
+  midi-relay:
+    build: /home/<username>/remote-midi
+    container_name: midi-relay
     restart: unless-stopped
     networks: [proxy]
     environment:
-      VIRTUAL_HOST: <url> 
-      LETSENCRYPT_HOST: <url> 
+      PORT: 3500
+      HOST: 0.0.0.0
+      WS_PATH: /midi
+      PING_INTERVAL_MS: 15000
+      PING_TIMEOUT_MS: 30000
+      MAX_ROOMS: 50
+      MAX_CLIENTS_PER_ROOM: 20
+      VIRTUAL_HOST: <url>
+      VIRTUAL_PORT: 3500
+      LETSENCRYPT_HOST: <url>
       LETSENCRYPT_EMAIL: <your-email>
-    volumes:
-      - /home/<username>/remote-midi/client/browser:/usr/share/nginx/html:ro
-      - /srv/reverse-proxy/nginx-config/midi-relay-web.conf:/etc/nginx/conf.d/default.conf:ro
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    expose:
+      - "3500"
 ```
 
-### 7. Start the container
+> `VIRTUAL_PORT: 3500` tells nginx-proxy which port the relay listens on (default is 80).
+
+### 4. Build and start
 
 ```bash
 cd /srv/reverse-proxy
-docker compose up -d midi-relay-web
+docker compose up -d --build midi-relay
 ```
 
-nginx-proxy and acme-companion will detect the new container and automatically provision a TLS certificate for `midi.datadadaist.space`. Allow a minute for the cert to be issued.
+nginx-proxy detects the new container and provisions a TLS certificate automatically. Allow a minute for the cert to be issued.
 
-### 8. Verify
+### 5. Verify
 
 ```bash
-# Health check via domain (tests full nginx proxy chain)
-curl https://midi.datadadaist.space/health
+# Health check via domain
+curl https://<url>/health
 
-# Browser client
-# Open https://midi.datadadaist.space in Chrome — the UI should load
+# Browser client — open in Chrome
+# https://<url>
 
 # WebSocket test (if wscat available)
-npx wscat -c wss://midi.datadadaist.space/midi
+npx wscat -c wss://<url>/midi
 # Type: {"type":"join","room":"test","role":"sender"}
 # Expected: {"type":"joined","room":"test","role":"sender","members":1}
 ```
@@ -154,45 +93,49 @@ npx wscat -c wss://midi.datadadaist.space/midi
 
 ## Updating
 
+After pulling changes to `~/remote-midi`:
+
 ```bash
 cd ~/remote-midi
 git pull
-npm install --production
-pm2 restart midi-relay
+cd /srv/reverse-proxy
+docker compose up -d --build midi-relay
 ```
+
+> `--build` is required — Docker copies files at build time, so a `git pull` alone won't update the running container.
 
 ## Viewing logs
 
 ```bash
-pm2 logs midi-relay          # live logs
-pm2 logs midi-relay --lines 100  # last 100 lines
+docker logs midi-relay           # all logs
+docker logs midi-relay --tail 50 # last 50 lines
+docker logs midi-relay -f        # follow (live)
 ```
 
 ## Troubleshooting
 
-- **pm2 shows errored** — `pm2 logs midi-relay` to see the error
-- **Port conflict** — `ss -tlnp | grep 3500` to see what's using it; also check `ss -tlnp | grep node` to see what port Node actually bound to
-- **Wrong port** — if the server starts on port 3000 or another port, PM2 is likely inheriting `PORT` from another app's environment. Ensure PM2 was started with `--node-args="--env-file=..."` so the `.env` file takes precedence
-- **WebSocket fails through nginx** — ensure the `Upgrade` and `Connection` headers are set in the nginx location block
-- **502 Bad Gateway** — PM2 process is not running; `pm2 restart midi-relay`
+- **Container won't start** — `docker logs midi-relay` to see the error
+- **502 Bad Gateway** — container is not running; `docker compose up -d midi-relay`
+- **503 Service Unavailable** — nginx-proxy hasn't detected the container yet; wait a moment then check `docker ps | grep midi-relay`
+- **TLS cert not provisioned** — `docker logs acme-companion` to see cert errors; ensure DNS A record is pointing to the VPS
+- **WebSocket connection fails** — nginx-proxy handles WebSocket upgrade automatically via `VIRTUAL_HOST`; check `docker logs nginx-proxy` for errors
 
 ---
 
 ## Alternative setups
 
-### Docker (without PM2)
+### PM2 on the host (without Docker for the relay)
 
-A `Dockerfile` and `deploy/docker-compose.service.yml` are provided. Add the service block to your existing `docker-compose.yml` and run:
+If you prefer PM2, use `ecosystem.config.cjs` in the repo root. Note: this requires the host firewall to allow Docker bridge → host traffic on port 3500, since nginx-proxy still runs in Docker.
 
 ```bash
-docker compose up -d midi-relay
+pm2 start ~/remote-midi/ecosystem.config.cjs
+pm2 save
 ```
-
-`restart: unless-stopped` handles crashes and reboots.
 
 ### Systemd (bare nginx, no Docker)
 
-`deploy/midi-relay.service` is provided for a traditional systemd setup. See the original instructions at the bottom of this file if needed — but for Krystal.io, PM2 is the right tool.
+`deploy/midi-relay.service` is provided for a traditional systemd setup with bare nginx.
 
 ### Full nginx config (new domain, no existing nginx)
 
