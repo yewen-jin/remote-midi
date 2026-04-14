@@ -8,7 +8,16 @@
   </head>
   <body>
     <header>
-      <h1>MIDI Relay</h1>
+      <div class="header-row">
+        <h1>MIDI Relay</h1>
+        <button
+          class="btn btn-outline btn-sm"
+          id="theme-toggle"
+          aria-label="Toggle theme"
+        >
+          ☀ / ☾
+        </button>
+      </div>
       <p class="subtitle">Speakers Corner — Remote MIDI Control</p>
     </header>
 
@@ -43,8 +52,17 @@
           </div>
         </div>
         <div class="button-row">
-          <button id="connect-btn" type="button">Connect</button>
-          <button id="disconnect-btn" type="button" disabled>Disconnect</button>
+          <button id="connect-btn" class="btn btn-accent" type="button">
+            Connect
+          </button>
+          <button
+            id="disconnect-btn"
+            class="btn btn-outline"
+            type="button"
+            disabled
+          >
+            Disconnect
+          </button>
         </div>
       </section>
 
@@ -58,7 +76,14 @@
           <select id="midi-device">
             <option value="">— No MIDI access —</option>
           </select>
-          <button id="midi-refresh-btn" type="button">Refresh</button>
+          <button
+            id="midi-refresh-btn"
+            class="btn btn-outline btn-sm"
+            type="button"
+            style="margin-top: 0.5rem"
+          >
+            Refresh
+          </button>
         </div>
         <p id="midi-status" class="status-text">
           Web MIDI not initialised yet.
@@ -98,7 +123,7 @@
       <section id="log-panel" class="panel">
         <h2>
           Activity Log
-          <button id="clear-log-btn" type="button" class="small-btn">
+          <button id="clear-log-btn" class="btn btn-outline btn-sm" type="button">
             Clear
           </button>
         </h2>
@@ -107,9 +132,24 @@
     </main>
 
     <footer>
-      <p>Speakers Corner MIDI Relay &mdash; <span id="version">v0.1.0</span></p>
+      <p>Speakers Corner MIDI Relay — <span id="version">v0.1.0</span></p>
     </footer>
 
     <script type="module" src="midi-relay-client.js"></script>
+    <script>
+      // Day/night theme toggle
+      const toggle = document.getElementById('theme-toggle');
+      const root = document.documentElement;
+
+      const saved = localStorage.getItem('theme');
+      if (saved) root.setAttribute('data-theme', saved);
+
+      toggle.addEventListener('click', () => {
+        const current = root.getAttribute('data-theme');
+        const next = current === 'night' ? 'day' : 'night';
+        root.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+      });
+    </script>
   </body>
 </html>
