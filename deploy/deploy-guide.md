@@ -4,9 +4,18 @@
 
 This guide covers the actual production environment:
 
-- **nginx** runs as a Docker container (shared with other apps, TLS already configured)
-- **Node.js apps** are managed by **PM2 on the host** — not Docker, not systemd
-- nginx routes to apps via host IP and port (e.g. `proxy_pass http://127.0.0.1:3500`)
+- **nginx** — `nginxproxy/nginx-proxy` Docker container at `/srv/reverse-proxy/`
+- **TLS** — `nginxproxy/acme-companion` container, auto-provisions Let's Encrypt certs
+- **Routing** — containers declare `VIRTUAL_HOST` env var; nginx-proxy picks them up automatically
+- **Node.js apps** — managed by **PM2 on the host**, not Docker
+- **Existing pattern** — `chat.datadadaist.space` uses `chatroom-web` container; MIDI relay follows the same pattern
+
+Traffic flow:
+```
+internet → nginx-proxy (443) → midi-relay-web container (80) → host PM2 (127.0.0.1:3500)
+```
+
+The `midi-relay-web` container is a plain nginx that proxies to the host via `host.docker.internal:3500`. nginx-proxy handles TLS termination and routing.
 
 If your setup is different (bare nginx, systemd, etc.) see the [Alternative setups](#alternative-setups) section below.
 
@@ -14,7 +23,7 @@ If your setup is different (bare nginx, systemd, etc.) see the [Alternative setu
 
 ## Deploy steps
 
-### 1. Clone the repository on your VPS
+### 1. Clone the repository on the VPS
 
 ```bash
 git clone <your-repo-url> ~/midi-relay
@@ -27,80 +36,113 @@ cd ~/midi-relay
 npm install --production
 ```
 
-### 3. Configure environment
-
-```bash
-cp .env.example .env   # if one exists, otherwise create it:
-cat > .env << 'EOF'
-PORT=3500
-HOST=127.0.0.1
-WS_PATH=/midi
-PING_INTERVAL_MS=15000
-PING_TIMEOUT_MS=30000
-MAX_ROOMS=50
-MAX_CLIENTS_PER_ROOM=20
-EOF
-chmod 600 .env
-```
-
-### 4. Add nginx location blocks
-
-Open whichever config file controls your domain's `server {}` block inside the nginx container and add the contents of `deploy/nginx-location.conf`:
-
-```nginx
-# WebSocket endpoint
-location /midi {
-    proxy_pass http://127.0.0.1:3500;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_read_timeout 86400s;
-    proxy_send_timeout 86400s;
-}
-
-# Health check
-location /health {
-    proxy_pass http://127.0.0.1:3500;
-    proxy_set_header Host $host;
-}
-```
-
-Reload nginx:
-
-```bash
-docker exec <nginx-container-name> nginx -s reload
-```
-
-### 5. Start with PM2
+### 3. Start with PM2
 
 ```bash
 pm2 start server/index.js --name midi-relay
 pm2 save
 ```
 
-If you haven't set up PM2 to survive reboots yet:
+If PM2 isn't set up to survive reboots:
 
 ```bash
 pm2 startup   # prints a command — copy and run it as instructed
 pm2 save
 ```
 
-### 6. Verify
+Verify it's running:
 
 ```bash
-# Check PM2 status
 pm2 list
-
-# Health check via localhost
 curl http://127.0.0.1:3500/health
+```
 
-# Health check via your domain (tests nginx proxy)
-curl https://your-domain.com/health
+### 4. Add DNS A record
 
-# WebSocket test
-npx wscat -c wss://your-domain.com/midi
+At your DNS provider, add:
+
+```
+Type:  A
+Name:  midi
+Value: <VPS IP>    # find with: curl ifconfig.me
+TTL:   3600
+```
+
+### 5. Create the nginx container config
+
+Create `/srv/reverse-proxy/nginx-config/midi-relay-web.conf`:
+
+```nginx
+server {
+    listen 80;
+
+    # Serve browser client (static files)
+    location / {
+        root /usr/share/nginx/html;
+        index index.html;
+    }
+
+    # WebSocket relay
+    location /midi {
+        proxy_pass http://host.docker.internal:3500;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_read_timeout 86400s;
+        proxy_send_timeout 86400s;
+    }
+
+    # Health check
+    location /health {
+        proxy_pass http://host.docker.internal:3500;
+        proxy_set_header Host $host;
+    }
+}
+```
+
+### 6. Add the service to docker-compose.yml
+
+In `/srv/reverse-proxy/docker-compose.yml`, add under `services:`:
+
+```yaml
+  midi-relay-web:
+    image: nginx:alpine
+    container_name: midi-relay-web
+    restart: unless-stopped
+    networks: [proxy]
+    environment:
+      VIRTUAL_HOST: midi.datadadaist.space
+      LETSENCRYPT_HOST: midi.datadadaist.space
+      LETSENCRYPT_EMAIL: hello@yewenjin.com
+    volumes:
+      - /home/yewen/midi-relay/client/browser:/usr/share/nginx/html:ro
+      - /srv/reverse-proxy/nginx-config/midi-relay-web.conf:/etc/nginx/conf.d/default.conf:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+```
+
+### 7. Start the container
+
+```bash
+cd /srv/reverse-proxy
+docker compose up -d midi-relay-web
+```
+
+nginx-proxy and acme-companion will detect the new container and automatically provision a TLS certificate for `midi.datadadaist.space`. Allow a minute for the cert to be issued.
+
+### 8. Verify
+
+```bash
+# Health check via domain (tests full nginx proxy chain)
+curl https://midi.datadadaist.space/health
+
+# Browser client
+# Open https://midi.datadadaist.space in Chrome — the UI should load
+
+# WebSocket test (if wscat available)
+npx wscat -c wss://midi.datadadaist.space/midi
 # Type: {"type":"join","room":"test","role":"sender"}
 # Expected: {"type":"joined","room":"test","role":"sender","members":1}
 ```
