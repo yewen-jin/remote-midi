@@ -91,6 +91,49 @@ Incoming MIDI bytes appear automatically in the receiver's activity log. No extr
 
 ---
 
+## Stress test
+
+`test/stress.js` verifies the relay under load: 5 senders × 5 receivers in the same room, each sender transmitting at 48 messages/second (120 BPM × 24 ppqn MIDI clock rate). It also kills one sender mid-run and verifies it reconnects and resumes without dropping messages.
+
+```bash
+node test/stress.js
+```
+
+No server needs to be running first — the test starts its own relay on a random port.
+
+### What it tests
+
+1. **Throughput** — all 25 sender→receiver pairs receive every message
+2. **No drops** — counts sent vs received per sender per receiver
+3. **Sequence integrity** — detects any out-of-order or missing messages via sequence numbers
+4. **Reconnection** — sender-0 is killed uncleanly mid-run, reconnects, resumes sending; receivers continue getting its messages
+
+### Sample output
+
+```
+  Total sent:    1382
+  Total dropped: 0 (0.00%)
+  Sequence gaps: 0
+  Reconnect:     sender-0 killed and rejoined — resumed from seq 247, ended at 395
+
+  Result: ALL PASS ✓
+```
+
+### Benchmark results (localhost)
+
+| Metric | Result |
+|--------|--------|
+| Senders | 5 |
+| Receivers | 5 |
+| Rate per sender | 48 msg/s |
+| Total messages sent | ~1,400 over 8s |
+| Dropped | 0 (0.00%) |
+| Sequence gaps | 0 |
+| Relay latency (avg) | 0.33 ms |
+| Relay latency (max) | 0.48 ms |
+
+---
+
 ## How it works
 
 **Sender** connects and joins a room → sends MIDI bytes as binary WebSocket frames.
