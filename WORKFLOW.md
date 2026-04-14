@@ -20,6 +20,7 @@ After each task, append to `WORKLOG.md`:
 
 ```markdown
 ## [ISO timestamp] — [Task Name]
+
 **Status:** completed | blocked | partial
 **Summary:** One-line description of what was done
 **Commit:** [commit hash or message]
@@ -31,6 +32,7 @@ After each task, append to `WORKLOG.md`:
 ## Phase 0: Project Scaffolding
 
 ### Task 0.1 — Initialise project
+
 ```
 Subagent: Initialise the Node.js project.
 - Run `git init`
@@ -45,6 +47,7 @@ Subagent: Initialise the Node.js project.
 ```
 
 ### Task 0.2 — Install dependencies
+
 ```
 Subagent: Install project dependencies.
 - `npm install ws` (only production dependency)
@@ -58,6 +61,7 @@ Subagent: Install project dependencies.
 ## Phase 1: Core Server
 
 ### Task 1.1 — Protocol definition
+
 ```
 Subagent: Create server/protocol.js
 - Define message types as constants (JOIN, JOINED, ERROR, PING, PONG, ROOM_UPDATE)
@@ -70,6 +74,7 @@ Subagent: Create server/protocol.js
 ```
 
 ### Task 1.2 — Room management
+
 ```
 Subagent: Create server/room.js
 - Room class: constructor(name), addMember(ws, role, name), removeMember(ws),
@@ -82,6 +87,7 @@ Subagent: Create server/room.js
 ```
 
 ### Task 1.3 — Relay core
+
 ```
 Subagent: Create server/relay.js
 - Relay class: constructor(options), manages a Map of rooms
@@ -95,6 +101,7 @@ Subagent: Create server/relay.js
 ```
 
 ### Task 1.4 — Health check
+
 ```
 Subagent: Create server/health.js
 - Simple HTTP GET /health endpoint returning JSON:
@@ -105,6 +112,7 @@ Subagent: Create server/health.js
 ```
 
 ### Task 1.5 — Server entry point
+
 ```
 Subagent: Create server/index.js
 - Read config from environment variables with sensible defaults
@@ -120,6 +128,7 @@ Subagent: Create server/index.js
 ```
 
 ### Task 1.6 — Integration test
+
 ```
 Subagent: Create test/integration.test.js
 - Start the relay server programmatically
@@ -139,6 +148,7 @@ Subagent: Create test/integration.test.js
 ## Phase 2: Client Implementations
 
 ### Task 2.1 — Browser client HTML/CSS
+
 ```
 Subagent: Create client/browser/index.html and client/browser/style.css
 - Clean, minimal HTML page with:
@@ -154,6 +164,7 @@ Subagent: Create client/browser/index.html and client/browser/style.css
 ```
 
 ### Task 2.2 — Browser client JavaScript
+
 ```
 Subagent: Create client/browser/midi-relay-client.js
 - MidiRelayClient class:
@@ -172,6 +183,7 @@ Subagent: Create client/browser/midi-relay-client.js
 ```
 
 ### Task 2.3 — Node.js sender client
+
 ```
 Subagent: Create client/node/sender.js
 - Command-line Node.js script
@@ -186,6 +198,7 @@ Subagent: Create client/node/sender.js
 ```
 
 ### Task 2.4 — Node.js receiver client
+
 ```
 Subagent: Create client/node/receiver.js
 - Command-line Node.js script
@@ -201,6 +214,7 @@ Subagent: Create client/node/receiver.js
 ## Phase 3: Deployment Configuration
 
 ### Task 3.1 — Systemd service file
+
 ```
 Subagent: Create deploy/midi-relay.service
 - Standard systemd unit for a Node.js service
@@ -211,6 +225,7 @@ Subagent: Create deploy/midi-relay.service
 ```
 
 ### Task 3.2 — Nginx config
+
 ```
 Subagent: Create deploy/nginx-site.conf
 - Server block for relay.example.com (placeholder domain)
@@ -224,6 +239,7 @@ Subagent: Create deploy/nginx-site.conf
 ```
 
 ### Task 3.3 — Deployment guide
+
 ```
 Subagent: Create deploy/deploy-guide.md
 - Step-by-step instructions for deploying to a fresh VPS:
@@ -245,6 +261,7 @@ Subagent: Create deploy/deploy-guide.md
 ## Phase 4: Documentation
 
 ### Task 4.1 — Client connection guide
+
 ```
 Subagent: Create docs/client-guide.md
 - Written for Speakers Corner (non-developer audience)
@@ -258,6 +275,7 @@ Subagent: Create docs/client-guide.md
 ```
 
 ### Task 4.2 — Protocol documentation
+
 ```
 Subagent: Create docs/protocol.md
 - Full wire protocol specification
@@ -269,6 +287,7 @@ Subagent: Create docs/protocol.md
 ```
 
 ### Task 4.3 — Troubleshooting guide
+
 ```
 Subagent: Create docs/troubleshooting.md
 - Common issues: can't connect, MIDI not appearing, high latency,
@@ -280,6 +299,7 @@ Subagent: Create docs/troubleshooting.md
 ```
 
 ### Task 4.4 — README
+
 ```
 Subagent: Create README.md
 - Project overview with architecture diagram (ASCII)
@@ -297,6 +317,7 @@ Subagent: Create README.md
 ## Phase 5: Hardening & Polish
 
 ### Task 5.1 — Latency measurement
+
 ```
 Subagent: Add latency measurement tooling.
 - Add application-level ping/pong with timestamps in protocol
@@ -307,6 +328,7 @@ Subagent: Add latency measurement tooling.
 ```
 
 ### Task 5.2 — Connection resilience audit
+
 ```
 Subagent: Audit and harden reconnection behaviour.
 - Verify exponential backoff works correctly in all clients
@@ -318,6 +340,7 @@ Subagent: Audit and harden reconnection behaviour.
 ```
 
 ### Task 5.3 — Edge case handling
+
 ```
 Subagent: Handle edge cases in the relay.
 - What happens if a receiver sends binary data? (ignore it, log warning)
@@ -329,6 +352,7 @@ Subagent: Handle edge cases in the relay.
 ```
 
 ### Task 5.4 — Final review and cleanup
+
 ```
 Subagent: Final pass over all code.
 - Run prettier on all files

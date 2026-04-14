@@ -135,3 +135,51 @@ Append-only log of all tasks completed during development.
 **Decision:** Added these tests to validate client reconnection behaviour under real conditions (socket terminate, not clean close). Tests use existing connectClient/drainTextMessages helpers for consistency.
 
 **Test Results:** 48 tests passing (up from 44)
+
+---
+
+## Phase 1 (continued)
+
+| Timestamp | Task | Status | Summary |
+|-----------|------|--------|---------|
+| 2026-04-14 | Task 1.4 — Health check | completed | HTTP handler returning JSON status with uptime, rooms, connections. 3 tests. |
+| 2026-04-14 | Task 1.5 — Server entry point | completed | startServer() factory with config, WS ping/pong, graceful shutdown. Verified manually. |
+| 2026-04-14 | Task 1.6 — Integration tests | completed | 6 end-to-end tests: binary relay, SysEx, multi-sender, reconnect, room isolation, health. |
+
+## Phase 2: Client Implementations
+
+| Timestamp | Task | Status | Summary |
+|-----------|------|--------|---------|
+| 2026-04-14 | Task 2.1 — Browser HTML/CSS | completed | Dark theme, monospace, accessible UI with connection config, MIDI device select, status, log. |
+| 2026-04-14 | Task 2.2 — Browser JavaScript | completed | MidiRelayClient class with Web MIDI API binding, reconnection (exp backoff 1s→30s). |
+| 2026-04-14 | Task 2.3+2.4 — Node clients | completed | Sender and receiver CLI scripts with ws, parseArgs, optional easymidi, reconnection. |
+
+## Phase 3: Deployment
+
+| Timestamp | Task | Status | Summary |
+|-----------|------|--------|---------|
+| 2026-04-14 | Task 3.1 — Systemd service | completed | Unit file with security hardening, env file, auto-restart. |
+| 2026-04-14 | Task 3.2 — Nginx config | completed | WSS reverse proxy with upgrade headers, 86400s timeouts. |
+| 2026-04-14 | Task 3.3 — Deploy guide | completed | Step-by-step VPS setup: clone, install, systemd, Nginx, certbot. |
+
+## Phase 4: Documentation
+
+| Timestamp | Task | Status | Summary |
+|-----------|------|--------|---------|
+| 2026-04-14 | Task 4.1 — Client guide | completed | Non-technical walkthrough for browser + Node.js clients. |
+| 2026-04-14 | Task 4.2 — Protocol spec | completed | Full wire protocol with all message types, fields, examples. |
+| 2026-04-14 | Task 4.3 — Troubleshooting | completed | Common failures and diagnostic steps for connection, MIDI, server. |
+| 2026-04-14 | Task 4.4 — README | completed | Architecture diagram, quick start, env vars, links to docs. |
+
+## Phase 5: Hardening & Polish
+
+| Timestamp | Task | Status | Summary |
+|-----------|------|--------|---------|
+| 2026-04-14 | Task 5.1 — Latency measurement | completed | Integration test: avg 0.33ms, max 0.48ms on localhost. App-level ping/pong verified. |
+| 2026-04-14 | Task 5.2 — Resilience audit | completed | Added tests for unclean disconnect, sender rejoin, room recovery. |
+| 2026-04-14 | Task 5.3 — Edge cases | completed | Tests for receiver binary (ignored), invalid JSON, rapid connect/disconnect, empty room. |
+| 2026-04-14 | Task 5.4 — Final cleanup | completed | Migrated to ESLint flat config, Prettier on all files, 52 tests passing, 0 lint errors. |
+
+## Summary
+
+All 21 tasks across 5 phases completed. 52 tests passing. Zero lint errors. Project ready for alpha testing.

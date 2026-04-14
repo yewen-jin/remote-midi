@@ -8,7 +8,7 @@
 
 ## Problem Statement
 
-Speakers Corner previously achieved remote MIDI control in 2020, but increased firewall/NAT restrictions broke their setup. Neither the sender nor receiver can open inbound ports. Both sides must connect *outbound* to a central relay server, which forwards MIDI bytes in real time.
+Speakers Corner previously achieved remote MIDI control in 2020, but increased firewall/NAT restrictions broke their setup. Neither the sender nor receiver can open inbound ports. Both sides must connect _outbound_ to a central relay server, which forwards MIDI bytes in real time.
 
 ## Architecture Overview
 
@@ -194,6 +194,7 @@ MAX_CLIENTS_PER_ROOM=20            # Maximum clients per room
 ## Subagent / Task Logging
 
 When using subagents or breaking work into tasks:
+
 - Use Haiku to maintain a `WORKLOG.md` at the project root
 - Each entry should include: timestamp, task name, status (started/completed/blocked), and a one-line summary
 - Keep the worklog append-only; never delete entries

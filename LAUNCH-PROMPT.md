@@ -80,6 +80,7 @@ Append the following entry to WORKLOG.md:
 ## Mid-Project Check-In Prompts
 
 ### Latency sanity check (run after Phase 1):
+
 ```
 Run the integration tests and measure the time between sending a binary frame
 from the mock sender and receiving it at the mock receiver. Report the
@@ -88,6 +89,7 @@ investigate why before moving to Phase 2.
 ```
 
 ### Reconnection stress test (run after Phase 2):
+
 ```
 Write a quick stress test: connect 5 senders and 5 receivers to the same room.
 Have each sender blast MIDI clock messages (0xF8) at 120 BPM rate (24 ppqn =
@@ -97,6 +99,7 @@ Report any dropped messages.
 ```
 
 ### Pre-deployment review (run after Phase 4):
+
 ```
 Do a final review before deployment hardening:
 1. Run all tests — report results
