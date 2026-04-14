@@ -157,6 +157,94 @@ Once a client connects as **Receiver**, data arrives automatically — nothing e
 
 ---
 
+## Arduino serial bridge
+
+The Arduino receiver (`client/node/arduino-receiver.js`) connects to the relay as a receiver and forwards incoming MIDI bytes to an Arduino (or any microcontroller) over a serial port. This is useful for controlling robotic installations, LED rigs, or any hardware that reads MIDI from its serial input.
+
+### Prerequisites
+
+Install the `serialport` npm package (already included in `package.json`):
+
+```bash
+npm install serialport
+```
+
+### Usage
+
+List available serial ports:
+
+```bash
+node client/node/arduino-receiver.js --list
+```
+
+Connect to the relay and forward MIDI to an Arduino:
+
+```bash
+# Explicit port
+node client/node/arduino-receiver.js \
+  --url wss://your-domain.com/midi \
+  --room speakers-corner-2026 \
+  --port /dev/ttyUSB0 \
+  --baud 9600
+
+# Auto-detect (uses the first available serial port)
+node client/node/arduino-receiver.js \
+  --url wss://your-domain.com/midi \
+  --room speakers-corner-2026
+```
+
+### CLI options
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--url` | `ws://127.0.0.1:3500/midi` | Relay WebSocket URL |
+| `--room` | `speakers-corner-2026` | Room name to join |
+| `--name` | `arduino-1` | Display name shown to other clients |
+| `--port` | *(auto-detect)* | Serial port path (e.g. `/dev/ttyUSB0`, `COM3`) |
+| `--baud` | `9600` | Baud rate for the serial connection |
+| `--list` | | List available serial ports and exit |
+| `-h`, `--help` | | Show help message |
+
+### Reconnection behaviour
+
+- **Relay connection:** reconnects with exponential backoff (1 s to 30 s cap), same as all other clients.
+- **Serial port:** if the Arduino is unplugged or the serial port closes unexpectedly, the script retries with exponential backoff until the port reappears.
+- **Startup order does not matter:** the script tolerates the Arduino not being plugged in yet. It will keep trying until the serial port is available.
+
+### What the Arduino sketch needs to do
+
+The Arduino receives raw MIDI bytes on its hardware serial port. A minimal sketch:
+
+```cpp
+void setup() {
+  Serial.begin(9600);  // Must match --baud rate
+}
+
+void loop() {
+  if (Serial.available()) {
+    byte midiByte = Serial.read();
+    // Process the MIDI byte, e.g.:
+    //   0x90 = Note On (channel 1)
+    //   0x80 = Note Off (channel 1)
+    //   0xB0 = Control Change (channel 1)
+    // The second byte is the note/controller number,
+    // the third byte is the velocity/value.
+    processMidi(midiByte);
+  }
+}
+
+void processMidi(byte b) {
+  // Your MIDI handling logic here
+  // e.g. drive a servo, switch a relay, control LEDs
+}
+```
+
+> **Tip:** For more robust MIDI parsing on the Arduino, consider the [MIDI Library](https://github.com/FortySevenEffects/arduino_midi_library) or [Arduino MIDI Library](https://www.arduino.cc/reference/en/libraries/midi-library/) which handle running status, SysEx, and other edge cases.
+
+> **Baud rate:** 9600 is the default for simplicity. Standard MIDI baud rate is 31250 — use `--baud 31250` if your Arduino sketch expects that. Make sure both sides match.
+
+---
+
 ## MIDI device requirements
 
 - **Sender:** needs a MIDI input device (keyboard, controller) or virtual MIDI port
