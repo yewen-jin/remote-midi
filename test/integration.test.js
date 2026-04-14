@@ -314,6 +314,64 @@ describe('Integration', () => {
     ws.close();
   });
 
+  it('client can rejoin room after unclean disconnect', async () => {
+    const sender = await connectClient('resilience-test', 'sender');
+    const receiver = await connectClient('resilience-test', 'receiver');
+
+    await drainTextMessages(receiver);
+
+    // Verify initial relay works
+    const p1 = nextBinaryMessage(receiver);
+    sender.send(Buffer.from([0x90, 0x3c, 0x7f]));
+    await p1;
+
+    // Simulate unclean disconnect by terminating the socket
+    receiver.terminate();
+
+    // Wait for server to detect the close
+    await new Promise((r) => setTimeout(r, 100));
+
+    // Reconnect as a new receiver
+    const receiver2 = await connectClient('resilience-test', 'receiver');
+    await drainTextMessages(receiver2);
+
+    // Verify relay still works with the new receiver
+    const p2 = nextBinaryMessage(receiver2);
+    sender.send(Buffer.from([0x80, 0x3c, 0x00]));
+    const r2 = await p2;
+    assert.deepEqual([...r2], [0x80, 0x3c, 0x00]);
+
+    sender.close();
+    receiver2.close();
+  });
+
+  it('sender can rejoin after disconnecting', async () => {
+    const receiver = await connectClient('sender-rejoin', 'receiver');
+
+    // First sender
+    let sender = await connectClient('sender-rejoin', 'sender');
+    await drainTextMessages(receiver);
+
+    const p1 = nextBinaryMessage(receiver);
+    sender.send(Buffer.from([0x90, 0x3c, 0x7f]));
+    await p1;
+
+    sender.close();
+    await new Promise((r) => setTimeout(r, 100));
+
+    // Second sender joins same room
+    sender = await connectClient('sender-rejoin', 'sender');
+    await drainTextMessages(receiver);
+
+    const p2 = nextBinaryMessage(receiver);
+    sender.send(Buffer.from([0x90, 0x40, 0x7f]));
+    const r2 = await p2;
+    assert.deepEqual([...r2], [0x90, 0x40, 0x7f]);
+
+    sender.close();
+    receiver.close();
+  });
+
   it('health endpoint returns 200 with correct shape', async () => {
     const { statusCode, body } = await httpGet('/health');
 
