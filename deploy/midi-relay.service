@@ -1,0 +1,33 @@
+[Unit]
+Description=Speakers Corner MIDI Relay Server
+Documentation=https://github.com/speakers-corner/midi-relay
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=midi-relay
+Group=midi-relay
+WorkingDirectory=/opt/midi-relay
+ExecStart=/usr/bin/node server/index.js
+Restart=always
+RestartSec=5
+
+# Environment
+EnvironmentFile=/opt/midi-relay/.env
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadOnlyPaths=/
+ReadWritePaths=/opt/midi-relay/logs
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=midi-relay
+
+[Install]
+WantedBy=multi-user.target
