@@ -266,4 +266,36 @@ describe('Relay', () => {
     assert.equal(msg.type, 'error');
     assert.match(msg.message, /Room name/);
   });
+
+  it('accepts a long room name', () => {
+    const ws = mockWs();
+    relay.handleConnection(ws);
+
+    const longName = 'a'.repeat(200);
+    sendText(ws, { type: 'join', room: longName, role: 'sender' });
+    const messages = ws.sent.map((m) => JSON.parse(m));
+    const joined = messages.find((m) => m.type === 'joined');
+    assert.ok(joined);
+    assert.equal(joined.room, longName);
+  });
+
+  it('does not broadcast binary when no receivers are present', () => {
+    const sender1 = mockWs();
+    const sender2 = mockWs();
+    relay.handleConnection(sender1);
+    relay.handleConnection(sender2);
+
+    sendText(sender1, { type: 'join', room: 'senders-only', role: 'sender' });
+    sendText(sender2, { type: 'join', room: 'senders-only', role: 'sender' });
+
+    // Clear text messages
+    sender1.sent.length = 0;
+    sender2.sent.length = 0;
+
+    sendBinary(sender1, [0x90, 0x3c, 0x7f]);
+
+    // Neither sender should receive the binary
+    assert.equal(sender1.sent.length, 0);
+    assert.equal(sender2.sent.length, 0);
+  });
 });
