@@ -262,6 +262,58 @@ describe('Integration', () => {
     receiverB.close();
   });
 
+  it('relay latency is under 50ms on localhost', async () => {
+    const sender = await connectClient('latency-test', 'sender');
+    const receiver = await connectClient('latency-test', 'receiver');
+
+    await drainTextMessages(receiver);
+
+    const iterations = 20;
+    const latencies = [];
+
+    for (let i = 0; i < iterations; i++) {
+      const noteOn = Buffer.from([0x90, 0x30 + i, 0x7f]);
+      const promise = nextBinaryMessage(receiver);
+      const start = performance.now();
+      sender.send(noteOn);
+      await promise;
+      const elapsed = performance.now() - start;
+      latencies.push(elapsed);
+    }
+
+    const avg =
+      latencies.reduce((sum, l) => sum + l, 0) / latencies.length;
+    const max = Math.max(...latencies);
+
+    console.log(
+      `Relay latency — avg: ${avg.toFixed(2)}ms, max: ${max.toFixed(2)}ms`,
+    );
+
+    assert.ok(avg < 50, `Average latency ${avg.toFixed(2)}ms exceeds 50ms`);
+    assert.ok(max < 50, `Max latency ${max.toFixed(2)}ms exceeds 50ms`);
+
+    sender.close();
+    receiver.close();
+  });
+
+  it('application-level ping/pong returns pong with timestamp', async () => {
+    const ws = new WebSocket(`ws://127.0.0.1:${port}/midi`);
+    await new Promise((resolve) => ws.on('open', resolve));
+
+    ws.send(JSON.stringify({ type: 'join', room: 'ping-test', role: 'sender' }));
+    await nextTextMessage(ws); // joined
+    await drainTextMessages(ws);
+
+    ws.send(JSON.stringify({ type: 'ping' }));
+    const pong = await nextTextMessage(ws);
+
+    assert.equal(pong.type, 'pong');
+    assert.equal(typeof pong.time, 'number');
+    assert.ok(pong.time > 0);
+
+    ws.close();
+  });
+
   it('health endpoint returns 200 with correct shape', async () => {
     const { statusCode, body } = await httpGet('/health');
 
