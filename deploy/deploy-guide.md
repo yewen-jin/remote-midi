@@ -115,9 +115,9 @@ In `/srv/reverse-proxy/docker-compose.yml`, add under `services:`:
     environment:
       VIRTUAL_HOST: <url> 
       LETSENCRYPT_HOST: <url> 
-      LETSENCRYPT_EMAIL: hello@yewenjin.com
+      LETSENCRYPT_EMAIL: <your-email>
     volumes:
-      - /home/yewen/remote-midi/client/browser:/usr/share/nginx/html:ro
+      - /home/<username>/remote-midi/client/browser:/usr/share/nginx/html:ro
       - /srv/reverse-proxy/nginx-config/midi-relay-web.conf:/etc/nginx/conf.d/default.conf:ro
     extra_hosts:
       - "host.docker.internal:host-gateway"

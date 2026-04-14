@@ -31,7 +31,7 @@ Practical notes on testing, deployment, and usage based on the actual setup.
    Replace `chat.datadadaist.space` → `midi.datadadaist.space`, swap the proxy location with `deploy/nginx-location.conf`, and add a static files location for the browser client:
    ```nginx
    location / {
-       root /home/yewen/remote-midi/client/browser; # replace YOUR_USER with your username
+       root /home/<username>/remote-midi/client/browser
        index index.html;
    }
    ```
@@ -216,7 +216,7 @@ Add a static files location block to nginx alongside the `/midi` block:
 
 ```nginx
 location / {
-    root /home/yewen/remote-midi/client/browser; # replace YOUR_USER with your username
+    root /home/<username>/remote-midi/client/browser
     index index.html;
 }
 ```
