@@ -113,11 +113,11 @@ In `/srv/reverse-proxy/docker-compose.yml`, add under `services:`:
     restart: unless-stopped
     networks: [proxy]
     environment:
-      VIRTUAL_HOST: midi.datadadaist.space
-      LETSENCRYPT_HOST: midi.datadadaist.space
+      VIRTUAL_HOST: <url> 
+      LETSENCRYPT_HOST: <url> 
       LETSENCRYPT_EMAIL: hello@yewenjin.com
     volumes:
-      - /home/yewen/midi-relay/client/browser:/usr/share/nginx/html:ro
+      - /home/<username>/midi-relay/client/browser:/usr/share/nginx/html:ro
       - /srv/reverse-proxy/nginx-config/midi-relay-web.conf:/etc/nginx/conf.d/default.conf:ro
     extra_hosts:
       - "host.docker.internal:host-gateway"

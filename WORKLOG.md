@@ -204,3 +204,15 @@ All 21 tasks across 5 phases completed. 52 tests passing. Zero lint errors. Proj
 |-----------|------|--------|---------|
 | 2026-04-14 | Task 7.1 — Arduino receiver bridge | completed | arduino-receiver.js with serialport auto-detect, reconnection, --list/--port/--baud flags. |
 | 2026-04-14 | Task 7.2 — Operations guide updated | completed | Added Arduino section to operations-guide.md with usage examples and Arduino sketch snippet. |
+
+---
+
+## 2026-04-14T — Update deploy guide for actual nginx-proxy setup
+
+**Status:** completed
+
+**Summary:** Rewrote deploy/deploy-guide.md to document the real Krystal.io setup — nginxproxy/nginx-proxy + acme-companion containers, midi-relay-web nginx container with VIRTUAL_HOST env var, host.docker.internal routing to PM2, exact file paths (/srv/reverse-proxy/, /home/yewen/midi-relay/)
+
+**Commit:** `fd8da4a`
+
+**Notes:** Deployment guide now matches the actual production environment: Docker nginx-proxy handles TLS termination, relay runs via PM2 on the host, routing via host.docker.internal:3500. All file paths, environment variables, and setup steps reflect the live Krystal.io configuration.
