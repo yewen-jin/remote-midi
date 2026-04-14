@@ -51,11 +51,17 @@ npm start
 
 ### 2. Serve the browser client
 
+On most machines with Node/npm:
+
+```bash
+npx serve client/browser/
+```
+
+On NixOS (where the nix flake uses a slim Node variant without npx):
+
 ```bash
 python3 -m http.server 8080 --directory client/browser/
 ```
-
-> `npx serve` does not work on this NixOS setup — the nix flake uses a slim Node variant without npm/npx. Use Python instead.
 
 ### 3. Open in browser
 
