@@ -1,0 +1,22 @@
+{
+  "name": "speakers-corner-midi-relay",
+  "version": "0.1.0",
+  "description": "Real-time WebSocket relay server that forwards MIDI bytes between a sender and one or more receivers over the internet",
+  "type": "module",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "test": "node --test test/**/*.test.js"
+  },
+  "keywords": [
+    "midi",
+    "websocket",
+    "relay",
+    "real-time"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
