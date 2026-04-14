@@ -39,9 +39,11 @@ npm install --production
 ### 3. Start with PM2
 
 ```bash
-pm2 start ~/remote-midi/server/index.js --name midi-relay
+pm2 start ~/remote-midi/server/index.js --name midi-relay --node-args="--env-file=/home/<username>/remote-midi/.env"
 pm2 save
 ```
+
+> **Important:** Node.js does not read `.env` files automatically. The `--node-args="--env-file=..."` flag tells Node to load it. Without this, the server may inherit stray environment variables (e.g. `PORT` from another app).
 
 If PM2 isn't set up to survive reboots:
 
@@ -54,6 +56,7 @@ Verify it's running:
 
 ```bash
 pm2 list
+ss -tlnp | grep 3500   # confirm it's on the right port
 curl http://127.0.0.1:3500/health
 ```
 
@@ -168,7 +171,8 @@ pm2 logs midi-relay --lines 100  # last 100 lines
 ## Troubleshooting
 
 - **pm2 shows errored** — `pm2 logs midi-relay` to see the error
-- **Port conflict** — `ss -tlnp | grep 3500` to see what's using it
+- **Port conflict** — `ss -tlnp | grep 3500` to see what's using it; also check `ss -tlnp | grep node` to see what port Node actually bound to
+- **Wrong port** — if the server starts on port 3000 or another port, PM2 is likely inheriting `PORT` from another app's environment. Ensure PM2 was started with `--node-args="--env-file=..."` so the `.env` file takes precedence
 - **WebSocket fails through nginx** — ensure the `Upgrade` and `Connection` headers are set in the nginx location block
 - **502 Bad Gateway** — PM2 process is not running; `pm2 restart midi-relay`
 

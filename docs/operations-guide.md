@@ -15,6 +15,8 @@ Practical notes on testing, deployment, and usage based on the actual setup.
 
 ### Adding the subdomain
 
+The VPS uses `nginxproxy/nginx-proxy` with `acme-companion` — routing and TLS are automatic based on Docker container environment variables. Follow the same pattern as `chat.datadadaist.space`.
+
 1. **DNS** — add an A record at your DNS provider:
    ```
    Type:  A
@@ -23,31 +25,60 @@ Practical notes on testing, deployment, and usage based on the actual setup.
    TTL:   3600
    ```
 
-2. **nginx** — find the `chat.datadadaist.space` config and copy it as a template:
-   ```bash
-   docker exec <nginx-container> cat /etc/nginx/conf.d/chat.conf
-   # or wherever your nginx configs live
-   ```
-   Replace `chat.datadadaist.space` → `midi.datadadaist.space`, swap the proxy location with `deploy/nginx-location.conf`, and add a static files location for the browser client:
+2. **nginx container config** — create `/srv/reverse-proxy/nginx-config/midi-relay-web.conf`:
    ```nginx
-   location / {
-       root /home/<username>/remote-midi/client/browser
-       index index.html;
+   server {
+       listen 80;
+
+       location / {
+           root /usr/share/nginx/html;
+           index index.html;
+       }
+
+       location /midi {
+           proxy_pass http://host.docker.internal:3500;
+           proxy_http_version 1.1;
+           proxy_set_header Upgrade $http_upgrade;
+           proxy_set_header Connection "upgrade";
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_read_timeout 86400s;
+           proxy_send_timeout 86400s;
+       }
+
+       location /health {
+           proxy_pass http://host.docker.internal:3500;
+           proxy_set_header Host $host;
+       }
    }
    ```
 
-3. **TLS** — obtain a cert the same way you did for `chat`:
+3. **docker-compose** — add to `/srv/reverse-proxy/docker-compose.yml` under `services:`:
+   ```yaml
+     midi-relay-web:
+       image: nginx:alpine
+       container_name: midi-relay-web
+       restart: unless-stopped
+       networks: [proxy]
+       environment:
+         VIRTUAL_HOST: <url>
+         LETSENCRYPT_HOST: <url>
+         LETSENCRYPT_EMAIL: <your-email>
+       volumes:
+         - /home/<username>/remote-midi/client/browser:/usr/share/nginx/html:ro
+         - /srv/reverse-proxy/nginx-config/midi-relay-web.conf:/etc/nginx/conf.d/default.conf:ro
+       extra_hosts:
+         - "host.docker.internal:host-gateway"
+   ```
+   > TLS is handled automatically by `acme-companion` — no manual certbot needed.
+
+4. **Start:**
    ```bash
-   certbot certonly -d midi.datadadaist.space
-   # or however certbot is configured in your nginx container
+   cd /srv/reverse-proxy
+   docker compose up -d midi-relay-web
    ```
 
-4. **Reload nginx:**
-   ```bash
-   docker exec <nginx-container> nginx -s reload
-   ```
-
-5. **Verify:**
+5. **Verify** (allow a minute for TLS provisioning):
    ```bash
    curl https://midi.datadadaist.space/health
    ```
@@ -176,9 +207,11 @@ docker exec <nginx-container> nginx -s reload
 ### 3. Start with PM2
 
 ```bash
-pm2 start ~/remote-midi/server/index.js --name midi-relay
+pm2 start ~/remote-midi/server/index.js --name midi-relay --node-args="--env-file=/home/<username>/remote-midi/.env"
 pm2 save
 ```
+
+> **Important:** The `--node-args="--env-file=..."` flag is required. Without it, Node.js does not read the `.env` file and may inherit stray environment variables (e.g. `PORT` from another app).
 
 If PM2 isn't set up to survive reboots:
 ```bash
@@ -212,20 +245,15 @@ pm2 logs midi-relay
 
 ## Serving the browser client from the VPS
 
-Add a static files location block to nginx alongside the `/midi` block:
+The `midi-relay-web` Docker container serves the browser client automatically — the volume mount maps `~/remote-midi/client/browser` into the container as static files.
 
-```nginx
-location / {
-    root /home/<username>/remote-midi/client/browser
-    index index.html;
-}
-```
-
-Then:
+Once deployed:
 - `https://your-domain.com` → browser client page (anyone can open this in Chrome)
 - `wss://your-domain.com/midi` → relay WebSocket endpoint
 
 Users go to your domain, enter the room name, choose their role, and connect — no local files needed.
+
+> **Permissions:** the container runs nginx as a non-root user. Ensure the browser client files are world-readable: `chmod -R o+rX ~/remote-midi/client/browser` and the home directory is traversable: `chmod o+x /home/<username>`.
 
 ---
 

@@ -95,47 +95,28 @@ Uses Node's built-in test runner. All 44 tests passing:
 
 ## Deployment
 
-### VPS Setup (Debian/Ubuntu)
+### Production setup (PM2 + Docker nginx)
+
+The production environment uses PM2 for the Node.js process and `nginxproxy/nginx-proxy` for routing and TLS.
 
 ```bash
-# Create service user
-sudo useradd --system --create-home --home-dir /opt/midi-relay --shell /usr/sbin/nologin midi-relay
-
 # Clone and install
-sudo -u midi-relay git clone https://github.com/speakers-corner/midi-relay.git /opt/midi-relay
-cd /opt/midi-relay
-sudo -u midi-relay npm install --production
+git clone <your-repo-url> ~/remote-midi
+cd ~/remote-midi
+npm install --production
 
-# Configure environment
-sudo tee /opt/midi-relay/.env << 'EOF'
-PORT=3500
-HOST=127.0.0.1
-WS_PATH=/midi
-PING_INTERVAL_MS=15000
-PING_TIMEOUT_MS=30000
-MAX_ROOMS=50
-MAX_CLIENTS_PER_ROOM=20
-EOF
-sudo chown midi-relay:midi-relay /opt/midi-relay/.env
-sudo chmod 600 /opt/midi-relay/.env
+# Start with PM2 (--env-file ensures .env is loaded)
+pm2 start ~/remote-midi/server/index.js --name midi-relay \
+  --node-args="--env-file=/home/<username>/remote-midi/.env"
+pm2 save
 
-# Create logs directory
-sudo -u midi-relay mkdir -p /opt/midi-relay/logs
+# Add the midi-relay-web container to your docker-compose.yml
+# (see deploy/deploy-guide.md for the full service block)
+cd /srv/reverse-proxy
+docker compose up -d midi-relay-web
 
-# Install systemd service
-sudo cp /opt/midi-relay/deploy/midi-relay.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable midi-relay
-sudo systemctl start midi-relay
-
-# Configure Nginx (replace relay.example.com with your domain)
-sudo cp /opt/midi-relay/deploy/nginx-site.conf /etc/nginx/sites-available/midi-relay.conf
-sudo sed -i 's/relay.example.com/YOUR_DOMAIN/g' /etc/nginx/sites-available/midi-relay.conf
-sudo ln -s /etc/nginx/sites-available/midi-relay.conf /etc/nginx/sites-enabled/
-sudo nginx -t && sudo systemctl reload nginx
-
-# Set up HTTPS with certbot
-sudo certbot certonly --nginx -d YOUR_DOMAIN
+# Verify
+curl https://your-domain.com/health
 ```
 
 For detailed instructions, see [`deploy/deploy-guide.md`](deploy/deploy-guide.md).
