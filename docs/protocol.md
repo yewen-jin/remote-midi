@@ -38,12 +38,12 @@ Sent by the client to join or switch rooms.
 }
 ```
 
-| Field  | Type   | Required | Description                          |
-|--------|--------|----------|--------------------------------------|
-| type   | string | yes      | Must be `"join"`                     |
-| room   | string | yes      | Room name to join                    |
-| role   | string | yes      | `"sender"` or `"receiver"`           |
-| name   | string | no       | Display name for this client         |
+| Field | Type   | Required | Description                  |
+| ----- | ------ | -------- | ---------------------------- |
+| type  | string | yes      | Must be `"join"`             |
+| room  | string | yes      | Room name to join            |
+| role  | string | yes      | `"sender"` or `"receiver"`   |
+| name  | string | no       | Display name for this client |
 
 If the client is already in a room, they are removed from the old room before joining the new one.
 
@@ -60,12 +60,12 @@ Sent by the server after a successful join.
 }
 ```
 
-| Field   | Type   | Description                       |
-|---------|--------|-----------------------------------|
-| type    | string | `"joined"`                        |
-| room    | string | Room name                         |
-| role    | string | The client's role                 |
-| members | number | Total number of members in room   |
+| Field   | Type   | Description                     |
+| ------- | ------ | ------------------------------- |
+| type    | string | `"joined"`                      |
+| room    | string | Room name                       |
+| role    | string | The client's role               |
+| members | number | Total number of members in room |
 
 ### `room-update` — Membership change
 
@@ -80,12 +80,12 @@ Broadcast to all room members when someone joins or leaves.
 }
 ```
 
-| Field     | Type   | Description                    |
-|-----------|--------|--------------------------------|
-| type      | string | `"room-update"`                |
-| room      | string | Room name                      |
-| senders   | number | Number of senders in the room  |
-| receivers | number | Number of receivers in the room|
+| Field     | Type   | Description                     |
+| --------- | ------ | ------------------------------- |
+| type      | string | `"room-update"`                 |
+| room      | string | Room name                       |
+| senders   | number | Number of senders in the room   |
+| receivers | number | Number of receivers in the room |
 
 ### `error` — Server error
 
@@ -98,10 +98,10 @@ Sent by the server when a request fails.
 }
 ```
 
-| Field   | Type   | Description           |
-|---------|--------|-----------------------|
-| type    | string | `"error"`             |
-| message | string | Human-readable error  |
+| Field   | Type   | Description          |
+| ------- | ------ | -------------------- |
+| type    | string | `"error"`            |
+| message | string | Human-readable error |
 
 ### `ping` / `pong` — Application-level heartbeat
 
@@ -117,10 +117,10 @@ The server responds with:
 { "type": "pong", "time": 1714000000000 }
 ```
 
-| Field | Type   | Description                      |
-|-------|--------|----------------------------------|
-| type  | string | `"pong"`                         |
-| time  | number | Server timestamp (ms since epoch)|
+| Field | Type   | Description                       |
+| ----- | ------ | --------------------------------- |
+| type  | string | `"pong"`                          |
+| time  | number | Server timestamp (ms since epoch) |
 
 ## MIDI Data (Binary Frames)
 
@@ -133,20 +133,20 @@ Raw MIDI bytes are sent as binary WebSocket frames with **no additional framing*
 
 ### Examples
 
-| MIDI Message | Bytes              |
-|--------------|--------------------|
-| Note On C4   | `90 3C 7F`        |
-| Note Off C4  | `80 3C 00`        |
-| CC #7 (Vol)  | `B0 07 64`        |
-| Clock tick   | `F8`              |
+| MIDI Message | Bytes            |
+| ------------ | ---------------- |
+| Note On C4   | `90 3C 7F`       |
+| Note Off C4  | `80 3C 00`       |
+| CC #7 (Vol)  | `B0 07 64`       |
+| Clock tick   | `F8`             |
 | SysEx        | `F0 7E 01 02 F7` |
 
 ## Limits
 
-| Limit                  | Default | Env variable          |
-|------------------------|---------|-----------------------|
-| Maximum rooms          | 50      | `MAX_ROOMS`           |
-| Maximum clients/room   | 20      | `MAX_CLIENTS_PER_ROOM`|
+| Limit                | Default | Env variable           |
+| -------------------- | ------- | ---------------------- |
+| Maximum rooms        | 50      | `MAX_ROOMS`            |
+| Maximum clients/room | 20      | `MAX_CLIENTS_PER_ROOM` |
 
 When a limit is reached, the server responds with an `error` message and does not join the client to the room.
 

@@ -88,7 +88,9 @@ function connect() {
 
   ws.on('open', () => {
     reconnectDelay = 1000;
-    console.log(`[${timestamp()}] Connected. Joining room "${args.room}" as sender…`);
+    console.log(
+      `[${timestamp()}] Connected. Joining room "${args.room}" as sender…`,
+    );
 
     const joinMsg = { type: 'join', room: args.room, role: 'sender' };
     if (args.name) joinMsg.name = args.name;

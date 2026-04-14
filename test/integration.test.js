@@ -154,9 +154,7 @@ describe('Integration', () => {
     await drainTextMessages(receiver);
 
     // SysEx: F0 <manufacturer> <data...> F7
-    const sysex = Buffer.from([
-      0xf0, 0x7e, 0x01, 0x02, 0x03, 0x04, 0x05, 0xf7,
-    ]);
+    const sysex = Buffer.from([0xf0, 0x7e, 0x01, 0x02, 0x03, 0x04, 0x05, 0xf7]);
     const binaryPromise = nextBinaryMessage(receiver);
     sender.send(sysex);
 
@@ -204,10 +202,7 @@ describe('Integration', () => {
 
   it('new receiver picks up subsequent messages after another disconnects', async () => {
     const sender = await connectClient('integration-reconnect', 'sender');
-    const receiver1 = await connectClient(
-      'integration-reconnect',
-      'receiver',
-    );
+    const receiver1 = await connectClient('integration-reconnect', 'receiver');
 
     await drainTextMessages(receiver1);
 
@@ -223,10 +218,7 @@ describe('Integration', () => {
     await new Promise((r) => setTimeout(r, 100));
 
     // New receiver joins
-    const receiver2 = await connectClient(
-      'integration-reconnect',
-      'receiver',
-    );
+    const receiver2 = await connectClient('integration-reconnect', 'receiver');
     await drainTextMessages(receiver2);
 
     // Second message to receiver2
@@ -252,10 +244,7 @@ describe('Integration', () => {
     await pA;
 
     // receiverB should NOT get anything — verify with a timeout
-    await assert.rejects(
-      nextBinaryMessage(receiverB, 200),
-      /Timed out/,
-    );
+    await assert.rejects(nextBinaryMessage(receiverB, 200), /Timed out/);
 
     senderA.close();
     receiverA.close();
@@ -281,8 +270,7 @@ describe('Integration', () => {
       latencies.push(elapsed);
     }
 
-    const avg =
-      latencies.reduce((sum, l) => sum + l, 0) / latencies.length;
+    const avg = latencies.reduce((sum, l) => sum + l, 0) / latencies.length;
     const max = Math.max(...latencies);
 
     console.log(
@@ -300,7 +288,9 @@ describe('Integration', () => {
     const ws = new WebSocket(`ws://127.0.0.1:${port}/midi`);
     await new Promise((resolve) => ws.on('open', resolve));
 
-    ws.send(JSON.stringify({ type: 'join', room: 'ping-test', role: 'sender' }));
+    ws.send(
+      JSON.stringify({ type: 'join', room: 'ping-test', role: 'sender' }),
+    );
     await nextTextMessage(ws); // joined
     await drainTextMessages(ws);
 

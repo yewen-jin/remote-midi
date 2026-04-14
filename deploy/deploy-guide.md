@@ -69,6 +69,7 @@ curl http://127.0.0.1:3500/health
 ```
 
 You should see a JSON response like:
+
 ```json
 { "status": "ok", "uptime": 5, "rooms": 0, "connections": 0 }
 ```
@@ -76,22 +77,26 @@ You should see a JSON response like:
 ## 8. Set up Nginx
 
 Install Nginx if not already present:
+
 ```bash
 sudo apt install nginx
 ```
 
 Copy the Nginx configuration:
+
 ```bash
 sudo cp /opt/midi-relay/deploy/nginx-site.conf /etc/nginx/sites-available/midi-relay
 sudo ln -s /etc/nginx/sites-available/midi-relay /etc/nginx/sites-enabled/
 ```
 
 Edit the file and replace `relay.example.com` with your actual domain:
+
 ```bash
 sudo nano /etc/nginx/sites-available/midi-relay
 ```
 
 Test and reload Nginx:
+
 ```bash
 sudo nginx -t
 sudo systemctl reload nginx
@@ -100,6 +105,7 @@ sudo systemctl reload nginx
 ## 9. Obtain a TLS certificate
 
 Using certbot with the Nginx plugin:
+
 ```bash
 sudo apt install certbot python3-certbot-nginx
 sudo certbot --nginx -d relay.example.com
@@ -110,6 +116,7 @@ Certbot will automatically configure the TLS certificates in the Nginx config.
 ## 10. Verify the full setup
 
 From any machine with internet access:
+
 ```bash
 # Health check
 curl https://relay.example.com/health
@@ -123,6 +130,7 @@ wscat -c wss://relay.example.com/midi
 ## Updating
 
 To deploy a new version:
+
 ```bash
 cd /opt/midi-relay
 sudo -u midi-relay git pull

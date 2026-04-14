@@ -1,4 +1,3 @@
-import { WebSocket } from 'ws';
 import { Room } from './room.js';
 import {
   parseControlMessage,
@@ -143,9 +142,7 @@ export class Relay {
     }
 
     if (room.getMemberCount() >= this.#maxClientsPerRoom) {
-      ws.send(
-        createMessage(MessageType.ERROR, { message: 'Room is full' }),
-      );
+      ws.send(createMessage(MessageType.ERROR, { message: 'Room is full' }));
       return;
     }
 

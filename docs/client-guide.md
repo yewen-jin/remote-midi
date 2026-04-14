@@ -28,6 +28,7 @@ Open the `index.html` file in your browser, or navigate to the hosted URL if one
 - If you are a **receiver**, select your MIDI output device (e.g. a virtual MIDI port or hardware device)
 
 If no devices appear, check that:
+
 1. Your MIDI device is plugged in and powered on
 2. You are using a browser that supports Web MIDI (Chrome, Edge, or Opera)
 3. You granted MIDI permission when the browser asked
@@ -37,6 +38,7 @@ Click **Refresh** if you plugged in a device after opening the page.
 ### Step 4: Connect
 
 Click **Connect**. The status panel will update to show:
+
 - **Connection:** Connected (green)
 - **Room:** The room you joined
 - **Senders/Receivers:** How many people are in the room

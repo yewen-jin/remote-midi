@@ -72,9 +72,7 @@ describe('Relay', () => {
 
     // Receiver should have: joined msg, room-update (sender join),
     // room-update (own join), and the binary data
-    const binaryMessages = receiver.sent.filter(
-      (m) => typeof m !== 'string',
-    );
+    const binaryMessages = receiver.sent.filter((m) => typeof m !== 'string');
     assert.equal(binaryMessages.length, 1);
     assert.deepEqual([...binaryMessages[0]], midiData);
   });

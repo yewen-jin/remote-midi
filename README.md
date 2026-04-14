@@ -15,6 +15,7 @@ Enables remote MIDI control of robotic installations without requiring inbound f
 ```
 
 **Key features:**
+
 - Sub-50ms added latency over typical internet connections
 - Room-based routing: MIDI from any sender reaches all receivers in the same room
 - Binary WebSocket frames for raw MIDI (no JSON overhead)
@@ -68,15 +69,15 @@ node client/node/receiver.js --url ws://127.0.0.1:3500/midi --room my-room
 
 ### Environment Variables
 
-| Variable               | Default       | Description                          |
-|------------------------|---------------|--------------------------------------|
-| `PORT`                 | `3500`        | Server listen port                   |
-| `HOST`                 | `127.0.0.1`   | Bind address (use 127.0.0.1 for Nginx proxy) |
-| `WS_PATH`              | `/midi`       | WebSocket endpoint path              |
-| `PING_INTERVAL_MS`     | `15000`       | WebSocket ping interval (ms)         |
-| `PING_TIMEOUT_MS`      | `30000`       | Connection dead timeout (ms)         |
-| `MAX_ROOMS`            | `50`          | Maximum concurrent rooms             |
-| `MAX_CLIENTS_PER_ROOM` | `20`          | Maximum clients per room             |
+| Variable               | Default     | Description                                  |
+| ---------------------- | ----------- | -------------------------------------------- |
+| `PORT`                 | `3500`      | Server listen port                           |
+| `HOST`                 | `127.0.0.1` | Bind address (use 127.0.0.1 for Nginx proxy) |
+| `WS_PATH`              | `/midi`     | WebSocket endpoint path                      |
+| `PING_INTERVAL_MS`     | `15000`     | WebSocket ping interval (ms)                 |
+| `PING_TIMEOUT_MS`      | `30000`     | Connection dead timeout (ms)                 |
+| `MAX_ROOMS`            | `50`        | Maximum concurrent rooms                     |
+| `MAX_CLIENTS_PER_ROOM` | `20`        | Maximum clients per room                     |
 
 ## Testing
 
@@ -85,6 +86,7 @@ npm test
 ```
 
 Uses Node's built-in test runner. All 44 tests passing:
+
 - Protocol parsing: 17 tests
 - Room management: 7 tests
 - Relay logic: 11 tests
@@ -168,6 +170,7 @@ For detailed instructions, see [`deploy/deploy-guide.md`](deploy/deploy-guide.md
 **v0.1 — Alpha**
 
 Core functionality complete and tested:
+
 - [x] WebSocket relay with room-based routing
 - [x] Binary MIDI forwarding
 - [x] Browser client (Web MIDI API)

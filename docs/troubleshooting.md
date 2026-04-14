@@ -65,6 +65,7 @@ sudo journalctl -u midi-relay -e
 ```
 
 Common causes:
+
 - **Port conflict** — Another process is using port 3500: `sudo ss -tlnp | grep 3500`
 - **Missing dependencies** — Run `npm install` in the project directory
 - **Wrong Node version** — Requires Node.js 20 or later: `node --version`
@@ -87,6 +88,7 @@ curl -v http://127.0.0.1:3500/health
 ### WebSocket upgrade fails through Nginx
 
 Ensure the Nginx config includes the WebSocket upgrade headers:
+
 ```
 proxy_set_header Upgrade $http_upgrade;
 proxy_set_header Connection "upgrade";
@@ -97,6 +99,7 @@ Reload Nginx after any config changes: `sudo systemctl reload nginx`
 ## Getting Help
 
 If you cannot resolve an issue:
+
 1. Note the exact error message or behaviour
 2. Check the activity log and browser console for details
 3. Contact the event organiser with the information above

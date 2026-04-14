@@ -65,9 +65,7 @@ describe('parseControlMessage', () => {
   it('throws on join missing room', () => {
     assert.throws(
       () =>
-        parseControlMessage(
-          JSON.stringify({ type: 'join', role: 'sender' }),
-        ),
+        parseControlMessage(JSON.stringify({ type: 'join', role: 'sender' })),
       /Room name is required/,
     );
   });

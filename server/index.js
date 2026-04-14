@@ -23,9 +23,6 @@ export function startServer(config = {}) {
   const pingIntervalMs =
     config.pingIntervalMs ??
     parseInt(process.env.PING_INTERVAL_MS || '15000', 10);
-  const pingTimeoutMs =
-    config.pingTimeoutMs ??
-    parseInt(process.env.PING_TIMEOUT_MS || '30000', 10);
   const maxRooms =
     config.maxRooms ?? parseInt(process.env.MAX_ROOMS || '50', 10);
   const maxClientsPerRoom =
@@ -111,8 +108,7 @@ export function startServer(config = {}) {
 
 // Run directly when this file is the entry point
 const isMain =
-  process.argv[1] &&
-  import.meta.url === `file://${process.argv[1]}`;
+  process.argv[1] && import.meta.url === `file://${process.argv[1]}`;
 
 if (isMain) {
   startServer().catch((err) => {

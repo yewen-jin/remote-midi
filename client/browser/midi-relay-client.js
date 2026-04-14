@@ -273,9 +273,7 @@ class MidiRelayClient {
     select.innerHTML = '';
 
     const devices =
-      role === 'sender'
-        ? this.#midiAccess.inputs
-        : this.#midiAccess.outputs;
+      role === 'sender' ? this.#midiAccess.inputs : this.#midiAccess.outputs;
 
     if (devices.size === 0) {
       const opt = document.createElement('option');
@@ -330,10 +328,7 @@ class MidiRelayClient {
     } else {
       this.#activeOutput = this.#midiAccess.outputs.get(deviceId) || null;
       if (this.#activeOutput) {
-        this.#log(
-          'info',
-          `Bound to MIDI output: ${this.#activeOutput.name}`,
-        );
+        this.#log('info', `Bound to MIDI output: ${this.#activeOutput.name}`);
       }
     }
   }
@@ -357,8 +352,7 @@ class MidiRelayClient {
    */
   #updateConnectionStatus(state) {
     const el = ui.connectionStatus;
-    el.textContent =
-      state.charAt(0).toUpperCase() + state.slice(1);
+    el.textContent = state.charAt(0).toUpperCase() + state.slice(1);
     el.className = `status-value ${state}`;
   }
 
