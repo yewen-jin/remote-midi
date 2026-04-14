@@ -250,3 +250,15 @@ All 21 tasks across 5 phases completed. 52 tests passing. Zero lint errors. Proj
 **Summary:** Rewrote deploy-guide.md, operations-guide.md, and README.md to remove all PM2/host.docker.internal/middleman container references. All docs now describe the Docker-only setup matching the actual production architecture.
 
 **Commit:** `4749f12`
+
+---
+
+## 2026-04-14T20:30:00Z — Update all project docs for Docker deployment and production domain
+
+**Status:** completed
+
+**Summary:** Updated README.md, CLAUDE.md, WORKFLOW.md, default browser client URL, and redeploy script. All references now use midi.datadadaist.space, Docker deployment (not PM2/systemd), and reflect actual project structure. WORKFLOW checklist updated to mark Phases 6 and 7 as complete.
+
+**Commit:** dccc321
+
+**Notes:** Browser client default URL changed from wss://relay.example.com/midi to wss://midi.datadadaist.space/midi. Redeploy script added at deploy/redeploy-midi.sh for quick VPS updates (git pull + docker compose rebuild).
