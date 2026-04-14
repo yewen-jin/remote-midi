@@ -212,4 +212,60 @@ describe('Relay', () => {
 
     assert.equal(ws.sent.length, 0);
   });
+
+  it('ignores binary from receivers', () => {
+    const sender = mockWs();
+    const receiver = mockWs();
+    relay.handleConnection(sender);
+    relay.handleConnection(receiver);
+
+    sendText(sender, { type: 'join', room: 'edge', role: 'sender' });
+    sendText(receiver, { type: 'join', room: 'edge', role: 'receiver' });
+
+    // Receiver sends binary — should be silently ignored
+    const senderSentBefore = sender.sent.filter(
+      (m) => typeof m !== 'string',
+    ).length;
+    sendBinary(receiver, [0x90, 0x3c, 0x7f]);
+    const senderSentAfter = sender.sent.filter(
+      (m) => typeof m !== 'string',
+    ).length;
+    assert.equal(senderSentAfter, senderSentBefore);
+  });
+
+  it('handles invalid JSON without crashing', () => {
+    const ws = mockWs();
+    relay.handleConnection(ws);
+
+    ws.emit('message', Buffer.from('{invalid'), false);
+    const msg = lastMessage(ws);
+    assert.equal(msg.type, 'error');
+
+    // Server should still be functional
+    sendText(ws, { type: 'join', room: 'test', role: 'sender' });
+    const messages = ws.sent.map((m) => JSON.parse(m));
+    assert.ok(messages.some((m) => m.type === 'joined'));
+  });
+
+  it('handles rapid connect/disconnect without leaking rooms', () => {
+    for (let i = 0; i < 10; i++) {
+      const ws = mockWs();
+      relay.handleConnection(ws);
+      sendText(ws, { type: 'join', room: `rapid-${i}`, role: 'sender' });
+      closeWs(ws);
+    }
+
+    assert.equal(relay.getRoomCount(), 0);
+    assert.equal(relay.getClientCount(), 0);
+  });
+
+  it('rejects empty room name', () => {
+    const ws = mockWs();
+    relay.handleConnection(ws);
+
+    sendText(ws, { type: 'join', room: '', role: 'sender' });
+    const msg = lastMessage(ws);
+    assert.equal(msg.type, 'error');
+    assert.match(msg.message, /Room name/);
+  });
 });
