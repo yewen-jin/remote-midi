@@ -397,4 +397,16 @@ Subagent: Final pass over all code.
     [ ] 6.3 — pm2 start server/index.js --name midi-relay && pm2 save
     [ ] 6.4 — Verify: curl https://your-domain.com/health
     [ ] 6.5 — End-to-end test with two real machines and MIDI device
+
+[ ] Phase 7: Arduino bridge
+    [ ] 7.1 — client/node/arduino-receiver.js
+              - Connects to relay as receiver
+              - Detects serial port automatically or accepts --port flag
+              - Parses MIDI bytes and writes to Arduino over serial (serialport)
+              - Reconnection with exponential backoff (same as other clients)
+              - --list flag to list available serial ports
+              - --baud flag (default 9600)
+              - Graceful shutdown closes serial port cleanly
+    [ ] 7.2 — Update docs/operations-guide.md with Arduino usage section
+    [ ] 7.3 — Update docs/client-guide.md with Arduino section
 ```
