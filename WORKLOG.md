@@ -110,4 +110,21 @@ Append-only log of all tasks completed during development.
 - Health endpoint is HTTP only (not authenticated)
 
 **Files Changed in Recent Session:**
-- WORKLOG.md: appended comprehensive status (this entry)
+- WORKLOG.md: appended comprehensive status
+- README.md: updated to reflect full project state, added deployment and status sections
+- .claude/agent-memory/decision-logger/MEMORY.md: created project memory for future sessions
+- test/integration.test.js: added resilience and reconnection edge case tests
+
+---
+
+## 2026-04-14T17:15:00Z — Task 7.4: Additional resilience tests
+
+**Status:** completed
+
+**Summary:** Added two new integration tests covering edge cases: unclean receiver disconnect with reconnection, and sender reconnection after dropping. Both tests verify the relay correctly handles client churn and room rejoin operations.
+
+**Files Changed:** test/integration.test.js
+
+**Decision:** Added these tests to validate client reconnection behaviour under real conditions (socket terminate, not clean close). Tests use existing connectClient/drainTextMessages helpers for consistency.
+
+**Test Results:** 48 tests passing (up from 44)
