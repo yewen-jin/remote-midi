@@ -140,45 +140,45 @@ Append-only log of all tasks completed during development.
 
 ## Phase 1 (continued)
 
-| Timestamp | Task | Status | Summary |
-|-----------|------|--------|---------|
-| 2026-04-14 | Task 1.4 — Health check | completed | HTTP handler returning JSON status with uptime, rooms, connections. 3 tests. |
-| 2026-04-14 | Task 1.5 — Server entry point | completed | startServer() factory with config, WS ping/pong, graceful shutdown. Verified manually. |
-| 2026-04-14 | Task 1.6 — Integration tests | completed | 6 end-to-end tests: binary relay, SysEx, multi-sender, reconnect, room isolation, health. |
+| Timestamp  | Task                          | Status    | Summary                                                                                   |
+| ---------- | ----------------------------- | --------- | ----------------------------------------------------------------------------------------- |
+| 2026-04-14 | Task 1.4 — Health check       | completed | HTTP handler returning JSON status with uptime, rooms, connections. 3 tests.              |
+| 2026-04-14 | Task 1.5 — Server entry point | completed | startServer() factory with config, WS ping/pong, graceful shutdown. Verified manually.    |
+| 2026-04-14 | Task 1.6 — Integration tests  | completed | 6 end-to-end tests: binary relay, SysEx, multi-sender, reconnect, room isolation, health. |
 
 ## Phase 2: Client Implementations
 
-| Timestamp | Task | Status | Summary |
-|-----------|------|--------|---------|
-| 2026-04-14 | Task 2.1 — Browser HTML/CSS | completed | Dark theme, monospace, accessible UI with connection config, MIDI device select, status, log. |
-| 2026-04-14 | Task 2.2 — Browser JavaScript | completed | MidiRelayClient class with Web MIDI API binding, reconnection (exp backoff 1s→30s). |
-| 2026-04-14 | Task 2.3+2.4 — Node clients | completed | Sender and receiver CLI scripts with ws, parseArgs, optional easymidi, reconnection. |
+| Timestamp  | Task                          | Status    | Summary                                                                                       |
+| ---------- | ----------------------------- | --------- | --------------------------------------------------------------------------------------------- |
+| 2026-04-14 | Task 2.1 — Browser HTML/CSS   | completed | Dark theme, monospace, accessible UI with connection config, MIDI device select, status, log. |
+| 2026-04-14 | Task 2.2 — Browser JavaScript | completed | MidiRelayClient class with Web MIDI API binding, reconnection (exp backoff 1s→30s).           |
+| 2026-04-14 | Task 2.3+2.4 — Node clients   | completed | Sender and receiver CLI scripts with ws, parseArgs, optional easymidi, reconnection.          |
 
 ## Phase 3: Deployment
 
-| Timestamp | Task | Status | Summary |
-|-----------|------|--------|---------|
-| 2026-04-14 | Task 3.1 — Systemd service | completed | Unit file with security hardening, env file, auto-restart. |
-| 2026-04-14 | Task 3.2 — Nginx config | completed | WSS reverse proxy with upgrade headers, 86400s timeouts. |
-| 2026-04-14 | Task 3.3 — Deploy guide | completed | Step-by-step VPS setup: clone, install, systemd, Nginx, certbot. |
+| Timestamp  | Task                       | Status    | Summary                                                          |
+| ---------- | -------------------------- | --------- | ---------------------------------------------------------------- |
+| 2026-04-14 | Task 3.1 — Systemd service | completed | Unit file with security hardening, env file, auto-restart.       |
+| 2026-04-14 | Task 3.2 — Nginx config    | completed | WSS reverse proxy with upgrade headers, 86400s timeouts.         |
+| 2026-04-14 | Task 3.3 — Deploy guide    | completed | Step-by-step VPS setup: clone, install, systemd, Nginx, certbot. |
 
 ## Phase 4: Documentation
 
-| Timestamp | Task | Status | Summary |
-|-----------|------|--------|---------|
-| 2026-04-14 | Task 4.1 — Client guide | completed | Non-technical walkthrough for browser + Node.js clients. |
-| 2026-04-14 | Task 4.2 — Protocol spec | completed | Full wire protocol with all message types, fields, examples. |
+| Timestamp  | Task                       | Status    | Summary                                                            |
+| ---------- | -------------------------- | --------- | ------------------------------------------------------------------ |
+| 2026-04-14 | Task 4.1 — Client guide    | completed | Non-technical walkthrough for browser + Node.js clients.           |
+| 2026-04-14 | Task 4.2 — Protocol spec   | completed | Full wire protocol with all message types, fields, examples.       |
 | 2026-04-14 | Task 4.3 — Troubleshooting | completed | Common failures and diagnostic steps for connection, MIDI, server. |
-| 2026-04-14 | Task 4.4 — README | completed | Architecture diagram, quick start, env vars, links to docs. |
+| 2026-04-14 | Task 4.4 — README          | completed | Architecture diagram, quick start, env vars, links to docs.        |
 
 ## Phase 5: Hardening & Polish
 
-| Timestamp | Task | Status | Summary |
-|-----------|------|--------|---------|
-| 2026-04-14 | Task 5.1 — Latency measurement | completed | Integration test: avg 0.33ms, max 0.48ms on localhost. App-level ping/pong verified. |
-| 2026-04-14 | Task 5.2 — Resilience audit | completed | Added tests for unclean disconnect, sender rejoin, room recovery. |
-| 2026-04-14 | Task 5.3 — Edge cases | completed | Tests for receiver binary (ignored), invalid JSON, rapid connect/disconnect, empty room. |
-| 2026-04-14 | Task 5.4 — Final cleanup | completed | Migrated to ESLint flat config, Prettier on all files, 52 tests passing, 0 lint errors. |
+| Timestamp  | Task                           | Status    | Summary                                                                                  |
+| ---------- | ------------------------------ | --------- | ---------------------------------------------------------------------------------------- |
+| 2026-04-14 | Task 5.1 — Latency measurement | completed | Integration test: avg 0.33ms, max 0.48ms on localhost. App-level ping/pong verified.     |
+| 2026-04-14 | Task 5.2 — Resilience audit    | completed | Added tests for unclean disconnect, sender rejoin, room recovery.                        |
+| 2026-04-14 | Task 5.3 — Edge cases          | completed | Tests for receiver binary (ignored), invalid JSON, rapid connect/disconnect, empty room. |
+| 2026-04-14 | Task 5.4 — Final cleanup       | completed | Migrated to ESLint flat config, Prettier on all files, 52 tests passing, 0 lint errors.  |
 
 ## Summary
 
@@ -188,21 +188,21 @@ All 21 tasks across 5 phases completed. 52 tests passing. Zero lint errors. Proj
 
 ## Phase 6: Production Deployment Planning
 
-| Timestamp | Task | Status | Summary |
-|-----------|------|--------|---------|
+| Timestamp  | Task                             | Status    | Summary                                                                                                             |
+| ---------- | -------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------- |
 | 2026-04-14 | Deployment environment discovery | completed | Confirmed Krystal.io VPS setup: PM2 manages Node on host, nginx runs as Docker container, routing via host IP/port. |
-| 2026-04-14 | Docker support added | completed | Added Dockerfile (node:20-alpine) and docker-compose.service.yml for teams using Docker. Not used in production. |
-| 2026-04-14 | nginx-location.conf added | completed | Created deploy/nginx-location.conf — minimal location blocks to drop into existing nginx container config. |
-| 2026-04-14 | WORKFLOW.md updated | completed | Marked all phases 0–5 complete, added Phase 6 checklist for actual production deployment steps. |
-| 2026-04-14 | deploy-guide.md rewritten | completed | Rewritten for PM2 + Docker nginx setup. Systemd and Docker alternatives kept as reference sections. |
+| 2026-04-14 | Docker support added             | completed | Added Dockerfile (node:20-alpine) and docker-compose.service.yml for teams using Docker. Not used in production.    |
+| 2026-04-14 | nginx-location.conf added        | completed | Created deploy/nginx-location.conf — minimal location blocks to drop into existing nginx container config.          |
+| 2026-04-14 | WORKFLOW.md updated              | completed | Marked all phases 0–5 complete, added Phase 6 checklist for actual production deployment steps.                     |
+| 2026-04-14 | deploy-guide.md rewritten        | completed | Rewritten for PM2 + Docker nginx setup. Systemd and Docker alternatives kept as reference sections.                 |
 
 **Decision note:** Skipping Docker for the relay itself — host PM2 is simpler and consistent with the existing app on the VPS. Docker is provided as an optional alternative for other environments.
 
 ## Phase 7: Arduino Integration
 
-| Timestamp | Task | Status | Summary |
-|-----------|------|--------|---------|
-| 2026-04-14 | Task 7.1 — Arduino receiver bridge | completed | arduino-receiver.js with serialport auto-detect, reconnection, --list/--port/--baud flags. |
+| Timestamp  | Task                                | Status    | Summary                                                                                      |
+| ---------- | ----------------------------------- | --------- | -------------------------------------------------------------------------------------------- |
+| 2026-04-14 | Task 7.1 — Arduino receiver bridge  | completed | arduino-receiver.js with serialport auto-detect, reconnection, --list/--port/--baud flags.   |
 | 2026-04-14 | Task 7.2 — Operations guide updated | completed | Added Arduino section to operations-guide.md with usage examples and Arduino sketch snippet. |
 
 ---
@@ -262,3 +262,12 @@ All 21 tasks across 5 phases completed. 52 tests passing. Zero lint errors. Proj
 **Commit:** dccc321
 
 **Notes:** Browser client default URL changed from wss://relay.example.com/midi to wss://midi.datadadaist.space/midi. Redeploy script added at deploy/redeploy-midi.sh for quick VPS updates (git pull + docker compose rebuild).
+
+---
+
+## 2026-04-14T21:55:00Z — Neo-brutalist browser client redesign
+
+**Status:** completed
+**Summary:** Redesigned browser client with neo-brutalist design system: hard edges (no border-radius), offset box-shadows, Space Mono font, day/night theme toggle with localStorage persistence, bold uppercase headings, accent buttons. All 68 tests passing.
+**Commit:** (pending)
+**Notes:** Added data-theme toggle (day/night) with system preference fallback via prefers-color-scheme. Button classes: btn, btn-outline, btn-accent, btn-sm. Google Fonts import for Space Mono.
