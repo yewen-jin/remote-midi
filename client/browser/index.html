@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MIDI Relay — Speakers Corner</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>MIDI Relay</h1>
+      <p class="subtitle">Speakers Corner — Remote MIDI Control</p>
+    </header>
+
+    <main>
+      <!-- Connection configuration -->
+      <section id="connection-config" class="panel">
+        <h2>Connection</h2>
+        <div class="form-group">
+          <label for="relay-url">Relay URL</label>
+          <input
+            type="text"
+            id="relay-url"
+            value="wss://relay.example.com/midi"
+            placeholder="wss://relay.example.com/midi"
+          />
+        </div>
+        <div class="form-group">
+          <label for="room-name">Room</label>
+          <input
+            type="text"
+            id="room-name"
+            value="speakers-corner-2026"
+            placeholder="Room name"
+          />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="client-role">Role</label>
+            <select id="client-role">
+              <option value="sender">Sender</option>
+              <option value="receiver">Receiver</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="client-name">Name (optional)</label>
+            <input
+              type="text"
+              id="client-name"
+              placeholder="e.g. piano-1"
+            />
+          </div>
+        </div>
+        <div class="button-row">
+          <button id="connect-btn" type="button">Connect</button>
+          <button id="disconnect-btn" type="button" disabled>
+            Disconnect
+          </button>
+        </div>
+      </section>
+
+      <!-- MIDI device selection -->
+      <section id="midi-config" class="panel">
+        <h2>MIDI Device</h2>
+        <div class="form-group">
+          <label for="midi-device">
+            <span id="midi-device-label">Input Device (Sender)</span>
+          </label>
+          <select id="midi-device">
+            <option value="">— No MIDI access —</option>
+          </select>
+          <button id="midi-refresh-btn" type="button">Refresh</button>
+        </div>
+        <p id="midi-status" class="status-text">
+          Web MIDI not initialised yet.
+        </p>
+      </section>
+
+      <!-- Status display -->
+      <section id="status-panel" class="panel">
+        <h2>Status</h2>
+        <div class="status-grid">
+          <div class="status-item">
+            <span class="status-label">Connection</span>
+            <span id="connection-status" class="status-value disconnected"
+              >Disconnected</span
+            >
+          </div>
+          <div class="status-item">
+            <span class="status-label">Room</span>
+            <span id="room-status" class="status-value">—</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Senders</span>
+            <span id="senders-count" class="status-value">0</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Receivers</span>
+            <span id="receivers-count" class="status-value">0</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Latency</span>
+            <span id="latency-display" class="status-value">— ms</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Activity log -->
+      <section id="log-panel" class="panel">
+        <h2>
+          Activity Log
+          <button id="clear-log-btn" type="button" class="small-btn">
+            Clear
+          </button>
+        </h2>
+        <div id="activity-log" role="log" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Speakers Corner MIDI Relay &mdash; <span id="version">v0.1.0</span></p>
+    </footer>
+
+    <script type="module" src="midi-relay-client.js"></script>
+  </body>
+</html>
