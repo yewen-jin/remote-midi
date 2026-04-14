@@ -7,11 +7,11 @@ A real-time WebSocket relay server that forwards MIDI bytes between a sender and
 Enables remote MIDI control of robotic installations without requiring inbound firewall configuration. Both the sender and receiver connect **outbound** to the relay server — neither side needs to accept inbound connections.
 
 ```
-┌─────────────┐         WSS          ┌──────────────┐         WSS          ┌──────────────┐
-│ MIDI Sender  │ ──────────────────► │  Relay Server │ ──────────────────► │ MIDI Receiver │
-│ (Browser or  │   outbound only     │  (VPS/Nginx)  │   outbound only     │ (Browser or   │
-│  Node client)│                     │               │                     │  Node client)  │
-└─────────────┘                     └──────────────┘                     └──────────────┘
+┌─────────────┐         WSS        ┌──────────────┐         WSS         ┌───────────────┐
+│ MIDI Sender │ ─────────────────► │ Relay Server │ ──────────────────► │ MIDI Receiver │
+│ (Browser or │   outbound only    │ (VPS/Nginx)  │   outbound only     │ (Browser or   │
+│ Node client)│                    │              │                     │  Node client) │
+└─────────────┘                    └──────────────┘                     └───────────────┘
 ```
 
 **Key features:**

@@ -183,3 +183,17 @@ Append-only log of all tasks completed during development.
 ## Summary
 
 All 21 tasks across 5 phases completed. 52 tests passing. Zero lint errors. Project ready for alpha testing.
+
+---
+
+## Phase 6: Production Deployment Planning
+
+| Timestamp | Task | Status | Summary |
+|-----------|------|--------|---------|
+| 2026-04-14 | Deployment environment discovery | completed | Confirmed Krystal.io VPS setup: PM2 manages Node on host, nginx runs as Docker container, routing via host IP/port. |
+| 2026-04-14 | Docker support added | completed | Added Dockerfile (node:20-alpine) and docker-compose.service.yml for teams using Docker. Not used in production. |
+| 2026-04-14 | nginx-location.conf added | completed | Created deploy/nginx-location.conf — minimal location blocks to drop into existing nginx container config. |
+| 2026-04-14 | WORKFLOW.md updated | completed | Marked all phases 0–5 complete, added Phase 6 checklist for actual production deployment steps. |
+| 2026-04-14 | deploy-guide.md rewritten | completed | Rewritten for PM2 + Docker nginx setup. Systemd and Docker alternatives kept as reference sections. |
+
+**Decision note:** Skipping Docker for the relay itself — host PM2 is simpler and consistent with the existing app on the VPS. Docker is provided as an optional alternative for other environments.
