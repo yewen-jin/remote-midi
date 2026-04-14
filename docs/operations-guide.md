@@ -31,7 +31,7 @@ Practical notes on testing, deployment, and usage based on the actual setup.
    Replace `chat.datadadaist.space` → `midi.datadadaist.space`, swap the proxy location with `deploy/nginx-location.conf`, and add a static files location for the browser client:
    ```nginx
    location / {
-       root /home/YOUR_USER/midi-relay/client/browser; # replace YOUR_USER with your username
+       root /home/yewen/remote-midi/client/browser; # replace YOUR_USER with your username
        index index.html;
    }
    ```
@@ -160,8 +160,8 @@ The format is always `ws://` or `wss://` — not `http://`.
 ### 1. Clone and install
 
 ```bash
-git clone <repo-url> ~/midi-relay
-cd ~/midi-relay
+git clone <repo-url> ~/remote-midi
+cd ~/remote-midi
 npm install --production
 ```
 
@@ -176,7 +176,7 @@ docker exec <nginx-container> nginx -s reload
 ### 3. Start with PM2
 
 ```bash
-pm2 start server/index.js --name midi-relay
+pm2 start ~/remote-midi/server/index.js --name midi-relay
 pm2 save
 ```
 
@@ -196,7 +196,7 @@ curl https://your-domain.com/health
 ### Updating
 
 ```bash
-cd ~/midi-relay
+cd ~/remote-midi
 git pull
 npm install --production
 pm2 restart midi-relay
@@ -216,7 +216,7 @@ Add a static files location block to nginx alongside the `/midi` block:
 
 ```nginx
 location / {
-    root /home/YOUR_USER/midi-relay/client/browser; # replace YOUR_USER with your username
+    root /home/yewen/remote-midi/client/browser; # replace YOUR_USER with your username
     index index.html;
 }
 ```

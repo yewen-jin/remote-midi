@@ -26,8 +26,8 @@ If your setup is different (bare nginx, systemd, etc.) see the [Alternative setu
 ### 1. Clone the repository on the VPS
 
 ```bash
-git clone <your-repo-url> ~/midi-relay
-cd ~/midi-relay
+git clone <your-repo-url> ~/remote-midi
+cd ~/remote-midi
 ```
 
 ### 2. Install production dependencies
@@ -39,7 +39,7 @@ npm install --production
 ### 3. Start with PM2
 
 ```bash
-pm2 start server/index.js --name midi-relay
+pm2 start ~/remote-midi/server/index.js --name midi-relay
 pm2 save
 ```
 
@@ -117,7 +117,7 @@ In `/srv/reverse-proxy/docker-compose.yml`, add under `services:`:
       LETSENCRYPT_HOST: <url> 
       LETSENCRYPT_EMAIL: hello@yewenjin.com
     volumes:
-      - /home/<username>/midi-relay/client/browser:/usr/share/nginx/html:ro
+      - /home/yewen/remote-midi/client/browser:/usr/share/nginx/html:ro
       - /srv/reverse-proxy/nginx-config/midi-relay-web.conf:/etc/nginx/conf.d/default.conf:ro
     extra_hosts:
       - "host.docker.internal:host-gateway"
