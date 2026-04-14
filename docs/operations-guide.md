@@ -15,6 +15,7 @@ Practical notes on testing, deployment, and usage based on the actual setup.
 ### Adding the subdomain
 
 1. **DNS** — add an A record at your DNS provider:
+
    ```
    Type:  A
    Name:  midi
@@ -25,10 +26,12 @@ Practical notes on testing, deployment, and usage based on the actual setup.
 2. **docker-compose** — add the `midi-relay` service to `/srv/reverse-proxy/docker-compose.yml`. See `deploy/docker-compose.service.yml` for the full block.
 
 3. **Build and start:**
+
    ```bash
    cd /srv/reverse-proxy
    docker compose up -d --build midi-relay
    ```
+
    TLS is provisioned automatically by `acme-companion`.
 
 4. **Verify** (allow a minute for TLS provisioning):
@@ -61,6 +64,7 @@ Go to `http://localhost:8080` in **Chrome, Edge, or Opera** (Firefox does not su
 > The client must be served over HTTP — opening `index.html` directly as `file://` won't work because of ES module restrictions.
 
 Set the relay URL to:
+
 ```
 ws://127.0.0.1:3500/midi
 ```
@@ -68,6 +72,7 @@ ws://127.0.0.1:3500/midi
 ### 4. Test sender → receiver
 
 Open two tabs:
+
 - **Tab 1:** role = Sender, connect
 - **Tab 2:** role = Receiver, same room name, connect
 
@@ -105,16 +110,16 @@ No server needs to be running first — the test starts its own relay on a rando
 
 ### Benchmark results (localhost)
 
-| Metric | Result |
-|--------|--------|
-| Senders | 5 |
-| Receivers | 5 |
-| Rate per sender | 48 msg/s |
+| Metric              | Result         |
+| ------------------- | -------------- |
+| Senders             | 5              |
+| Receivers           | 5              |
+| Rate per sender     | 48 msg/s       |
 | Total messages sent | ~1,400 over 8s |
-| Dropped | 0 (0.00%) |
-| Sequence gaps | 0 |
-| Relay latency (avg) | 0.33 ms |
-| Relay latency (max) | 0.48 ms |
+| Dropped             | 0 (0.00%)      |
+| Sequence gaps       | 0              |
+| Relay latency (avg) | 0.33 ms        |
+| Relay latency (max) | 0.48 ms        |
 
 ---
 
@@ -130,10 +135,10 @@ The receiver is purely passive after connecting. Data arrives as the sender tran
 
 ## URLs
 
-| Environment | Relay URL | Notes |
-|-------------|-----------|-------|
-| Local testing | `ws://127.0.0.1:3500/midi` | No TLS needed locally |
-| Production | `wss://your-domain.com/midi` | WSS = WebSocket over TLS |
+| Environment   | Relay URL                    | Notes                    |
+| ------------- | ---------------------------- | ------------------------ |
+| Local testing | `ws://127.0.0.1:3500/midi`   | No TLS needed locally    |
+| Production    | `wss://your-domain.com/midi` | WSS = WebSocket over TLS |
 
 The format is always `ws://` or `wss://` — not `http://`.
 
@@ -181,6 +186,7 @@ docker logs midi-relay -f
 The relay server serves the browser client directly — the Dockerfile copies `client/browser/` into the container and the server serves static files on `/`.
 
 Once deployed:
+
 - `https://your-domain.com` → browser client page (anyone can open this in Chrome)
 - `wss://your-domain.com/midi` → relay WebSocket endpoint
 
@@ -192,11 +198,11 @@ Users go to your domain, enter the room name, choose their role, and connect —
 
 Once a client connects as **Receiver**, data arrives automatically — nothing else to do. Options:
 
-| Method | How |
-|--------|-----|
-| Browser tab | Open client page, role = Receiver, connect. Bytes appear in the activity log. |
+| Method                | How                                                                                                          |
+| --------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Browser tab           | Open client page, role = Receiver, connect. Bytes appear in the activity log.                                |
 | Browser → MIDI device | Same as above, but select a MIDI output device in the UI to forward bytes to hardware or a DAW virtual port. |
-| Node.js (headless) | `node client/node/receiver.js --url wss://your-domain.com/midi --room your-room` |
+| Node.js (headless)    | `node client/node/receiver.js --url wss://your-domain.com/midi --room your-room`                             |
 
 ---
 
@@ -238,15 +244,15 @@ node client/node/arduino-receiver.js \
 
 ### CLI options
 
-| Flag | Default | Description |
-|------|---------|-------------|
-| `--url` | `ws://127.0.0.1:3500/midi` | Relay WebSocket URL |
-| `--room` | `speakers-corner-2026` | Room name to join |
-| `--name` | `arduino-1` | Display name shown to other clients |
-| `--port` | *(auto-detect)* | Serial port path (e.g. `/dev/ttyUSB0`, `COM3`) |
-| `--baud` | `9600` | Baud rate for the serial connection |
-| `--list` | | List available serial ports and exit |
-| `-h`, `--help` | | Show help message |
+| Flag           | Default                    | Description                                    |
+| -------------- | -------------------------- | ---------------------------------------------- |
+| `--url`        | `ws://127.0.0.1:3500/midi` | Relay WebSocket URL                            |
+| `--room`       | `speakers-corner-2026`     | Room name to join                              |
+| `--name`       | `arduino-1`                | Display name shown to other clients            |
+| `--port`       | _(auto-detect)_            | Serial port path (e.g. `/dev/ttyUSB0`, `COM3`) |
+| `--baud`       | `9600`                     | Baud rate for the serial connection            |
+| `--list`       |                            | List available serial ports and exit           |
+| `-h`, `--help` |                            | Show help message                              |
 
 ### Reconnection behaviour
 

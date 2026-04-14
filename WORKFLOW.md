@@ -214,6 +214,7 @@ Subagent: Create client/node/receiver.js
 ## Phase 3: Deployment Configuration
 
 > **Actual production setup (Krystal.io VPS):**
+>
 > - nginx runs as a **Docker container** (existing, shared with other apps)
 > - Node.js apps are managed by **PM2 on the host** (not systemd, not Docker)
 > - nginx routes to apps via host IP/port (e.g. `proxy_pass http://127.0.0.1:3500`)

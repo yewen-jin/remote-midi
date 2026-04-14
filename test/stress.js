@@ -16,11 +16,11 @@ import { WebSocket } from 'ws';
 const ROOM = 'stress-test';
 const NUM_SENDERS = 5;
 const NUM_RECEIVERS = 5;
-const MSG_RATE_HZ = 48;                       // 120 BPM × 24 ppqn
-const MSG_INTERVAL_MS = 1000 / MSG_RATE_HZ;  // ~20.83 ms
-const PHASE_DURATION_MS = 5000;              // 5 s normal run
-const RECONNECT_DELAY_MS = 1000;             // wait before reconnect
-const RECONNECT_PHASE_MS = 3000;             // additional run after reconnect
+const MSG_RATE_HZ = 48; // 120 BPM × 24 ppqn
+const MSG_INTERVAL_MS = 1000 / MSG_RATE_HZ; // ~20.83 ms
+const PHASE_DURATION_MS = 5000; // 5 s normal run
+const RECONNECT_DELAY_MS = 1000; // wait before reconnect
+const RECONNECT_PHASE_MS = 3000; // additional run after reconnect
 
 // ── Helpers ──────────────────────────────────────────────────────
 
@@ -166,7 +166,9 @@ async function main() {
   const newWs = await joinRoom(url, 'sender', 'sender-0');
   senderSockets[0] = newWs;
   const newStop = startSending(newWs, 0);
-  console.log(`[${ts()}] sender-0 reconnected. Resuming for ${RECONNECT_PHASE_MS / 1000}s…`);
+  console.log(
+    `[${ts()}] sender-0 reconnected. Resuming for ${RECONNECT_PHASE_MS / 1000}s…`,
+  );
 
   await sleep(RECONNECT_PHASE_MS);
   newStop();
@@ -218,7 +220,9 @@ async function main() {
   console.log(
     `  Reconnect:     sender-0 killed and rejoined — resumed from seq ${sentAfterPhase1[0]}, ended at ${sent[0]}`,
   );
-  console.log(`\n  Result: ${allPassed ? 'ALL PASS ✓' : 'FAILURES DETECTED ✗'}`);
+  console.log(
+    `\n  Result: ${allPassed ? 'ALL PASS ✓' : 'FAILURES DETECTED ✗'}`,
+  );
   console.log('══════════════════════════════════════════\n');
 
   // ── Teardown ───────────────────────────────────────────────────

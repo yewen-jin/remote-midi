@@ -17,6 +17,14 @@ export default [
     },
   },
   {
+    files: ['client/browser/**/*.js'],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+      },
+    },
+  },
+  {
     ignores: ['node_modules/', 'logs/'],
   },
 ];
