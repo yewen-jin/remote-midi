@@ -22,6 +22,18 @@ Common issues and diagnostic steps for the MIDI relay system.
 
 The room has reached its maximum capacity (default: 20 clients). Ask the operator to increase `MAX_CLIENTS_PER_ROOM` or use a different room name.
 
+### "Too many connections" error
+
+Your IP address has exceeded the concurrent connection limit (default: 10). This typically happens if you have many browser tabs open to the relay. Close unused tabs, or ask the operator to increase `MAX_CONNECTIONS_PER_IP`.
+
+### "Connection rate limit exceeded" error
+
+Your IP has opened too many new connections within a short window (default: 20 per 60 seconds). Wait a moment and try again. This usually means something is rapidly reconnecting — check your client for a reconnection loop.
+
+### MIDI notes are being dropped intermittently
+
+If the relay is dropping messages, the per-connection message rate limit (default: 500 messages/second) may have been reached. This is unlikely during normal play, but could happen with very high-frequency MIDI clock sync or large SysEx transfers. The operator can increase `MESSAGE_RATE_LIMIT` if needed.
+
 ## MIDI Issues
 
 ### No MIDI devices listed (browser)

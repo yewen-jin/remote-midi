@@ -22,6 +22,7 @@ Enables remote MIDI control of robotic installations without requiring inbound f
 - Automatic reconnection with exponential backoff
 - TLS/WSS encryption with Nginx reverse proxy (production)
 - Minimal dependencies (only `ws` library)
+- Per-IP and per-connection rate limiting
 
 ## Quick Start
 
@@ -69,15 +70,19 @@ node client/node/receiver.js --url ws://127.0.0.1:3500/midi --room my-room
 
 ### Environment Variables
 
-| Variable               | Default     | Description                                  |
-| ---------------------- | ----------- | -------------------------------------------- |
-| `PORT`                 | `3500`      | Server listen port                           |
-| `HOST`                 | `127.0.0.1` | Bind address (use 0.0.0.0 in Docker)         |
-| `WS_PATH`              | `/midi`     | WebSocket endpoint path                      |
-| `PING_INTERVAL_MS`     | `15000`     | WebSocket ping interval (ms)                 |
-| `PING_TIMEOUT_MS`      | `30000`     | Connection dead timeout (ms)                 |
-| `MAX_ROOMS`            | `50`        | Maximum concurrent rooms                     |
-| `MAX_CLIENTS_PER_ROOM` | `20`        | Maximum clients per room                     |
+| Variable                 | Default     | Description                            |
+| ------------------------ | ----------- | -------------------------------------- |
+| `PORT`                   | `3500`      | Server listen port                     |
+| `HOST`                   | `127.0.0.1` | Bind address (use 0.0.0.0 in Docker)   |
+| `WS_PATH`                | `/midi`     | WebSocket endpoint path                |
+| `PING_INTERVAL_MS`       | `15000`     | WebSocket ping interval (ms)           |
+| `PING_TIMEOUT_MS`        | `30000`     | Connection dead timeout (ms)           |
+| `MAX_ROOMS`              | `50`        | Maximum concurrent rooms               |
+| `MAX_CLIENTS_PER_ROOM`   | `20`        | Maximum clients per room               |
+| `MAX_CONNECTIONS_PER_IP` | `10`        | Max concurrent connections per IP      |
+| `CONNECT_RATE_LIMIT`     | `20`        | Max new connections per IP per window  |
+| `CONNECT_RATE_WINDOW_MS` | `60000`     | Connection rate window (ms)            |
+| `MESSAGE_RATE_LIMIT`     | `500`       | Max messages per second per connection |
 
 ## Testing
 
@@ -85,13 +90,14 @@ node client/node/receiver.js --url ws://127.0.0.1:3500/midi --room my-room
 npm test
 ```
 
-Uses Node's built-in test runner. All 52 tests passing:
+Uses Node's built-in test runner. All 68 tests passing:
 
 - Protocol parsing: 17 tests
 - Room management: 7 tests
-- Relay logic: 15 tests
+- Relay logic: 17 tests
 - Health endpoint: 3 tests
-- Integration (end-to-end): 10 tests
+- Rate limiting: 13 tests
+- Integration (end-to-end): 11 tests
 
 ## Deployment
 
@@ -140,11 +146,11 @@ To route MIDI from the relay into a DAW, you need a virtual MIDI port — a soft
 
 ### 1. Create a virtual MIDI port
 
-| OS | Tool | Setup |
-|---|---|---|
-| macOS | IAC Driver (built-in) | Open **Audio MIDI Setup** → **Window** → **Show MIDI Studio** → double-click **IAC Driver** → tick **Device is online** |
-| Windows | loopMIDI | Install [loopMIDI](https://www.tobias-erichsen.de/software/loopmidi.html) → click **+** to create a port |
-| Linux | ALSA virmidi | `sudo modprobe snd-virmidi` — creates virtual MIDI ports |
+| OS      | Tool                  | Setup                                                                                                                   |
+| ------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| macOS   | IAC Driver (built-in) | Open **Audio MIDI Setup** → **Window** → **Show MIDI Studio** → double-click **IAC Driver** → tick **Device is online** |
+| Windows | loopMIDI              | Install [loopMIDI](https://www.tobias-erichsen.de/software/loopmidi.html) → click **+** to create a port                |
+| Linux   | ALSA virmidi          | `sudo modprobe snd-virmidi` — creates virtual MIDI ports                                                                |
 
 ### 2. Connect the browser client
 

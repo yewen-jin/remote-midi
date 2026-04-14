@@ -22,9 +22,13 @@ services:
       PING_TIMEOUT_MS: 30000
       MAX_ROOMS: 50
       MAX_CLIENTS_PER_ROOM: 20
+      MAX_CONNECTIONS_PER_IP: 10
+      CONNECT_RATE_LIMIT: 20
+      CONNECT_RATE_WINDOW_MS: 60000
+      MESSAGE_RATE_LIMIT: 500
       VIRTUAL_HOST: <url>
       VIRTUAL_PORT: 3500
       LETSENCRYPT_HOST: <url>
       LETSENCRYPT_EMAIL: <your-email>
     expose:
-      - "3500"
+      - '3500'

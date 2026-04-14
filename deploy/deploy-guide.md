@@ -10,6 +10,7 @@ This guide covers the actual production environment:
 - **Relay** — runs as a Docker container on the `proxy` network (same pattern as `chatroom-web`)
 
 Traffic flow:
+
 ```
 internet → nginx-proxy (443/TLS) → midi-relay container (3500) → WebSocket clients
 ```
@@ -42,25 +43,29 @@ TTL:   3600
 In `/srv/reverse-proxy/docker-compose.yml`, add under `services:`:
 
 ```yaml
-  midi-relay:
-    build: /home/<username>/remote-midi
-    container_name: midi-relay
-    restart: unless-stopped
-    networks: [proxy]
-    environment:
-      PORT: 3500
-      HOST: 0.0.0.0
-      WS_PATH: /midi
-      PING_INTERVAL_MS: 15000
-      PING_TIMEOUT_MS: 30000
-      MAX_ROOMS: 50
-      MAX_CLIENTS_PER_ROOM: 20
-      VIRTUAL_HOST: <url>
-      VIRTUAL_PORT: 3500
-      LETSENCRYPT_HOST: <url>
-      LETSENCRYPT_EMAIL: <your-email>
-    expose:
-      - "3500"
+midi-relay:
+  build: /home/<username>/remote-midi
+  container_name: midi-relay
+  restart: unless-stopped
+  networks: [proxy]
+  environment:
+    PORT: 3500
+    HOST: 0.0.0.0
+    WS_PATH: /midi
+    PING_INTERVAL_MS: 15000
+    PING_TIMEOUT_MS: 30000
+    MAX_ROOMS: 50
+    MAX_CLIENTS_PER_ROOM: 20
+    MAX_CONNECTIONS_PER_IP: 10
+    CONNECT_RATE_LIMIT: 20
+    CONNECT_RATE_WINDOW_MS: 60000
+    MESSAGE_RATE_LIMIT: 500
+    VIRTUAL_HOST: <url>
+    VIRTUAL_PORT: 3500
+    LETSENCRYPT_HOST: <url>
+    LETSENCRYPT_EMAIL: <your-email>
+  expose:
+    - '3500'
 ```
 
 > `VIRTUAL_PORT: 3500` tells nginx-proxy which port the relay listens on (default is 80).

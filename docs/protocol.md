@@ -143,12 +143,18 @@ Raw MIDI bytes are sent as binary WebSocket frames with **no additional framing*
 
 ## Limits
 
-| Limit                | Default | Env variable           |
-| -------------------- | ------- | ---------------------- |
-| Maximum rooms        | 50      | `MAX_ROOMS`            |
-| Maximum clients/room | 20      | `MAX_CLIENTS_PER_ROOM` |
+| Limit                         | Default | Env variable             |
+| ----------------------------- | ------- | ------------------------ |
+| Maximum rooms                 | 50      | `MAX_ROOMS`              |
+| Maximum clients/room          | 20      | `MAX_CLIENTS_PER_ROOM`   |
+| Concurrent connections/IP     | 10      | `MAX_CONNECTIONS_PER_IP` |
+| New connections/IP per window | 20      | `CONNECT_RATE_LIMIT`     |
+| Connection rate window        | 60 s    | `CONNECT_RATE_WINDOW_MS` |
+| Messages/second/connection    | 500     | `MESSAGE_RATE_LIMIT`     |
 
-When a limit is reached, the server responds with an `error` message and does not join the client to the room.
+When a room or connection limit is reached, the server responds with an `error` message. For room limits, the client is not joined. For connection limits, the WebSocket is closed with code `1008`.
+
+Message rate limiting uses a token-bucket algorithm. Excess messages are silently dropped rather than disconnecting the client — this avoids disrupting MIDI clock bursts that temporarily exceed the limit.
 
 ## Keepalive
 
