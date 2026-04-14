@@ -7,9 +7,50 @@ Practical notes on testing, deployment, and usage based on the actual setup.
 ## Production environment
 
 - **VPS:** Krystal.io
+- **Domain:** `midi.datadadaist.space` (subdomain of `datadadaist.space`)
 - **nginx:** runs as a Docker container (shared with other apps, TLS already configured)
 - **Node.js apps:** managed by PM2 on the host — not Docker
 - **nginx routing:** via host IP/port (`proxy_pass http://127.0.0.1:3500`)
+- **Existing subdomain pattern:** `chat.datadadaist.space` already points to the same VPS — use that config as the reference when adding `midi.datadadaist.space`
+
+### Adding the subdomain
+
+1. **DNS** — add an A record at your DNS provider:
+   ```
+   Type:  A
+   Name:  midi
+   Value: <VPS IP>   # find with: curl ifconfig.me
+   TTL:   3600
+   ```
+
+2. **nginx** — find the `chat.datadadaist.space` config and copy it as a template:
+   ```bash
+   docker exec <nginx-container> cat /etc/nginx/conf.d/chat.conf
+   # or wherever your nginx configs live
+   ```
+   Replace `chat.datadadaist.space` → `midi.datadadaist.space`, swap the proxy location with `deploy/nginx-location.conf`, and add a static files location for the browser client:
+   ```nginx
+   location / {
+       root /opt/midi-relay/client/browser;
+       index index.html;
+   }
+   ```
+
+3. **TLS** — obtain a cert the same way you did for `chat`:
+   ```bash
+   certbot certonly -d midi.datadadaist.space
+   # or however certbot is configured in your nginx container
+   ```
+
+4. **Reload nginx:**
+   ```bash
+   docker exec <nginx-container> nginx -s reload
+   ```
+
+5. **Verify:**
+   ```bash
+   curl https://midi.datadadaist.space/health
+   ```
 
 ---
 
