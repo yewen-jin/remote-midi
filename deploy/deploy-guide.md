@@ -17,8 +17,8 @@ If your setup is different (bare nginx, systemd, etc.) see the [Alternative setu
 ### 1. Clone the repository on your VPS
 
 ```bash
-git clone <your-repo-url> /opt/midi-relay
-cd /opt/midi-relay
+git clone <your-repo-url> ~/midi-relay
+cd ~/midi-relay
 ```
 
 ### 2. Install production dependencies
@@ -110,7 +110,7 @@ npx wscat -c wss://your-domain.com/midi
 ## Updating
 
 ```bash
-cd /opt/midi-relay
+cd ~/midi-relay
 git pull
 npm install --production
 pm2 restart midi-relay
