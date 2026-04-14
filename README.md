@@ -134,6 +134,42 @@ For detailed instructions, see [`deploy/deploy-guide.md`](deploy/deploy-guide.md
 4. The relay forwards binary frames to all receivers in the same room
 5. The relay never inspects or modifies MIDI data — it is a transparent byte pipe
 
+## Using with a DAW (Ableton, Logic, etc.)
+
+To route MIDI from the relay into a DAW, you need a virtual MIDI port — a software loopback that connects the browser client's output to the DAW's input.
+
+### 1. Create a virtual MIDI port
+
+| OS | Tool | Setup |
+|---|---|---|
+| macOS | IAC Driver (built-in) | Open **Audio MIDI Setup** → **Window** → **Show MIDI Studio** → double-click **IAC Driver** → tick **Device is online** |
+| Windows | loopMIDI | Install [loopMIDI](https://www.tobias-erichsen.de/software/loopmidi.html) → click **+** to create a port |
+| Linux | ALSA virmidi | `sudo modprobe snd-virmidi` — creates virtual MIDI ports |
+
+### 2. Connect the browser client
+
+1. Open `https://midi.datadadaist.space` in Chrome
+2. Set role to **Receiver**, enter the room name, connect
+3. In the **MIDI Output** dropdown, select your virtual MIDI port (e.g. "IAC Driver Bus 1" or "loopMIDI Port")
+
+### 3. Configure the DAW
+
+- **Ableton Live:** Preferences → Link/Tempo/MIDI → under MIDI Ports, enable **Track** and **Remote** for the virtual port's input
+- **Logic Pro:** the IAC Driver appears automatically as a MIDI input
+- **Other DAWs:** look for the virtual port in MIDI input/device settings
+
+MIDI data now flows: **relay → browser → virtual port → DAW**
+
+### 4. Sending from a DAW
+
+To send MIDI from a DAW to the relay:
+
+1. Set the DAW's MIDI output to the virtual port
+2. Open the browser client as **Sender**
+3. Select the virtual port as the **MIDI Input**
+
+MIDI data flows: **DAW → virtual port → browser → relay → receivers**
+
 ## Key Design Decisions
 
 - **Binary frames for MIDI** — no JSON wrapping, minimal serialisation overhead
