@@ -364,7 +364,17 @@ select {
 }
 
 .log-info {
+  color: #1565c0;
+}
+
+[data-theme='night'] .log-info {
   color: var(--status-ok);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='day']) .log-info {
+    color: var(--status-ok);
+  }
 }
 
 .log-warn {
