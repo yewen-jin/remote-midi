@@ -213,47 +213,34 @@ Subagent: Create client/node/receiver.js
 
 ## Phase 3: Deployment Configuration
 
+> **Actual production setup (Krystal.io VPS):**
+> - nginx runs as a **Docker container** (existing, shared with other apps)
+> - Node.js apps are managed by **PM2 on the host** (not systemd, not Docker)
+> - nginx routes to apps via host IP/port (e.g. `proxy_pass http://127.0.0.1:3500`)
+> - TLS is already configured on the nginx container
+
 ### Task 3.1 — Systemd service file
 
 ```
-Subagent: Create deploy/midi-relay.service
-- Standard systemd unit for a Node.js service
-- WorkingDirectory, ExecStart (node server/index.js), User
-- Restart=always, RestartSec=5
-- EnvironmentFile for config
-- Commit: "deploy: systemd service unit file"
+Created deploy/midi-relay.service (kept for reference / alternative setups).
+Not used in production — PM2 handles process management.
+Commit: "deploy: systemd service unit file"
 ```
 
 ### Task 3.2 — Nginx config
 
 ```
-Subagent: Create deploy/nginx-site.conf
-- Server block for relay.example.com (placeholder domain)
-- SSL with Let's Encrypt cert paths
-- WebSocket upgrade handling (Connection: upgrade, Upgrade: websocket)
-- Proxy pass to localhost:3500
-- proxy_read_timeout 86400s (keep WebSocket alive)
-- proxy_send_timeout 86400s
-- Health check location pass-through
-- Commit: "deploy: Nginx reverse proxy config with WSS"
+Created deploy/nginx-site.conf (full standalone config, for reference).
+Created deploy/nginx-location.conf — the actual file to use:
+  add these location blocks to the existing nginx container server{} block.
+Commit: "deploy: Nginx reverse proxy config with WSS"
 ```
 
 ### Task 3.3 — Deployment guide
 
 ```
-Subagent: Create deploy/deploy-guide.md
-- Step-by-step instructions for deploying to a fresh VPS:
-  1. Clone the repo
-  2. Install Node.js 20 LTS
-  3. npm install --production
-  4. Copy and edit environment file
-  5. Install systemd service
-  6. Configure Nginx
-  7. Obtain SSL cert with certbot
-  8. Start service, verify health endpoint
-  9. Test with wscat
-- Include commands for checking logs, restarting, updating
-- Commit: "docs: deployment guide for VPS setup"
+Created deploy/deploy-guide.md — updated to reflect PM2 + Docker nginx setup.
+Commit: "docs: deployment guide for VPS setup"
 ```
 
 ---
@@ -368,41 +355,46 @@ Subagent: Final pass over all code.
 
 ## Execution Checklist
 
-Copy this to track progress:
-
 ```
-[ ] Phase 0: Scaffolding
-    [ ] 0.1 — Initialise project
-    [ ] 0.2 — Install dependencies
+[x] Phase 0: Scaffolding
+    [x] 0.1 — Initialise project
+    [x] 0.2 — Install dependencies
 
-[ ] Phase 1: Core Server
-    [ ] 1.1 — Protocol definition
-    [ ] 1.2 — Room management
-    [ ] 1.3 — Relay core
-    [ ] 1.4 — Health check
-    [ ] 1.5 — Server entry point
-    [ ] 1.6 — Integration test
+[x] Phase 1: Core Server
+    [x] 1.1 — Protocol definition
+    [x] 1.2 — Room management
+    [x] 1.3 — Relay core
+    [x] 1.4 — Health check
+    [x] 1.5 — Server entry point
+    [x] 1.6 — Integration test
 
-[ ] Phase 2: Clients
-    [ ] 2.1 — Browser client HTML/CSS
-    [ ] 2.2 — Browser client JavaScript
-    [ ] 2.3 — Node.js sender
-    [ ] 2.4 — Node.js receiver
+[x] Phase 2: Clients
+    [x] 2.1 — Browser client HTML/CSS
+    [x] 2.2 — Browser client JavaScript
+    [x] 2.3 — Node.js sender
+    [x] 2.4 — Node.js receiver
 
-[ ] Phase 3: Deployment
-    [ ] 3.1 — Systemd service
-    [ ] 3.2 — Nginx config
-    [ ] 3.3 — Deployment guide
+[x] Phase 3: Deployment
+    [x] 3.1 — Systemd service (kept for reference; PM2 used in production)
+    [x] 3.2 — Nginx config (nginx-location.conf for Docker nginx setup)
+    [x] 3.3 — Deployment guide (updated for PM2 + Docker nginx on Krystal.io)
 
-[ ] Phase 4: Documentation
-    [ ] 4.1 — Client guide
-    [ ] 4.2 — Protocol docs
-    [ ] 4.3 — Troubleshooting
-    [ ] 4.4 — README
+[x] Phase 4: Documentation
+    [x] 4.1 — Client guide
+    [x] 4.2 — Protocol docs
+    [x] 4.3 — Troubleshooting
+    [x] 4.4 — README
 
-[ ] Phase 5: Hardening
-    [ ] 5.1 — Latency measurement
-    [ ] 5.2 — Connection resilience
-    [ ] 5.3 — Edge cases
-    [ ] 5.4 — Final cleanup
+[x] Phase 5: Hardening
+    [x] 5.1 — Latency measurement (avg 0.33ms on localhost)
+    [x] 5.2 — Connection resilience
+    [x] 5.3 — Edge cases
+    [x] 5.4 — Final cleanup
+
+[ ] Phase 6: Production deployment (Krystal.io)
+    [ ] 6.1 — Clone repo on VPS, npm install --production
+    [ ] 6.2 — Add location blocks to nginx container config, reload nginx
+    [ ] 6.3 — pm2 start server/index.js --name midi-relay && pm2 save
+    [ ] 6.4 — Verify: curl https://your-domain.com/health
+    [ ] 6.5 — End-to-end test with two real machines and MIDI device
 ```

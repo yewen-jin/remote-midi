@@ -1,156 +1,157 @@
 # Deployment Guide — MIDI Relay Server
 
-Step-by-step instructions for deploying the MIDI relay server on a Linux VPS (Debian/Ubuntu).
+## Production setup (Krystal.io VPS)
 
-## Prerequisites
+This guide covers the actual production environment:
 
-- A VPS with a public IP address
-- A domain name pointing to the VPS (e.g. `relay.example.com`)
-- SSH access with sudo privileges
-- Node.js 20 LTS or later installed
+- **nginx** runs as a Docker container (shared with other apps, TLS already configured)
+- **Node.js apps** are managed by **PM2 on the host** — not Docker, not systemd
+- nginx routes to apps via host IP and port (e.g. `proxy_pass http://127.0.0.1:3500`)
 
-## 1. Create a service user
+If your setup is different (bare nginx, systemd, etc.) see the [Alternative setups](#alternative-setups) section below.
+
+---
+
+## Deploy steps
+
+### 1. Clone the repository on your VPS
 
 ```bash
-sudo useradd --system --create-home --home-dir /opt/midi-relay --shell /usr/sbin/nologin midi-relay
-```
-
-## 2. Clone the repository
-
-```bash
-sudo -u midi-relay git clone https://github.com/speakers-corner/midi-relay.git /opt/midi-relay
+git clone <your-repo-url> /opt/midi-relay
 cd /opt/midi-relay
 ```
 
-## 3. Install dependencies
+### 2. Install production dependencies
 
 ```bash
-sudo -u midi-relay npm install --production
+npm install --production
 ```
 
-## 4. Create the environment file
+### 3. Configure environment
 
 ```bash
-sudo tee /opt/midi-relay/.env << 'EOF'
+cp .env.example .env   # if one exists, otherwise create it:
+cat > .env << 'EOF'
 PORT=3500
 HOST=127.0.0.1
 WS_PATH=/midi
 PING_INTERVAL_MS=15000
 PING_TIMEOUT_MS=30000
-LOG_LEVEL=info
 MAX_ROOMS=50
 MAX_CLIENTS_PER_ROOM=20
 EOF
-
-sudo chown midi-relay:midi-relay /opt/midi-relay/.env
-sudo chmod 600 /opt/midi-relay/.env
+chmod 600 .env
 ```
 
-## 5. Create the logs directory
+### 4. Add nginx location blocks
 
-```bash
-sudo -u midi-relay mkdir -p /opt/midi-relay/logs
-```
+Open whichever config file controls your domain's `server {}` block inside the nginx container and add the contents of `deploy/nginx-location.conf`:
 
-## 6. Install the systemd service
+```nginx
+# WebSocket endpoint
+location /midi {
+    proxy_pass http://127.0.0.1:3500;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_read_timeout 86400s;
+    proxy_send_timeout 86400s;
+}
 
-```bash
-sudo cp /opt/midi-relay/deploy/midi-relay.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable midi-relay
-sudo systemctl start midi-relay
-```
-
-## 7. Verify the service is running
-
-```bash
-sudo systemctl status midi-relay
-curl http://127.0.0.1:3500/health
-```
-
-You should see a JSON response like:
-
-```json
-{ "status": "ok", "uptime": 5, "rooms": 0, "connections": 0 }
-```
-
-## 8. Set up Nginx
-
-Install Nginx if not already present:
-
-```bash
-sudo apt install nginx
-```
-
-Copy the Nginx configuration:
-
-```bash
-sudo cp /opt/midi-relay/deploy/nginx-site.conf /etc/nginx/sites-available/midi-relay
-sudo ln -s /etc/nginx/sites-available/midi-relay /etc/nginx/sites-enabled/
-```
-
-Edit the file and replace `relay.example.com` with your actual domain:
-
-```bash
-sudo nano /etc/nginx/sites-available/midi-relay
-```
-
-Test and reload Nginx:
-
-```bash
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
-## 9. Obtain a TLS certificate
-
-Using certbot with the Nginx plugin:
-
-```bash
-sudo apt install certbot python3-certbot-nginx
-sudo certbot --nginx -d relay.example.com
-```
-
-Certbot will automatically configure the TLS certificates in the Nginx config.
-
-## 10. Verify the full setup
-
-From any machine with internet access:
-
-```bash
 # Health check
-curl https://relay.example.com/health
-
-# WebSocket test (install wscat: npm install -g wscat)
-wscat -c wss://relay.example.com/midi
-# Then type: {"type":"join","room":"test","role":"sender"}
-# You should receive a joined confirmation
+location /health {
+    proxy_pass http://127.0.0.1:3500;
+    proxy_set_header Host $host;
+}
 ```
+
+Reload nginx:
+
+```bash
+docker exec <nginx-container-name> nginx -s reload
+```
+
+### 5. Start with PM2
+
+```bash
+pm2 start server/index.js --name midi-relay
+pm2 save
+```
+
+If you haven't set up PM2 to survive reboots yet:
+
+```bash
+pm2 startup   # prints a command — copy and run it as instructed
+pm2 save
+```
+
+### 6. Verify
+
+```bash
+# Check PM2 status
+pm2 list
+
+# Health check via localhost
+curl http://127.0.0.1:3500/health
+
+# Health check via your domain (tests nginx proxy)
+curl https://your-domain.com/health
+
+# WebSocket test
+npx wscat -c wss://your-domain.com/midi
+# Type: {"type":"join","room":"test","role":"sender"}
+# Expected: {"type":"joined","room":"test","role":"sender","members":1}
+```
+
+---
 
 ## Updating
 
-To deploy a new version:
-
 ```bash
 cd /opt/midi-relay
-sudo -u midi-relay git pull
-sudo -u midi-relay npm install --production
-sudo systemctl restart midi-relay
+git pull
+npm install --production
+pm2 restart midi-relay
 ```
 
 ## Viewing logs
 
 ```bash
-# Live logs
-sudo journalctl -u midi-relay -f
-
-# Last 100 lines
-sudo journalctl -u midi-relay -n 100
+pm2 logs midi-relay          # live logs
+pm2 logs midi-relay --lines 100  # last 100 lines
 ```
 
 ## Troubleshooting
 
-- **Service won't start:** Check `journalctl -u midi-relay -e` for error details
-- **WebSocket connection fails:** Ensure Nginx has the `proxy_set_header Upgrade` directives
-- **Certificate issues:** Run `sudo certbot renew --dry-run` to test renewal
-- **Port conflicts:** Verify nothing else is using port 3500: `sudo ss -tlnp | grep 3500`
+- **pm2 shows errored** — `pm2 logs midi-relay` to see the error
+- **Port conflict** — `ss -tlnp | grep 3500` to see what's using it
+- **WebSocket fails through nginx** — ensure the `Upgrade` and `Connection` headers are set in the nginx location block
+- **502 Bad Gateway** — PM2 process is not running; `pm2 restart midi-relay`
+
+---
+
+## Alternative setups
+
+### Docker (without PM2)
+
+A `Dockerfile` and `deploy/docker-compose.service.yml` are provided. Add the service block to your existing `docker-compose.yml` and run:
+
+```bash
+docker compose up -d midi-relay
+```
+
+`restart: unless-stopped` handles crashes and reboots.
+
+### Systemd (bare nginx, no Docker)
+
+`deploy/midi-relay.service` is provided for a traditional systemd setup. See the original instructions at the bottom of this file if needed — but for Krystal.io, PM2 is the right tool.
+
+### Full nginx config (new domain, no existing nginx)
+
+Use `deploy/nginx-site.conf` as a starting point. Replace `relay.example.com` with your domain and obtain a TLS certificate:
+
+```bash
+sudo certbot --nginx -d your-domain.com
+```
