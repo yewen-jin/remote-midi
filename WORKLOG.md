@@ -216,3 +216,37 @@ All 21 tasks across 5 phases completed. 52 tests passing. Zero lint errors. Proj
 **Commit:** `fd8da4a`
 
 **Notes:** Deployment guide now matches the actual production environment: Docker nginx-proxy handles TLS termination, relay runs via PM2 on the host, routing via host.docker.internal:3500. All file paths, environment variables, and setup steps reflect the live Krystal.io configuration.
+
+---
+
+## 2026-04-14T — Fix PM2 isMain detection
+
+**Status:** completed
+
+**Summary:** PM2 mangles process.argv[1], breaking the isMain entry point check. Replaced fragile path comparison with test-runner detection (auto-start unless NODE_TEST_CONTEXT or --test flag present). Also added PM2_HOME/pm_id env check as fallback.
+
+**Commit:** `0c54302`
+
+**Notes:** The real root cause of "PM2 shows online but empty logs and no port" — startServer() was never called.
+
+---
+
+## 2026-04-14T — Switch to full Docker deployment (Option A)
+
+**Status:** completed
+
+**Summary:** Abandoned PM2 + middleman nginx container approach due to Docker-to-host firewall issues (ufw blocking bridge traffic). Relay now runs as a Docker container on the proxy network with VIRTUAL_HOST/VIRTUAL_PORT. Server serves browser client static files directly. No PM2, no host networking, no firewall changes needed.
+
+**Commit:** `df7de9e`
+
+**Notes:** HOST must be 0.0.0.0 (not 127.0.0.1) since nginx-proxy connects within the Docker network. Added static file serving to health.js. VIRTUAL_PORT: 3500 required since nginx-proxy defaults to port 80.
+
+---
+
+## 2026-04-14T — Rewrite all deployment documentation
+
+**Status:** completed
+
+**Summary:** Rewrote deploy-guide.md, operations-guide.md, and README.md to remove all PM2/host.docker.internal/middleman container references. All docs now describe the Docker-only setup matching the actual production architecture.
+
+**Commit:** `4749f12`
