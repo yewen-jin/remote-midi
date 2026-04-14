@@ -197,3 +197,10 @@ All 21 tasks across 5 phases completed. 52 tests passing. Zero lint errors. Proj
 | 2026-04-14 | deploy-guide.md rewritten | completed | Rewritten for PM2 + Docker nginx setup. Systemd and Docker alternatives kept as reference sections. |
 
 **Decision note:** Skipping Docker for the relay itself — host PM2 is simpler and consistent with the existing app on the VPS. Docker is provided as an optional alternative for other environments.
+
+## Phase 7: Arduino Integration
+
+| Timestamp | Task | Status | Summary |
+|-----------|------|--------|---------|
+| 2026-04-14 | Task 7.1 — Arduino receiver bridge | completed | arduino-receiver.js with serialport auto-detect, reconnection, --list/--port/--baud flags. |
+| 2026-04-14 | Task 7.2 — Operations guide updated | completed | Added Arduino section to operations-guide.md with usage examples and Arduino sketch snippet. |
