@@ -152,7 +152,7 @@ npx wscat -c wss://midi.datadadaist.space/midi
 ## Updating
 
 ```bash
-cd ~/midi-relay
+cd ~/remote-midi
 git pull
 npm install --production
 pm2 restart midi-relay
