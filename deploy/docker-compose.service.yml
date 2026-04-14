@@ -1,21 +1,30 @@
 # Add this service block to your existing docker-compose.yml
+# at /srv/reverse-proxy/docker-compose.yml.
 #
-# Your nginx container proxies to 127.0.0.1:3500 on the host.
-# Set network_mode: host so the container shares the host network,
-# matching your existing app pattern.
+# This runs the MIDI relay server and serves the browser client.
+# nginxproxy/nginx-proxy handles TLS and routing via VIRTUAL_HOST.
+#
+# Usage:
+#   cd /srv/reverse-proxy
+#   docker compose up -d --build midi-relay
 
 services:
   midi-relay:
-    build: .
-    # Or use a pre-built image:
-    # image: ghcr.io/speakers-corner/midi-relay:latest
+    build: /home/<username>/remote-midi
+    container_name: midi-relay
     restart: unless-stopped
-    network_mode: host        # shares host network — nginx reaches it at 127.0.0.1:3500
+    networks: [proxy]
     environment:
       PORT: 3500
-      HOST: 127.0.0.1         # only accept connections from nginx on the host
+      HOST: 0.0.0.0
       WS_PATH: /midi
       PING_INTERVAL_MS: 15000
       PING_TIMEOUT_MS: 30000
       MAX_ROOMS: 50
       MAX_CLIENTS_PER_ROOM: 20
+      VIRTUAL_HOST: <url>
+      VIRTUAL_PORT: 3500
+      LETSENCRYPT_HOST: <url>
+      LETSENCRYPT_EMAIL: <your-email>
+    expose:
+      - "3500"

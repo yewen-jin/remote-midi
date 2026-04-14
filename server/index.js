@@ -106,19 +106,11 @@ export function startServer(config = {}) {
   });
 }
 
-// Start the server when this file is the entry point.
-// Tests import startServer() directly and don't hit this path.
-// PM2 may mangle process.argv, so we also check for the PM2 marker.
-import { resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+// Auto-start unless imported by the test runner.
+// Tests import startServer() directly and call it with { port: 0 }.
+const isTest = process.env.NODE_TEST_CONTEXT || process.argv.includes('--test');
 
-const currentFile = fileURLToPath(import.meta.url);
-const isMain =
-  (process.argv[1] && resolve(process.argv[1]) === currentFile) ||
-  'PM2_HOME' in process.env ||
-  'pm_id' in process.env;
-
-if (isMain) {
+if (!isTest) {
   startServer().catch((err) => {
     console.error('Failed to start server:', err);
     process.exit(1);

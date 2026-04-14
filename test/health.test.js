@@ -28,11 +28,11 @@ function mockRes() {
 }
 
 describe('createHealthHandler', () => {
-  it('returns 200 with status info for GET /health', () => {
+  it('returns 200 with status info for GET /health', async () => {
     const handler = createHealthHandler(mockRelay(2, 5), Date.now() - 60000);
     const res = mockRes();
 
-    handler({ method: 'GET', url: '/health' }, res);
+    await handler({ method: 'GET', url: '/health' }, res);
 
     assert.equal(res.statusCode, 200);
     assert.equal(res.headers['Content-Type'], 'application/json');
@@ -45,20 +45,20 @@ describe('createHealthHandler', () => {
     assert.equal(body.connections, 5);
   });
 
-  it('returns 404 for other paths', () => {
+  it('returns 404 for unknown static paths', async () => {
     const handler = createHealthHandler(mockRelay(), Date.now());
     const res = mockRes();
 
-    handler({ method: 'GET', url: '/other' }, res);
+    await handler({ method: 'GET', url: '/nonexistent-file.txt' }, res);
 
     assert.equal(res.statusCode, 404);
   });
 
-  it('returns 404 for non-GET methods', () => {
+  it('returns 404 for non-GET methods', async () => {
     const handler = createHealthHandler(mockRelay(), Date.now());
     const res = mockRes();
 
-    handler({ method: 'POST', url: '/health' }, res);
+    await handler({ method: 'POST', url: '/health' }, res);
 
     assert.equal(res.statusCode, 404);
   });

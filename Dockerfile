@@ -6,8 +6,9 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --omit=dev
 
-# Copy server source
+# Copy server source and browser client
 COPY server/ ./server/
+COPY client/browser/ ./client/browser/
 
 # Run as non-root user for security
 USER node
