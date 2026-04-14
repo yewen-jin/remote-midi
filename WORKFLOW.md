@@ -375,9 +375,12 @@ Subagent: Final pass over all code.
     [x] 2.4 — Node.js receiver
 
 [x] Phase 3: Deployment
-    [x] 3.1 — Systemd service (kept for reference; PM2 used in production)
-    [x] 3.2 — Nginx config (nginx-location.conf for Docker nginx setup)
-    [x] 3.3 — Deployment guide (updated for PM2 + Docker nginx on Krystal.io)
+    [x] 3.1 — Systemd service (kept for reference)
+    [x] 3.2 — Nginx configs (standalone + location blocks, kept for reference)
+    [x] 3.3 — Deployment guide
+    [x] 3.4 — Docker deployment (Dockerfile, docker-compose service block, VIRTUAL_HOST/VIRTUAL_PORT)
+    [x] 3.5 — Static file serving in health.js (relay serves browser client directly)
+    [x] 3.6 — Redeploy script (deploy/redeploy-midi.sh)
 
 [x] Phase 4: Documentation
     [x] 4.1 — Client guide
@@ -391,22 +394,16 @@ Subagent: Final pass over all code.
     [x] 5.3 — Edge cases
     [x] 5.4 — Final cleanup
 
-[ ] Phase 6: Production deployment (Krystal.io)
-    [ ] 6.1 — Clone repo on VPS, npm install --production
-    [ ] 6.2 — Add location blocks to nginx container config, reload nginx
-    [ ] 6.3 — pm2 start server/index.js --name midi-relay && pm2 save
-    [ ] 6.4 — Verify: curl https://your-domain.com/health
-    [ ] 6.5 — End-to-end test with two real machines and MIDI device
+[x] Phase 6: Production deployment (Krystal.io)
+    [x] 6.1 — Clone repo on VPS
+    [x] 6.2 — Add midi-relay service to docker-compose.yml
+    [x] 6.3 — docker compose up -d --build midi-relay
+    [x] 6.4 — DNS A record for midi.datadadaist.space
+    [x] 6.5 — Verify: curl https://midi.datadadaist.space/health
+    [ ] 6.6 — End-to-end test with two real machines and MIDI device
 
-[ ] Phase 7: Arduino bridge
-    [ ] 7.1 — client/node/arduino-receiver.js
-              - Connects to relay as receiver
-              - Detects serial port automatically or accepts --port flag
-              - Parses MIDI bytes and writes to Arduino over serial (serialport)
-              - Reconnection with exponential backoff (same as other clients)
-              - --list flag to list available serial ports
-              - --baud flag (default 9600)
-              - Graceful shutdown closes serial port cleanly
-    [ ] 7.2 — Update docs/operations-guide.md with Arduino usage section
-    [ ] 7.3 — Update docs/client-guide.md with Arduino section
+[x] Phase 7: Arduino bridge
+    [x] 7.1 — client/node/arduino-receiver.js
+    [x] 7.2 — Update docs/operations-guide.md with Arduino usage section
+    [x] 7.3 — Update docs/client-guide.md with Arduino section
 ```

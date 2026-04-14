@@ -53,25 +53,31 @@ speakers-corner-midi-relay/
 ├── README.md                    # User-facing documentation
 ├── package.json
 ├── .prettierrc
-├── .eslintrc.json
+├── eslint.config.js
 ├── .gitignore
+├── Dockerfile                   # Docker image for the relay server
+├── ecosystem.config.cjs         # PM2 config (alternative to Docker)
 ├── server/
 │   ├── index.js                 # Entry point — starts the WebSocket relay
 │   ├── relay.js                 # Core relay logic: rooms, routing, connection mgmt
 │   ├── room.js                  # Room class: manages members, handles join/leave
 │   ├── protocol.js              # Message protocol definitions and parsing
-│   └── health.js                # Health check endpoint for monitoring
+│   └── health.js                # Health check, static file serving
 ├── client/
 │   ├── browser/
 │   │   ├── index.html           # Browser client — Web MIDI API sender/receiver
 │   │   ├── midi-relay-client.js # Browser WebSocket + Web MIDI glue code
 │   │   └── style.css            # Minimal styling
 │   └── node/
-│       ├── sender.js            # Node.js MIDI sender client (using `midi` or `easymidi`)
-│       └── receiver.js          # Node.js MIDI receiver client
+│       ├── sender.js            # Node.js MIDI sender client
+│       ├── receiver.js          # Node.js MIDI receiver client
+│       └── arduino-receiver.js  # Arduino serial bridge receiver
 ├── deploy/
-│   ├── midi-relay.service       # Systemd unit file
-│   ├── nginx-site.conf          # Nginx reverse proxy config (WSS)
+│   ├── docker-compose.service.yml # Docker service block for existing compose
+│   ├── redeploy-midi.sh         # Redeploy script (git pull + docker rebuild)
+│   ├── midi-relay.service       # Systemd unit file (alternative)
+│   ├── nginx-site.conf          # Standalone nginx config (alternative)
+│   ├── nginx-location.conf      # Nginx location blocks (alternative)
 │   └── deploy-guide.md          # Step-by-step deployment instructions
 ├── docs/
 │   ├── client-guide.md          # Guide for Speakers Corner to connect
@@ -121,7 +127,7 @@ The relay simply forwards binary frames from senders to all receivers in the sam
 
 ### Connection Flow
 
-1. Client opens WSS connection to `wss://relay.example.com/midi`
+1. Client opens WSS connection to `wss://midi.datadadaist.space/midi`
 2. Client sends a `join` message (JSON text frame) with room name and role
 3. Server responds with `joined` confirmation
 4. Sender transmits MIDI bytes as binary frames
@@ -130,11 +136,13 @@ The relay simply forwards binary frames from senders to all receivers in the sam
 
 ## Deployment Context
 
-- **VPS:** Linux (likely Debian/Ubuntu), with Docker, Nginx, and Let's Encrypt already configured
-- **Nginx:** Reverse proxy with SSL termination; WebSocket upgrade handling required
-- **Process manager:** Systemd (preferred) or Docker container
-- **Domain:** Will be configured by the developer; docs should use `relay.example.com` as placeholder
-- **Port:** Relay listens on localhost:3500 (configurable via env); Nginx proxies WSS → WS
+- **VPS:** Krystal.io, Debian, with Docker
+- **Reverse proxy:** `nginxproxy/nginx-proxy` Docker container with `acme-companion` for auto TLS
+- **Relay:** Docker container on the `proxy` network, routed via `VIRTUAL_HOST` + `VIRTUAL_PORT`
+- **Domain:** `midi.datadadaist.space`
+- **Port:** Relay listens on 0.0.0.0:3500 inside the container; nginx-proxy handles TLS and routing
+- **docker-compose:** `/srv/reverse-proxy/docker-compose.yml`
+- **Redeploy:** `~/redeploy-midi.sh` (pulls repo + rebuilds container)
 
 ## Environment Variables
 
@@ -173,7 +181,7 @@ MAX_CLIENTS_PER_ROOM=20            # Maximum clients per room
 - Do not interpret or validate MIDI bytes on the server — just forward them
 - Do not add a frontend framework (React, Vue, etc.) — the browser client is plain HTML/JS
 - Do not use TypeScript unless explicitly asked — plain JavaScript with JSDoc comments
-- Do not add Docker configuration unless explicitly asked — systemd is the primary deployment method
+- Do not add PM2 or systemd configuration — Docker is the deployment method
 - Do not wrap MIDI binary data in JSON — binary frames only
 
 ## MIDI-Specific Notes

@@ -35,7 +35,7 @@ Enables remote MIDI control of robotic installations without requiring inbound f
 ```bash
 nix develop                # Enter NixOS development environment
 npm install                # Install dependencies
-npm test                   # Run tests (44 passing)
+npm test                   # Run tests (52 passing)
 npm run dev                # Start server with file watching
 ```
 
@@ -72,7 +72,7 @@ node client/node/receiver.js --url ws://127.0.0.1:3500/midi --room my-room
 | Variable               | Default     | Description                                  |
 | ---------------------- | ----------- | -------------------------------------------- |
 | `PORT`                 | `3500`      | Server listen port                           |
-| `HOST`                 | `127.0.0.1` | Bind address (use 127.0.0.1 for Nginx proxy) |
+| `HOST`                 | `127.0.0.1` | Bind address (use 0.0.0.0 in Docker)         |
 | `WS_PATH`              | `/midi`     | WebSocket endpoint path                      |
 | `PING_INTERVAL_MS`     | `15000`     | WebSocket ping interval (ms)                 |
 | `PING_TIMEOUT_MS`      | `30000`     | Connection dead timeout (ms)                 |
@@ -85,13 +85,13 @@ node client/node/receiver.js --url ws://127.0.0.1:3500/midi --room my-room
 npm test
 ```
 
-Uses Node's built-in test runner. All 44 tests passing:
+Uses Node's built-in test runner. All 52 tests passing:
 
 - Protocol parsing: 17 tests
 - Room management: 7 tests
-- Relay logic: 11 tests
-- Health endpoint: 1 test
-- Integration (end-to-end): 1 test
+- Relay logic: 15 tests
+- Health endpoint: 3 tests
+- Integration (end-to-end): 10 tests
 
 ## Deployment
 
@@ -128,7 +128,7 @@ For detailed instructions, see [`deploy/deploy-guide.md`](deploy/deploy-guide.md
 
 ## How It Works
 
-1. Clients open a WebSocket connection to the relay server (e.g. `wss://relay.example.com/midi`)
+1. Clients open a WebSocket connection to the relay server (e.g. `wss://midi.datadadaist.space/midi`)
 2. Each client sends a JSON `join` message specifying a room name and role (sender or receiver)
 3. Senders transmit raw MIDI bytes as binary WebSocket frames
 4. The relay forwards binary frames to all receivers in the same room
@@ -154,13 +154,14 @@ Core functionality complete and tested:
 - [x] Browser client (Web MIDI API)
 - [x] Node.js client examples
 - [x] Automatic reconnection
-- [x] Systemd service + Nginx config
+- [x] Docker deployment + Nginx proxy
 - [x] Complete documentation
-- [ ] Production load testing
+- [x] Stress testing (0 drops at 48 msg/s × 5 senders)
+- [x] Arduino serial bridge
 - [ ] Browser UI polish
 - [ ] MIDI library integration for Node clients
 
-All tests passing. Ready for alpha testing with Speakers Corner.
+All tests passing. Deployed at `midi.datadadaist.space`.
 
 ## Licence
 
