@@ -280,3 +280,21 @@ All 21 tasks across 5 phases completed. 52 tests passing. Zero lint errors. Proj
 **Summary:** Fixed WCAG 2.1 AA contrast failures across day/night modes. Replaced all opacity-based text with explicit colour variables (--text-muted, --text-faint). Added :focus-visible outlines for keyboard navigation. Darkened status colours for day mode (green #146c43, amber #7c5800, red #b91c1c). Fixed btn-accent contrast (#bf360c). Theme toggle now shows current state. 68 tests passing.
 **Commit:** (pending)
 **Notes:** Day mode uses darker status/accent text colours; night mode keeps the original bright variants. All text now meets 4.5:1 contrast ratio on its background.
+
+---
+
+## 2026-04-20T15:05:00Z — Task 5.4: Rate Limiting
+
+**Status:** completed
+**Summary:** Added three-layer rate limiting — per-IP concurrent connection limit (default 10), per-IP connection rate (default 20/60s), and per-connection message rate via token bucket (default 500 msg/s). Zero new dependencies. Health endpoint reports blockedConnections and throttledMessages stats. 13 new tests (7 unit, 6 integration).
+**Commit:** (committed in previous session)
+**Notes:** All in-memory, no Redis. Message rate limiter silently drops rather than disconnects to handle MIDI clock bursts gracefully.
+
+---
+
+## 2026-04-20T15:06:00Z — Task 5.5: Final Cleanup
+
+**Status:** completed
+**Summary:** Final review pass — Prettier (all unchanged), ESLint (zero issues), 68 tests passing, British English verified, .gitignore audited, zero TODO/FIXME remaining. Codebase is production-ready.
+**Commit:** chore: final cleanup and review pass
+**Notes:** No code changes needed — everything was already clean from prior passes.

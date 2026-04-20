@@ -393,7 +393,8 @@ Subagent: Final pass over all code.
     [x] 5.1 — Latency measurement (avg 0.33ms on localhost)
     [x] 5.2 — Connection resilience
     [x] 5.3 — Edge cases
-    [x] 5.4 — Final cleanup
+    [x] 5.4 — Rate limiting (per-IP connection + rate + per-connection message)
+    [x] 5.5 — Final cleanup
 
 [x] Phase 6: Production deployment (Krystal.io)
     [x] 6.1 — Clone repo on VPS
