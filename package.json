@@ -20,8 +20,10 @@
     "node": ">=20.0.0"
   },
   "dependencies": {
-    "serialport": "^13.0.0",
     "ws": "^8.20.0"
+  },
+  "optionalDependencies": {
+    "serialport": "^13.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
