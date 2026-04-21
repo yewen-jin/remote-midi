@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Setup Guide — MIDI Relay</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* Docs-specific styles */
+      .docs-content {
+        max-width: 720px;
+        margin: 0 auto;
+      }
+
+      .docs-content h2 {
+        font-size: 1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: var(--border-width) solid var(--border);
+      }
+
+      .docs-content h3 {
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .docs-content p,
+      .docs-content li {
+        font-size: 0.9rem;
+        line-height: 1.7;
+        margin-bottom: 0.75rem;
+      }
+
+      .docs-content ol,
+      .docs-content ul {
+        padding-left: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .docs-content li {
+        margin-bottom: 0.5rem;
+      }
+
+      .docs-content code {
+        font-family: inherit;
+        background: var(--muted);
+        border: 1px solid var(--border);
+        padding: 0.15em 0.4em;
+        font-size: 0.85em;
+      }
+
+      .docs-content .diagram {
+        padding: 1.5em;
+        margin: 1.5rem 0;
+        border: var(--border-width) solid var(--border);
+        background: var(--muted);
+        font-family: inherit;
+        font-size: 0.8rem;
+        line-height: 1.6;
+        overflow-x: auto;
+        white-space: pre;
+      }
+
+      .docs-content .note {
+        padding: 1em 1.2em;
+        margin: 1rem 0;
+        border: var(--border-width) solid var(--border);
+        box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--shadow);
+        background: var(--surface);
+        font-size: 0.85rem;
+      }
+
+      .docs-content .note strong {
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      .back-link {
+        display: inline-block;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--fg);
+        text-decoration: none;
+        border: var(--border-width) solid var(--border);
+        padding: 0.4em 0.8em;
+        transition:
+          transform 0.1s,
+          box-shadow 0.1s;
+        box-shadow: 2px 2px 0 var(--shadow);
+      }
+
+      .back-link:hover {
+        transform: translate(1px, 1px);
+        box-shadow: 1px 1px 0 var(--shadow);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-row">
+        <h1>Setup Guide</h1>
+        <button
+          class="btn btn-outline btn-sm"
+          id="theme-toggle"
+          aria-label="Toggle theme"
+        >
+          ☀ / ☾
+        </button>
+      </div>
+      <p class="subtitle">MIDI Relay</p>
+      <p style="margin-top: 1rem">
+        <a href="/" class="back-link">&larr; Back to MIDI Relay</a>
+      </p>
+    </header>
+
+    <main class="docs-content">
+      <!-- What is this? -->
+      <h2 id="what">What is this?</h2>
+      <p>
+        This is a browser-based tool for sending and receiving MIDI over the
+        internet between two computers. One person sends MIDI (from a keyboard,
+        controller, or DAW) and another person receives it on a different
+        computer anywhere in the world. The relay server in the middle passes
+        the MIDI data through in real time.
+      </p>
+
+      <!-- Before you start -->
+      <h2 id="before-you-start">Before you start</h2>
+      <p>You will need:</p>
+      <ul>
+        <li>
+          A modern browser &mdash; <strong>Chrome</strong> or
+          <strong>Edge</strong> are recommended (Firefox does not support Web
+          MIDI)
+        </li>
+        <li>
+          A <strong>room code</strong> &mdash; both people need to type the same
+          room name to connect to each other
+        </li>
+        <li>
+          A MIDI device (keyboard, controller) or a virtual MIDI port if you
+          want to route MIDI into a DAW
+        </li>
+      </ul>
+
+      <!-- Connecting two computers -->
+      <h2 id="connecting">Connecting two computers</h2>
+      <ol>
+        <li>
+          <strong>Person A</strong> (the sender) opens the MIDI Relay page,
+          selects <strong>Sender</strong> as their role, types a room code (e.g.
+          "studio-session"), selects their MIDI input device, and clicks
+          <strong>Connect</strong>.
+        </li>
+        <li>
+          <strong>Person B</strong> (the receiver) opens the same page, selects
+          <strong>Receiver</strong>, types the <strong>same room code</strong>,
+          selects their MIDI output device, and clicks <strong>Connect</strong>.
+        </li>
+        <li>
+          <strong>Test it:</strong> Person A plays a note on their MIDI
+          controller. Person B should see activity in the log and hear the note
+          if their output device is connected to a sound source.
+        </li>
+      </ol>
+      <div class="note">
+        <strong>Tip:</strong> Room names are case-sensitive. Make sure both
+        people type exactly the same text, including any capital letters or
+        hyphens.
+      </div>
+
+      <!-- DAW section -->
+      <h2 id="daw">Connecting to a DAW (Ableton, Logic, etc.)</h2>
+      <p>
+        To get MIDI from the browser into your DAW, you need a
+        <strong>virtual MIDI port</strong>. This creates a bridge between the
+        browser and your music software. The setup depends on your operating
+        system.
+      </p>
+
+      <h3 id="macos">macOS &mdash; IAC Driver</h3>
+      <ol>
+        <li>
+          Open <strong>Audio MIDI Setup</strong> (search for it in Spotlight, or
+          find it in Applications &rarr; Utilities)
+        </li>
+        <li>
+          If you don't see the MIDI Studio window, go to
+          <strong>Window &rarr; Show MIDI Studio</strong>
+        </li>
+        <li>Double-click <strong>IAC Driver</strong></li>
+        <li>Tick <strong>Device is online</strong></li>
+        <li>Click <strong>Apply</strong></li>
+      </ol>
+      <p>
+        The IAC Driver will now appear as both a MIDI input and output. In the
+        browser, select <strong>Receiver</strong> and choose
+        <strong>IAC Driver</strong> as the MIDI output. Your DAW will see it as
+        a MIDI input.
+      </p>
+
+      <h3 id="windows">Windows &mdash; loopMIDI</h3>
+      <ol>
+        <li>
+          Download and install
+          <strong>loopMIDI</strong> (free) from Tobias Erichsen's website
+        </li>
+        <li>
+          Open loopMIDI and click the <strong>+</strong> button to create a new
+          virtual port
+        </li>
+        <li>Give it a name (e.g. "MIDI Relay")</li>
+      </ol>
+      <p>
+        The new port will appear in the browser's device list. Select
+        <strong>Receiver</strong> and choose your loopMIDI port as the output.
+        Your DAW will see it as a MIDI input.
+      </p>
+
+      <h3 id="linux">Linux &mdash; Virtual MIDI</h3>
+      <p>Run this command in a terminal to create virtual MIDI ports:</p>
+      <p><code>sudo modprobe snd-virmidi</code></p>
+      <p>
+        This creates several virtual MIDI ports that appear as both inputs and
+        outputs. Select one as the output in the browser, and use the
+        corresponding input in your DAW.
+      </p>
+
+      <h3 id="ableton">Ableton Live</h3>
+      <ol>
+        <li>Open <strong>Preferences</strong> (Ctrl/Cmd + comma)</li>
+        <li>Go to the <strong>Link/Tempo/MIDI</strong> tab</li>
+        <li>
+          Find your virtual MIDI port (IAC Driver on Mac, loopMIDI on Windows)
+          in the <strong>MIDI Ports</strong> section
+        </li>
+        <li>Enable <strong>Track</strong> for the input</li>
+        <li>
+          On a MIDI track, set <strong>MIDI From</strong> to your virtual port
+        </li>
+      </ol>
+
+      <h3 id="logic">Logic Pro</h3>
+      <p>
+        Logic Pro automatically recognises the IAC Driver. Simply create a
+        Software Instrument track and it will receive MIDI from the IAC Driver
+        input. No additional setup is needed.
+      </p>
+
+      <h3 id="other-daws">Other DAWs</h3>
+      <p>
+        Look for the MIDI input settings in your DAW's preferences. Enable the
+        virtual MIDI port (IAC Driver, loopMIDI, or snd-virmidi) as an input,
+        then assign it to a track.
+      </p>
+
+      <!-- If something isn't working -->
+      <h2 id="troubleshooting">If something isn't working</h2>
+      <ul>
+        <li>
+          <strong>No MIDI devices appear in the browser:</strong> Make sure
+          you're using Chrome or Edge. Click "Refresh" next to the device
+          dropdown. Your browser will ask for permission to access MIDI devices
+          &mdash; click Allow.
+        </li>
+        <li>
+          <strong>Connected but no MIDI is arriving:</strong> Check that both
+          people are using the exact same room name (case-sensitive). Check that
+          one person is set to Sender and the other to Receiver.
+        </li>
+        <li>
+          <strong>Firefox doesn't work:</strong> Firefox does not support the
+          Web MIDI API. Use Chrome or Edge instead.
+        </li>
+        <li>
+          <strong>Activity log shows MIDI data but DAW doesn't respond:</strong>
+          Check that the virtual MIDI port is enabled as an input in your DAW's
+          preferences, and that a track is set to receive from it.
+        </li>
+        <li>
+          <strong>Connection keeps dropping:</strong> The client will
+          automatically reconnect. If it happens frequently, check your internet
+          connection or try a wired connection.
+        </li>
+      </ul>
+
+      <!-- Connection diagram -->
+      <h2 id="diagram">How it works</h2>
+      <!-- prettier-ignore -->
+      <pre class="diagram">Your MIDI Device
+    ↓
+Browser (Sender)
+    ↓
+Internet → Relay Server
+    ↓
+Browser (Receiver)
+    ↓
+Virtual MIDI Port
+    ↓
+Your DAW (Ableton, Logic, etc.)</pre>
+    </main>
+
+    <footer>
+      <p>MIDI Relay &mdash; <a href="/">Back to app</a></p>
+    </footer>
+
+    <script>
+      // Day/night theme toggle (same logic as main page)
+      const toggle = document.getElementById('theme-toggle');
+      const root = document.documentElement;
+
+      function updateToggleLabel() {
+        const theme = root.getAttribute('data-theme');
+        const isNight =
+          theme === 'night' ||
+          (!theme && matchMedia('(prefers-color-scheme: dark)').matches);
+        toggle.textContent = isNight ? '☀ Day' : '☾ Night';
+        toggle.setAttribute(
+          'aria-label',
+          isNight ? 'Switch to day mode' : 'Switch to night mode',
+        );
+      }
+
+      const saved = localStorage.getItem('theme');
+      if (saved) root.setAttribute('data-theme', saved);
+      updateToggleLabel();
+
+      toggle.addEventListener('click', () => {
+        const current = root.getAttribute('data-theme');
+        const next = current === 'night' ? 'day' : 'night';
+        root.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateToggleLabel();
+      });
+    </script>
+  </body>
+</html>

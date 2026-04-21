@@ -1,4 +1,4 @@
-# WORKLOG — Speakers Corner MIDI Relay
+# WORKLOG — MIDI Relay
 
 Append-only log of all tasks completed during development.
 
@@ -67,7 +67,7 @@ Append-only log of all tasks completed during development.
 | Timestamp  | Task                             | Status    | Summary                                                                                                                                           |
 | ---------- | -------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 2026-04-14 | Task 7.1 — Wire protocol doc     | completed | Complete protocol spec: text/binary frames, control messages (join, joined, error, ping, pong, room-update), connection lifecycle, examples.      |
-| 2026-04-14 | Task 7.2 — Client guide          | completed | Browser client user guide: requirements, connection steps, device selection, reconnection handling, troubleshooting. Written for Speakers Corner. |
+| 2026-04-14 | Task 7.2 — Client guide          | completed | Browser client user guide: requirements, connection steps, device selection, reconnection handling, troubleshooting. |
 | 2026-04-14 | Task 7.3 — Troubleshooting guide | completed | Common issues: connection refused, MIDI device not found, firewall blocks, reconnection loops, latency measurement. Diagnostic steps.             |
 
 ---
@@ -104,7 +104,7 @@ Append-only log of all tasks completed during development.
 3. Load testing and latency profiling
 4. Client reconnection edge cases (partial send/receive during disconnect)
 5. Production deployment and monitoring
-6. User acceptance testing with Speakers Corner
+6. User acceptance testing
 
 **Known Limitations (v0.1):**
 

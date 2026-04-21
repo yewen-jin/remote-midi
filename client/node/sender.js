@@ -22,7 +22,7 @@ import { parseArgs } from 'node:util';
 const { values: args } = parseArgs({
   options: {
     url: { type: 'string', default: 'ws://127.0.0.1:3500/midi' },
-    room: { type: 'string', default: 'speakers-corner-2026' },
+    room: { type: 'string', default: 'midi-relay-default' },
     name: { type: 'string', default: '' },
     device: { type: 'string', default: '' },
     list: { type: 'boolean', default: false },
@@ -38,7 +38,7 @@ Usage: node sender.js [options]
 
 Options:
   --url <url>       Relay WebSocket URL (default: ws://127.0.0.1:3500/midi)
-  --room <name>     Room to join (default: speakers-corner-2026)
+  --room <name>     Room to join (default: midi-relay-default)
   --name <name>     Display name for this sender
   --device <name>   MIDI input device name (requires MIDI library)
   --list            List available MIDI input devices and exit

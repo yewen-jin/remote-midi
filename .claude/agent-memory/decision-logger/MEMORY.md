@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-- **Name:** speakers-corner-midi-relay
+- **Name:** midi-relay
 - **Purpose:** WebSocket relay for remote MIDI control without inbound firewall config
 - **Status:** v0.1 Alpha — Core implementation complete, 44 tests passing
 - **Deadline:** End of April/early May 2026
@@ -108,7 +108,7 @@ test/
 2. Browser UI polish (currently functional)
 3. Node MIDI library integration (placeholder code needs real implementation)
 4. Client reconnection edge cases (partial send/receive during disconnect)
-5. User acceptance testing with Speakers Corner
+5. User acceptance testing
 6. Production deployment monitoring/alerting
 
 ## Worklog Pattern

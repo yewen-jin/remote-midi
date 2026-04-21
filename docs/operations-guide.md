@@ -1,4 +1,4 @@
-# Operations Guide — Speakers Corner MIDI Relay
+# Operations Guide — MIDI Relay
 
 Practical notes on testing, deployment, and usage based on the actual setup.
 
@@ -238,14 +238,14 @@ Connect to the relay and forward MIDI to an Arduino:
 # Explicit port
 node client/node/arduino-receiver.js \
   --url wss://your-domain.com/midi \
-  --room speakers-corner-2026 \
+  --room midi-relay-default \
   --port /dev/ttyUSB0 \
   --baud 9600
 
 # Auto-detect (uses the first available serial port)
 node client/node/arduino-receiver.js \
   --url wss://your-domain.com/midi \
-  --room speakers-corner-2026
+  --room midi-relay-default
 ```
 
 ### CLI options
@@ -253,7 +253,7 @@ node client/node/arduino-receiver.js \
 | Flag           | Default                    | Description                                    |
 | -------------- | -------------------------- | ---------------------------------------------- |
 | `--url`        | `ws://127.0.0.1:3500/midi` | Relay WebSocket URL                            |
-| `--room`       | `speakers-corner-2026`     | Room name to join                              |
+| `--room`       | `midi-relay-default`     | Room name to join                              |
 | `--name`       | `arduino-1`                | Display name shown to other clients            |
 | `--port`       | _(auto-detect)_            | Serial port path (e.g. `/dev/ttyUSB0`, `COM3`) |
 | `--baud`       | `9600`                     | Baud rate for the serial connection            |

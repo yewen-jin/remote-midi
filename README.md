@@ -1,6 +1,6 @@
-# Speakers Corner MIDI Relay
+# MIDI Relay
 
-A real-time WebSocket relay server that forwards MIDI bytes between a sender and one or more receivers over the internet. Built for [Speakers Corner](https://speakerscorner.org), an arts organisation that controls robotic installations remotely via MIDI.
+A real-time WebSocket relay server that forwards MIDI bytes between a sender and one or more receivers over the internet.
 
 ## What It Does
 

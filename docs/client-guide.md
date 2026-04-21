@@ -1,4 +1,4 @@
-# Client Connection Guide — Speakers Corner
+# Client Connection Guide
 
 This guide explains how to connect to the MIDI relay server using the browser client.
 
@@ -59,10 +59,10 @@ For headless or server-side use, Node.js clients are provided:
 
 ```bash
 # Sender
-node client/node/sender.js --url wss://relay.example.com/midi --room speakers-corner-2026 --name piano-1
+node client/node/sender.js --url wss://relay.example.com/midi --room midi-relay-default --name piano-1
 
 # Receiver
-node client/node/receiver.js --url wss://relay.example.com/midi --room speakers-corner-2026 --name robot-arm-1
+node client/node/receiver.js --url wss://relay.example.com/midi --room midi-relay-default --name robot-arm-1
 
 # List available MIDI devices (requires easymidi)
 node client/node/sender.js --list

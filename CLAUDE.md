@@ -1,14 +1,14 @@
-# CLAUDE.md — MIDI Relay Server for Speakers Corner
+# CLAUDE.md — MIDI Relay Server
 
 ## Project Identity
 
-**Name:** `speakers-corner-midi-relay`
-**Purpose:** A real-time WebSocket relay server that forwards MIDI bytes between a sender and one or more receivers over the internet. Built for Speakers Corner, an arts organisation that controls robotic installations remotely via MIDI.
+**Name:** `midi-relay`
+**Purpose:** A real-time WebSocket relay server that forwards MIDI bytes between a sender and one or more receivers over the internet. Built to control robotic installations remotely via MIDI when neither end can open inbound ports.
 **Deadline:** End of April / early May 2026 (filming and recording session)
 
 ## Problem Statement
 
-Speakers Corner previously achieved remote MIDI control in 2020, but increased firewall/NAT restrictions broke their setup. Neither the sender nor receiver can open inbound ports. Both sides must connect _outbound_ to a central relay server, which forwards MIDI bytes in real time.
+Remote MIDI control previously worked in 2020, but increased firewall/NAT restrictions broke typical setups. Neither the sender nor receiver can open inbound ports. Both sides must connect _outbound_ to a central relay server, which forwards MIDI bytes in real time.
 
 ## Architecture Overview
 
@@ -48,7 +48,7 @@ Speakers Corner previously achieved remote MIDI control in 2020, but increased f
 ## Project Structure
 
 ```
-speakers-corner-midi-relay/
+midi-relay/
 ├── CLAUDE.md                    # This file — project instructions for Claude Code
 ├── README.md                    # User-facing documentation
 ├── package.json
@@ -80,7 +80,7 @@ speakers-corner-midi-relay/
 │   ├── nginx-location.conf      # Nginx location blocks (alternative)
 │   └── deploy-guide.md          # Step-by-step deployment instructions
 ├── docs/
-│   ├── client-guide.md          # Guide for Speakers Corner to connect
+│   ├── client-guide.md          # Guide for operators to connect
 │   ├── protocol.md              # Wire protocol documentation
 │   └── troubleshooting.md       # Common issues and fixes
 ├── test/
@@ -100,13 +100,13 @@ Clients send JSON for control operations. The server responds with JSON.
 
 ```jsonc
 // Join a room as sender
-{ "type": "join", "room": "speakers-corner-2026", "role": "sender", "name": "optional-display-name" }
+{ "type": "join", "room": "midi-relay-default", "role": "sender", "name": "optional-display-name" }
 
 // Join a room as receiver
-{ "type": "join", "room": "speakers-corner-2026", "role": "receiver", "name": "robot-arm-1" }
+{ "type": "join", "room": "midi-relay-default", "role": "receiver", "name": "robot-arm-1" }
 
 // Server acknowledgement
-{ "type": "joined", "room": "speakers-corner-2026", "role": "sender", "members": 3 }
+{ "type": "joined", "room": "midi-relay-default", "role": "sender", "members": 3 }
 
 // Server error
 { "type": "error", "message": "Room name is required" }
@@ -116,7 +116,7 @@ Clients send JSON for control operations. The server responds with JSON.
 { "type": "pong", "time": 1714000000000 }
 
 // Room info broadcast (when members change)
-{ "type": "room-update", "room": "speakers-corner-2026", "senders": 1, "receivers": 2 }
+{ "type": "room-update", "room": "midi-relay-default", "senders": 1, "receivers": 2 }
 ```
 
 ### MIDI Data (binary frames)

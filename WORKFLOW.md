@@ -36,7 +36,7 @@ After each task, append to `WORKLOG.md`:
 ```
 Subagent: Initialise the Node.js project.
 - Run `git init`
-- Create package.json with "type": "module", name "speakers-corner-midi-relay",
+- Create package.json with "type": "module", name "midi-relay",
   description, and scripts (start, test, dev)
 - Create .gitignore (node_modules, logs/, .env, *.log)
 - Create .prettierrc (default: single quotes, trailing commas, 2-space)
@@ -252,14 +252,14 @@ Commit: "docs: deployment guide for VPS setup"
 
 ```
 Subagent: Create docs/client-guide.md
-- Written for Speakers Corner (non-developer audience)
+- Written for non-developer audience
 - How to open the browser client and connect
 - How to select MIDI devices
 - What the status indicators mean
 - What to do if connection drops
 - How to use the Node.js clients (for advanced users)
 - Include screenshots placeholders or ASCII diagrams
-- Commit: "docs: client connection guide for Speakers Corner"
+- Commit: "docs: client connection guide"
 ```
 
 ### Task 4.2 — Protocol documentation

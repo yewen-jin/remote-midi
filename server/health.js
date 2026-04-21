@@ -64,6 +64,7 @@ export function createHealthHandler(relay, startTime, limiters = {}) {
     // Serve static files from client/browser/
     if (req.method === 'GET') {
       let filePath = req.url === '/' ? '/index.html' : req.url;
+      if (filePath === '/docs') filePath = '/docs.html';
 
       // Prevent directory traversal
       if (filePath.includes('..')) {

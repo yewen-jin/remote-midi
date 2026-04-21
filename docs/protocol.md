@@ -32,7 +32,7 @@ Sent by the client to join or switch rooms.
 ```json
 {
   "type": "join",
-  "room": "speakers-corner-2026",
+  "room": "midi-relay-default",
   "role": "sender",
   "name": "piano-1"
 }
@@ -54,7 +54,7 @@ Sent by the server after a successful join.
 ```json
 {
   "type": "joined",
-  "room": "speakers-corner-2026",
+  "room": "midi-relay-default",
   "role": "sender",
   "members": 3
 }
@@ -74,7 +74,7 @@ Broadcast to all room members when someone joins or leaves.
 ```json
 {
   "type": "room-update",
-  "room": "speakers-corner-2026",
+  "room": "midi-relay-default",
   "senders": 1,
   "receivers": 2
 }

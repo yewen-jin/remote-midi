@@ -1,5 +1,5 @@
 {
-  description = "Speakers Corner MIDI Relay development environment";
+  description = "MIDI Relay development environment";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";

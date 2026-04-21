@@ -1,6 +1,6 @@
 [Unit]
-Description=Speakers Corner MIDI Relay Server
-Documentation=https://github.com/speakers-corner/midi-relay
+Description=MIDI Relay Server
+Documentation=https://github.com/midi-relay
 After=network-online.target
 Wants=network-online.target
 

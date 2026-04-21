@@ -1,4 +1,4 @@
-/* MIDI Relay — Speakers Corner
+/* MIDI Relay
    Neo-brutalist design: hard edges, offset shadows, day/night */
 
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
@@ -326,6 +326,21 @@ select:focus-visible {
   font-size: 0.8rem;
   color: var(--text-muted);
   margin-top: 0.5rem;
+}
+
+.help-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.75rem;
+}
+
+.help-hint a {
+  color: var(--accent-text);
+  text-decoration: underline;
+}
+
+.help-hint a:hover {
+  color: var(--accent-hover);
 }
 
 /* Status badges */

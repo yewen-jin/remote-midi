@@ -20,7 +20,7 @@ import { parseArgs } from 'node:util';
 const { values: args } = parseArgs({
   options: {
     url: { type: 'string', default: 'ws://127.0.0.1:3500/midi' },
-    room: { type: 'string', default: 'speakers-corner-2026' },
+    room: { type: 'string', default: 'midi-relay-default' },
     name: { type: 'string', default: 'arduino-1' },
     port: { type: 'string', default: '' },
     baud: { type: 'string', default: '9600' },
@@ -40,7 +40,7 @@ Usage: node arduino-receiver.js [options]
 
 Options:
   --url <url>       Relay WebSocket URL (default: ws://127.0.0.1:3500/midi)
-  --room <name>     Room to join (default: speakers-corner-2026)
+  --room <name>     Room to join (default: midi-relay-default)
   --name <name>     Display name for this receiver (default: arduino-1)
   --port <path>     Serial port path, e.g. /dev/ttyUSB0 or COM3
                     If omitted, auto-detects the first available port.

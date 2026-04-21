@@ -8,9 +8,9 @@ are already in the project directory.
 ## Initial Prompt (paste this)
 
 ```
-I'm building a real-time MIDI relay server for Speakers Corner, an arts organisation
-that controls robotic installations remotely. Read CLAUDE.md for full project context
-and WORKFLOW.md for the step-by-step execution plan.
+I'm building a real-time MIDI relay server for controlling robotic installations
+remotely. Read CLAUDE.md for full project context and WORKFLOW.md for the
+step-by-step execution plan.
 
 Work through the WORKFLOW.md phases in order. For each task:
 
