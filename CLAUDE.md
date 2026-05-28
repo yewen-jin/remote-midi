@@ -25,6 +25,34 @@ Remote MIDI control previously worked in 2020, but increased firewall/NAT restri
 - **Rooms:** Clients join a named room/channel; MIDI bytes from any sender in a room are forwarded to all receivers in that room
 - **Transport:** Raw MIDI bytes over WebSocket binary frames — no JSON wrapping for MIDI data
 
+The relay server also **serves the browser client itself** over plain HTTP (see `server/health.js`): `GET /` → `client/browser/index.html`, `GET /docs` → `docs.html`, and any other path is served as a static file from `client/browser/`. There is no separate static host — the same Node process serves both the WebSocket endpoint (`/midi`) and the browser UI.
+
+## Commands
+
+```bash
+npm start            # Run the relay server (node server/index.js)
+npm run dev          # Run with auto-restart on file change (node --watch)
+npm test             # Run all unit + integration tests (node --test test/*.test.js)
+
+# Run a single test file
+node --test test/relay.test.js
+
+# Run tests whose name matches a pattern (across all files)
+node --test --test-name-pattern="forwards binary" test/*.test.js
+
+# Stress / load test (not part of `npm test`; long-running, prints its own report)
+node test/stress.js
+
+npx eslint .         # Lint (no npm script; ESLint flat config in eslint.config.js)
+npx prettier --write .   # Format
+```
+
+There are no `lint`/`format` npm scripts — invoke ESLint and Prettier via `npx`. Tests use the **Node built-in runner** (`node --test`), not Mocha/Jest. `server/index.js` auto-starts the server unless `--test` is present or `NODE_TEST_CONTEXT` is set, so tests can `import { startServer }` and call it with `{ port: 0 }` for an ephemeral port.
+
+## Development Environment (Nix + direnv)
+
+This repo ships a `flake.nix` providing Node.js 20 and an `.envrc` containing `use flake`. With `direnv` installed, `cd` into the repo to enter the dev shell automatically; otherwise `nix develop`. Plain `npm install` against any Node ≥ 20 also works — the flake is a convenience, not a requirement.
+
 ## Non-Negotiable Requirements
 
 1. **Sub-50ms added latency** over a decent connection (relay processing + network, not including local MIDI hardware)
@@ -62,7 +90,8 @@ midi-relay/
 │   ├── relay.js                 # Core relay logic: rooms, routing, connection mgmt
 │   ├── room.js                  # Room class: manages members, handles join/leave
 │   ├── protocol.js              # Message protocol definitions and parsing
-│   └── health.js                # Health check, static file serving
+│   ├── rate-limit.js            # Per-IP connection + per-connection message limiting
+│   └── health.js                # Health check JSON + static file serving for browser client
 ├── client/
 │   ├── browser/
 │   │   ├── index.html           # Browser client — Web MIDI API sender/receiver
@@ -82,15 +111,22 @@ midi-relay/
 ├── docs/
 │   ├── client-guide.md          # Guide for operators to connect
 │   ├── protocol.md              # Wire protocol documentation
+│   ├── operations-guide.md      # Running/monitoring the deployed relay
 │   └── troubleshooting.md       # Common issues and fixes
 ├── test/
 │   ├── relay.test.js            # Unit tests for relay logic
 │   ├── room.test.js             # Unit tests for room management
 │   ├── protocol.test.js         # Unit tests for protocol parsing
-│   └── integration.test.js      # End-to-end test: sender → relay → receiver
+│   ├── rate-limit.test.js       # Unit tests for rate limiting
+│   ├── health.test.js           # Unit tests for /health + static serving
+│   ├── integration.test.js      # End-to-end test: sender → relay → receiver
+│   └── stress.js                # Load test (run manually; NOT a node --test file)
+├── flake.nix / .envrc           # Nix dev shell (Node 20) + direnv `use flake`
 └── logs/                        # Git-ignored; runtime logs go here
     └── .gitkeep
 ```
+
+The browser client folder also contains `docs.html` (served at `/docs`) and `style-brutalist.css` alongside `style.css`.
 
 ## Wire Protocol
 
@@ -132,7 +168,7 @@ The relay simply forwards binary frames from senders to all receivers in the sam
 3. Server responds with `joined` confirmation
 4. Sender transmits MIDI bytes as binary frames
 5. Server forwards binary frames to all receivers in the room
-6. WebSocket-level ping/pong keeps the connection alive (interval: 15s, timeout: 30s)
+6. WebSocket-level ping/pong keeps the connection alive: every `PING_INTERVAL_MS` (15s) the server pings each socket and terminates any that did not `pong` since the previous tick — so a dead connection is dropped within ~one interval
 
 ## Deployment Context
 
@@ -146,16 +182,24 @@ The relay simply forwards binary frames from senders to all receivers in the sam
 
 ## Environment Variables
 
+All are read in `server/index.js` and can also be passed as a config object to `startServer()` (the config arg takes precedence over env vars — used by tests).
+
 ```bash
 PORT=3500                          # Relay server listen port
 HOST=127.0.0.1                     # Bind address (localhost for Nginx proxy)
 WS_PATH=/midi                      # WebSocket endpoint path
 PING_INTERVAL_MS=15000             # WebSocket ping interval
-PING_TIMEOUT_MS=30000              # Connection considered dead after this
-LOG_LEVEL=info                     # info | debug | warn | error
 MAX_ROOMS=50                       # Maximum concurrent rooms
 MAX_CLIENTS_PER_ROOM=20            # Maximum clients per room
+
+# Rate limiting (see server/rate-limit.js)
+MAX_CONNECTIONS_PER_IP=10          # Max concurrent connections per IP
+CONNECT_RATE_LIMIT=20              # Max new connections per IP per window
+CONNECT_RATE_WINDOW_MS=60000       # Sliding window for connection rate
+MESSAGE_RATE_LIMIT=500             # Max messages/sec per connection (token bucket)
 ```
+
+Note: `PING_TIMEOUT_MS` and `LOG_LEVEL` are mentioned in older docs but are **not** read by the current code. Liveness is enforced by the ping interval + `isAlive`/`pong` flag in `server/index.js` (a missed pong before the next interval terminates the socket), and logging is plain timestamped `console.*`. Don't rely on these two vars without implementing them.
 
 ## Testing Strategy
 
@@ -173,6 +217,16 @@ MAX_CLIENTS_PER_ROOM=20            # Maximum clients per room
 4. **No MIDI interpretation on server** — the relay is a dumb pipe; all MIDI logic lives in clients
 5. **ES modules** — modern Node.js, no CommonJS
 6. **Node built-in test runner** — zero test framework dependencies
+
+## Rate Limiting (`server/rate-limit.js`)
+
+Despite "no auth", the relay does apply abuse protection. All limiters are in-memory and wired up in `server/index.js`; their counters are exposed on the `/health` JSON (`blockedConnections`, `throttledMessages`). Three layers:
+
+1. **Per-IP concurrent connections** — caps how many sockets one IP may hold open at once. Excess connections get a JSON error and `ws.close(1008, …)`.
+2. **Per-IP connection rate** — sliding window limiting new connections per IP per window (defends against connect/disconnect floods).
+3. **Per-connection message rate** — a token bucket per socket. Crucially, over-limit messages are **silently dropped, not disconnected** — a MIDI clock burst must never tear down an installation's connection. The default (500 msg/s) sits well above a 120 BPM clock stream (~48 msg/s).
+
+When touching this, keep the token-bucket drop-don't-disconnect behaviour: dropping a frame is acceptable, killing the socket is not.
 
 ## What Claude Code Should NOT Do
 
