@@ -643,6 +643,10 @@ select:focus-visible {
   color: var(--accent);
 }
 
+.log-name {
+  color: var(--status-ok);
+}
+
 .log-info {
   color: var(--status-ok);
 }
