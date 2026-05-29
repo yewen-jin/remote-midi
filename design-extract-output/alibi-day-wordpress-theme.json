@@ -1,0 +1,173 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "color": {
+      "palette": [
+        {
+          "slug": "primary",
+          "color": "#3253c7",
+          "name": "Primary"
+        },
+        {
+          "slug": "secondary",
+          "color": "#081692",
+          "name": "Secondary"
+        },
+        {
+          "slug": "accent",
+          "color": "#0e3b56",
+          "name": "Accent"
+        },
+        {
+          "slug": "neutral-1",
+          "color": "#ffffff",
+          "name": "Neutral 1"
+        },
+        {
+          "slug": "bg-ffffff",
+          "color": "#ffffff",
+          "name": "Background #ffffff"
+        },
+        {
+          "slug": "bg-4a60c6",
+          "color": "#4a60c6",
+          "name": "Background #4a60c6"
+        }
+      ],
+      "gradients": [
+        {
+          "slug": "gradient-1",
+          "gradient": "radial-gradient(circle at 16% 18%, rgba(191, 125, 173, 0.38) 0px, rgba(191, 125, 173, 0.38) 12%, rgba(0, 0, 0, 0) 28%)",
+          "name": "Gradient 1"
+        },
+        {
+          "slug": "gradient-2",
+          "gradient": "radial-gradient(circle at 84% 8%, rgba(147, 165, 228, 0.55) 0px, rgba(147, 165, 228, 0.55) 15%, rgba(0, 0, 0, 0) 32%)",
+          "name": "Gradient 2"
+        },
+        {
+          "slug": "gradient-3",
+          "gradient": "radial-gradient(circle at 74% 82%, rgba(67, 132, 157, 0.34) 0px, rgba(67, 132, 157, 0.34) 14%, rgba(0, 0, 0, 0) 31%)",
+          "name": "Gradient 3"
+        },
+        {
+          "slug": "gradient-4",
+          "gradient": "linear-gradient(135deg, rgb(248, 250, 255) 0%, rgb(244, 240, 255) 42%, rgb(234, 240, 255) 100%)",
+          "name": "Gradient 4"
+        }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "fontFamily": "Figtree",
+          "slug": "figtree",
+          "name": "Figtree"
+        },
+        {
+          "fontFamily": "JetBrains Mono",
+          "slug": "jetbrains-mono",
+          "name": "JetBrains Mono"
+        }
+      ],
+      "fontSizes": [
+        {
+          "size": "60px",
+          "slug": "size-60",
+          "name": "60px"
+        },
+        {
+          "size": "30px",
+          "slug": "size-30",
+          "name": "30px"
+        },
+        {
+          "size": "24px",
+          "slug": "size-24",
+          "name": "24px"
+        },
+        {
+          "size": "17px",
+          "slug": "size-17",
+          "name": "17px"
+        },
+        {
+          "size": "16px",
+          "slug": "size-16",
+          "name": "16px"
+        },
+        {
+          "size": "15px",
+          "slug": "size-15",
+          "name": "15px"
+        },
+        {
+          "size": "14px",
+          "slug": "size-14",
+          "name": "14px"
+        },
+        {
+          "size": "13px",
+          "slug": "size-13",
+          "name": "13px"
+        }
+      ]
+    },
+    "spacing": {
+      "spacingSizes": [
+        {
+          "size": "2px",
+          "slug": "spacing-2",
+          "name": "2px"
+        },
+        {
+          "size": "40px",
+          "slug": "spacing-40",
+          "name": "40px"
+        },
+        {
+          "size": "64px",
+          "slug": "spacing-64",
+          "name": "64px"
+        },
+        {
+          "size": "80px",
+          "slug": "spacing-80",
+          "name": "80px"
+        },
+        {
+          "size": "123px",
+          "slug": "spacing-123",
+          "name": "123px"
+        },
+        {
+          "size": "128px",
+          "slug": "spacing-128",
+          "name": "128px"
+        },
+        {
+          "size": "449px",
+          "slug": "spacing-449",
+          "name": "449px"
+        }
+      ]
+    },
+    "layout": {
+      "contentSize": "1152px",
+      "wideSize": "1400px"
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "#ffffff",
+      "text": "#162044"
+    },
+    "typography": {
+      "fontSize": "17px",
+      "lineHeight": "27.2px",
+      "fontFamily": "Figtree"
+    },
+    "spacing": {}
+  }
+}

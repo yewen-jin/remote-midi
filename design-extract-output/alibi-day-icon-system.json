@@ -1,0 +1,146 @@
+{
+  "library": "phosphor",
+  "confidence": 0.7,
+  "alternates": [
+    {
+      "id": "feather",
+      "score": 0.7
+    },
+    {
+      "id": "tabler",
+      "score": 0.6
+    }
+  ],
+  "stats": {
+    "count": 19,
+    "strokeOnly": 19,
+    "fillOnly": 0,
+    "mixed": 0,
+    "avgStrokeWidth": 2.25,
+    "gridDistribution": {
+      "24": 19
+    },
+    "roundedCapsFraction": 1
+  },
+  "signals": [
+    "strokeDominant",
+    "roundedCaps",
+    "grid24"
+  ],
+  "icons": [
+    {
+      "class": "lucide lucide-arrow-right h-3.5 w-3.5",
+      "grid": 24,
+      "strokeWidth": 2.4,
+      "style": "stroke"
+    },
+    {
+      "class": "lucide lucide-play h-4 w-4",
+      "grid": 24,
+      "strokeWidth": 2.4,
+      "style": "stroke"
+    },
+    {
+      "class": "lucide lucide-arrow-right h-4 w-4",
+      "grid": 24,
+      "strokeWidth": 2.4,
+      "style": "stroke"
+    },
+    {
+      "class": "lucide lucide-heart h-5 w-5",
+      "grid": 24,
+      "strokeWidth": 2.3,
+      "style": "stroke"
+    },
+    {
+      "class": "lucide lucide-timer h-4 w-4",
+      "grid": 24,
+      "strokeWidth": 2.2,
+      "style": "stroke"
+    },
+    {
+      "class": "lucide lucide-notebook-pen h-4 w-4",
+      "grid": 24,
+      "strokeWidth": 2.2,
+      "style": "stroke"
+    },
+    {
+      "class": "lucide lucide-search-check h-4 w-4",
+      "grid": 24,
+      "strokeWidth": 2.2,
+      "style": "stroke"
+    },
+    {
+      "class": "lucide lucide-network h-4 w-4",
+      "grid": 24,
+      "strokeWidth": 2.2,
+      "style": "stroke"
+    },
+    {
+      "class": "lucide lucide-timer h-3.5 w-3.5",
+      "grid": 24,
+      "strokeWidth": 2.2,
+      "style": "stroke"
+    },
+    {
+      "class": "lucide lucide-plus h-3.5 w-3.5",
+      "grid": 24,
+      "strokeWidth": 2.2,
+      "style": "stroke"
+    },
+    {
+      "class": "lucide lucide-notebook-pen h-3.5 w-3.5",
+      "grid": 24,
+      "strokeWidth": 2.2,
+      "style": "stroke"
+    },
+    {
+      "class": "lucide lucide-message-circle-question h-3.5 w-3.5",
+      "grid": 24,
+      "strokeWidth": 2.2,
+      "style": "stroke"
+    },
+    {
+      "class": "lucide lucide-calendar-range h-3.5 w-3.5",
+      "grid": 24,
+      "strokeWidth": 2.2,
+      "style": "stroke"
+    },
+    {
+      "class": "lucide lucide-chart-column h-3.5 w-3.5",
+      "grid": 24,
+      "strokeWidth": 2.2,
+      "style": "stroke"
+    },
+    {
+      "class": "lucide lucide-search-check h-3.5 w-3.5",
+      "grid": 24,
+      "strokeWidth": 2.2,
+      "style": "stroke"
+    },
+    {
+      "class": "lucide lucide-network h-3.5 w-3.5",
+      "grid": 24,
+      "strokeWidth": 2.2,
+      "style": "stroke"
+    },
+    {
+      "class": "lucide lucide-lock h-3.5 w-3.5",
+      "grid": 24,
+      "strokeWidth": 2.2,
+      "style": "stroke"
+    },
+    {
+      "class": "lucide lucide-book-open mx-auto h-5 w-5 text-alibi-pink",
+      "grid": 24,
+      "strokeWidth": 2.3,
+      "style": "stroke"
+    },
+    {
+      "class": "lucide lucide-arrow-right h-4 w-4",
+      "grid": 24,
+      "strokeWidth": 2.4,
+      "style": "stroke"
+    }
+  ]
+}

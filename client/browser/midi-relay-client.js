@@ -185,7 +185,7 @@ class MidiRelayClient {
       .map((b) => b.toString(16).padStart(2, '0').toUpperCase())
       .join(' ');
     const suffix = data.length > 6 ? ` … (${data.length} bytes)` : '';
-    this.#log('midi', `← ${hex}${suffix}`);
+    this.#log('midi', `← ${hex}${suffix}`, this.#name);
 
     // Forward to MIDI output if available (receiver mode)
     if (this.#activeOutput) {
@@ -320,7 +320,7 @@ class MidiRelayClient {
               .slice(0, 6)
               .map((b) => b.toString(16).padStart(2, '0').toUpperCase())
               .join(' ');
-            this.#log('midi', `→ ${hex}`);
+            this.#log('midi', `→ ${hex}`, this.#name);
           }
         };
         this.#log('info', `Bound to MIDI input: ${this.#activeInput.name}`);
@@ -361,14 +361,19 @@ class MidiRelayClient {
    *
    * @param {'info' | 'warn' | 'error' | 'midi'} level
    * @param {string} text
+   * @param {string} [name] — optional client display name, shown after the message
    */
-  #log(level, text) {
+  #log(level, text, name = '') {
     const log = ui.activityLog;
     const entry = document.createElement('div');
     entry.className = 'log-entry';
 
     const time = new Date().toLocaleTimeString();
-    entry.innerHTML = `<span class="log-time">${time}</span><span class="log-${level}">${escapeHtml(text)}</span>`;
+    let html = `<span class="log-time">${time}</span><span class="log-${level}">${escapeHtml(text)}</span>`;
+    if (name) {
+      html += `<span class="log-name">${escapeHtml(name)}</span>`;
+    }
+    entry.innerHTML = html;
 
     log.appendChild(entry);
     log.scrollTop = log.scrollHeight;

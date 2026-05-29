@@ -1,0 +1,45 @@
+{
+  "openGraph": {},
+  "twitter": {},
+  "description": "Alibi is a witness with a warm voice. Log what you did, then let it reflect your productivity patterns back clearly.",
+  "canonical": null,
+  "themeColor": "#f8faff",
+  "viewport": "width=device-width, initial-scale=1, viewport-fit=cover",
+  "favicons": [
+    {
+      "rel": "icon",
+      "href": "https://www.alibi.day/favicon.ico",
+      "sizes": "",
+      "type": ""
+    },
+    {
+      "rel": "icon",
+      "href": "https://www.alibi.day/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "rel": "icon",
+      "href": "https://www.alibi.day/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "rel": "apple-touch-icon",
+      "href": "https://www.alibi.day/apple-touch-icon.png",
+      "sizes": "",
+      "type": ""
+    }
+  ],
+  "manifest": "https://www.alibi.day/site.webmanifest",
+  "structuredData": [],
+  "score": {
+    "hasOg": false,
+    "hasTwitter": false,
+    "hasDescription": true,
+    "hasCanonical": false,
+    "hasStructuredData": false,
+    "hasFavicon": true,
+    "hasThemeColor": true
+  }
+}
