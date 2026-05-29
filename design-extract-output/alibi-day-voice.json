@@ -1,0 +1,58 @@
+{
+  "tone": "friendly",
+  "pronoun": "you-only",
+  "headingStyle": "all-lowercase",
+  "headingLengthClass": "tight",
+  "ctaVerbs": [
+    {
+      "value": "sign",
+      "count": 1
+    },
+    {
+      "value": "try",
+      "count": 1
+    },
+    {
+      "value": "create",
+      "count": 1
+    },
+    {
+      "value": "start",
+      "count": 1
+    }
+  ],
+  "buttonPatterns": [
+    {
+      "value": "sign in",
+      "count": 1
+    },
+    {
+      "value": "try the demo",
+      "count": 1
+    },
+    {
+      "value": "create account",
+      "count": 1
+    },
+    {
+      "value": "start with a demo session",
+      "count": 1
+    }
+  ],
+  "sampleHeadings": [
+    "the friend who remembers\nyour day",
+    "a timeline with memory",
+    "CAPTURE",
+    "PRESERVE",
+    "REFLECT",
+    "the friend who remembers\nyour day",
+    "a timeline with memory",
+    "CAPTURE",
+    "PRESERVE",
+    "REFLECT"
+  ],
+  "stats": {
+    "buttons": 4,
+    "headings": 22
+  }
+}

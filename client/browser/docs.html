@@ -3,10 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Setup Guide — MIDI Relay</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta name="color-scheme" content="dark light" />
+    <title>Setup Guide — MIDI RELAY</title>
+    <link id="style-link" rel="stylesheet" href="style.css" />
+    <script>
+      // ── FOUC guard — same logic as index.html ───────────────────
+      (function () {
+        const root = document.documentElement;
+        const savedStyle = localStorage.getItem('style');
+        const savedMode = localStorage.getItem('mode');
+
+        const style = savedStyle === 'style2' ? 'style2' : 'brutalist';
+        const mode = ['auto', 'day', 'night'].includes(savedMode)
+          ? savedMode
+          : 'auto';
+
+        document.getElementById('style-link').href =
+          style === 'style2' ? 'style.css' : 'style-brutalist.css';
+        root.setAttribute('data-style', style);
+
+        function applyTheme(isLight) {
+          root.setAttribute('data-theme', isLight ? 'day' : 'night');
+        }
+
+        if (mode === 'day') applyTheme(true);
+        else if (mode === 'night') applyTheme(false);
+        else {
+          const mq = matchMedia('(prefers-color-scheme: light)');
+          applyTheme(mq.matches);
+          mq.addEventListener('change', (e) => applyTheme(e.matches));
+        }
+        root.setAttribute('data-mode', mode);
+      })();
+    </script>
     <style>
-      /* Docs-specific styles */
+      /* Docs-specific layout only — colours come from loaded stylesheet */
       .docs-content {
         max-width: 720px;
         margin: 0 auto;
@@ -20,7 +51,7 @@
         margin-top: 2.5rem;
         margin-bottom: 1rem;
         padding-bottom: 0.5rem;
-        border-bottom: var(--border-width) solid var(--border);
+        border-bottom: 1px solid var(--hairline);
       }
 
       .docs-content h3 {
@@ -50,56 +81,40 @@
       }
 
       .docs-content code {
-        font-family: inherit;
-        background: var(--muted);
-        border: 1px solid var(--border);
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        background: var(--surface-recessed);
+        border: 1px solid var(--hairline);
         padding: 0.15em 0.4em;
         font-size: 0.85em;
+        border-radius: 4px;
       }
 
       .docs-content .diagram {
         padding: 1.5em;
         margin: 1.5rem 0;
-        border: var(--border-width) solid var(--border);
-        background: var(--muted);
-        font-family: inherit;
+        border: 1px solid var(--hairline);
+        background: var(--surface-recessed);
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
         font-size: 0.8rem;
         line-height: 1.6;
         overflow-x: auto;
         white-space: pre;
+        border-radius: var(--radius-sm);
       }
 
       .docs-content .note {
         padding: 1em 1.2em;
         margin: 1rem 0;
-        border: var(--border-width) solid var(--border);
-        box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--shadow);
-        background: var(--surface);
+        background: var(--surface-recessed);
+        border: 1px solid var(--hairline);
+        border-radius: var(--radius);
         font-size: 0.85rem;
       }
 
       .docs-content .note strong {
         text-transform: uppercase;
         letter-spacing: 0.04em;
-      }
-
-      .back-link {
-        display: inline-block;
-        font-size: 0.85rem;
-        font-weight: 700;
-        color: var(--fg);
-        text-decoration: none;
-        border: var(--border-width) solid var(--border);
-        padding: 0.4em 0.8em;
-        transition:
-          transform 0.1s,
-          box-shadow 0.1s;
-        box-shadow: 2px 2px 0 var(--shadow);
-      }
-
-      .back-link:hover {
-        transform: translate(1px, 1px);
-        box-shadow: 1px 1px 0 var(--shadow);
+        font-size: 0.75rem;
       }
     </style>
   </head>
@@ -107,17 +122,10 @@
     <header>
       <div class="header-row">
         <h1>Setup Guide</h1>
-        <button
-          class="btn btn-outline btn-sm"
-          id="theme-toggle"
-          aria-label="Toggle theme"
-        >
-          ☀ / ☾
-        </button>
       </div>
-      <p class="subtitle">MIDI Relay</p>
+      <p class="subtitle">MIDI RELAY</p>
       <p style="margin-top: 1rem">
-        <a href="/" class="back-link">&larr; Back to MIDI Relay</a>
+        <a href="/" class="btn btn-sm btn-outline">&larr; Back to app</a>
       </p>
     </header>
 
@@ -294,7 +302,6 @@
 
       <!-- Connection diagram -->
       <h2 id="diagram">How it works</h2>
-      <!-- prettier-ignore -->
       <pre class="diagram">Your MIDI Device
     ↓
 Browser (Sender)
@@ -309,37 +316,21 @@ Your DAW (Ableton, Logic, etc.)</pre>
     </main>
 
     <footer>
-      <p>MIDI Relay &mdash; <a href="/">Back to app</a></p>
+      <p><a href="/">Back to app</a></p>
     </footer>
 
     <script>
-      // Day/night theme toggle (same logic as main page)
-      const toggle = document.getElementById('theme-toggle');
       const root = document.documentElement;
+      const styleLink = document.getElementById('style-link');
 
-      function updateToggleLabel() {
-        const theme = root.getAttribute('data-theme');
-        const isNight =
-          theme === 'night' ||
-          (!theme && matchMedia('(prefers-color-scheme: dark)').matches);
-        toggle.textContent = isNight ? '☀ Day' : '☾ Night';
-        toggle.setAttribute(
-          'aria-label',
-          isNight ? 'Switch to day mode' : 'Switch to night mode',
-        );
+      // Check current style from main page
+      const currentStyle = root.getAttribute('data-style');
+      const currentMode = root.getAttribute('data-mode');
+
+      // Update stylesheet if needed (in case localStorage changed since page load)
+      if (currentStyle) {
+        styleLink.href = currentStyle === 'style2' ? 'style.css' : 'style-brutalist.css';
       }
-
-      const saved = localStorage.getItem('theme');
-      if (saved) root.setAttribute('data-theme', saved);
-      updateToggleLabel();
-
-      toggle.addEventListener('click', () => {
-        const current = root.getAttribute('data-theme');
-        const next = current === 'night' ? 'day' : 'night';
-        root.setAttribute('data-theme', next);
-        localStorage.setItem('theme', next);
-        updateToggleLabel();
-      });
     </script>
   </body>
 </html>

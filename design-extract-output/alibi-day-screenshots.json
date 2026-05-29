@@ -1,0 +1,100 @@
+{
+  "components": [
+    {
+      "cluster": "button--primary",
+      "variant": 0,
+      "path": "screenshots/button-primary-0.png",
+      "bounds": {
+        "w": 93,
+        "h": 33
+      },
+      "kind": "button",
+      "variantHint": "primary",
+      "sizeHint": "",
+      "retina": true
+    },
+    {
+      "cluster": "button--primary",
+      "variant": 1,
+      "path": "screenshots/button-primary-1.png",
+      "bounds": {
+        "w": 155,
+        "h": 46
+      },
+      "kind": "button",
+      "variantHint": "primary",
+      "sizeHint": "",
+      "retina": true
+    },
+    {
+      "cluster": "button--primary",
+      "variant": 2,
+      "path": "screenshots/button-primary-2.png",
+      "bounds": {
+        "w": 236,
+        "h": 46
+      },
+      "kind": "button",
+      "variantHint": "primary",
+      "sizeHint": "",
+      "retina": true
+    },
+    {
+      "cluster": "button--secondary",
+      "variant": 0,
+      "path": "screenshots/button-secondary-0.png",
+      "bounds": {
+        "w": 171,
+        "h": 48
+      },
+      "kind": "button",
+      "variantHint": "secondary",
+      "sizeHint": "",
+      "retina": true
+    },
+    {
+      "cluster": "card--default",
+      "variant": 0,
+      "path": "screenshots/card-default-0.png",
+      "bounds": {
+        "w": 505,
+        "h": 557
+      },
+      "kind": "card",
+      "variantHint": "default",
+      "sizeHint": "",
+      "retina": true
+    },
+    {
+      "cluster": "card--default",
+      "variant": 1,
+      "path": "screenshots/card-default-1.png",
+      "bounds": {
+        "w": 455,
+        "h": 81
+      },
+      "kind": "card",
+      "variantHint": "default",
+      "sizeHint": "",
+      "retina": true
+    },
+    {
+      "cluster": "card--default",
+      "variant": 2,
+      "path": "screenshots/card-default-2.png",
+      "bounds": {
+        "w": 455,
+        "h": 105
+      },
+      "kind": "card",
+      "variantHint": "default",
+      "sizeHint": "",
+      "retina": true
+    }
+  ],
+  "fullPage": {
+    "path": "screenshots/full-page.png",
+    "retina": true
+  },
+  "count": 7
+}

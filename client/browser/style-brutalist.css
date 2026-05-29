@@ -192,6 +192,10 @@ select {
   cursor: pointer;
 }
 
+.controls {
+  margin-top: 0.5rem;
+}
+
 /* ── Buttons ─────────────────────────────────────────────────── */
 
 .btn {
@@ -405,6 +409,7 @@ select:focus-visible {
 
 .log-name {
   color: var(--status-ok);
+  margin-left: 0.75rem;
 }
 
 .log-info {

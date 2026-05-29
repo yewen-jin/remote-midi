@@ -1,0 +1,233 @@
+{
+  "pageIntent": {
+    "type": "landing",
+    "confidence": 0.45,
+    "path": "/",
+    "title": "alibi — for the days you can't see clearly",
+    "description": "Alibi is a witness with a warm voice. Log what you did, then let it reflect your productivity patterns back clearly.",
+    "signals": [
+      {
+        "kind": "url",
+        "type": "landing",
+        "weight": 0.45,
+        "detail": "root-path"
+      }
+    ],
+    "alternates": [],
+    "needsSmart": true
+  },
+  "sectionRoles": {
+    "sections": [
+      {
+        "index": 0,
+        "tag": "main",
+        "role": "content",
+        "subrole": null,
+        "confidence": 0.3,
+        "heading": "the friend who remembers\nyour day",
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "w": 1280,
+          "h": 2028.703125
+        },
+        "buttonCount": 4,
+        "cardCount": 50,
+        "slots": {
+          "heading": "the friend who remembers\nyour day",
+          "subheadings": [
+            "a timeline with memory",
+            "CAPTURE",
+            "PRESERVE",
+            "REFLECT"
+          ],
+          "ctaCount": 4,
+          "lede": "alibi\ndemo\ndocs\nsign in"
+        },
+        "needsSmart": true
+      },
+      {
+        "index": 1,
+        "tag": "nav",
+        "role": "nav",
+        "subrole": null,
+        "confidence": 0.9,
+        "heading": null,
+        "bounds": {
+          "x": 483,
+          "y": 24,
+          "w": 314,
+          "h": 58.796875
+        },
+        "buttonCount": 1,
+        "cardCount": 1,
+        "slots": {
+          "ctaCount": 1,
+          "lede": "alibi\ndemo\ndocs\nsign in"
+        },
+        "needsSmart": false
+      },
+      {
+        "index": 2,
+        "tag": "section",
+        "role": "feature-grid",
+        "subrole": null,
+        "confidence": 0.8,
+        "heading": "the friend who remembers\nyour day",
+        "bounds": {
+          "x": 64,
+          "y": 0,
+          "w": 1152,
+          "h": 800
+        },
+        "buttonCount": 2,
+        "cardCount": 18,
+        "slots": {
+          "heading": "the friend who remembers\nyour day",
+          "subheadings": [
+            "a timeline with memory",
+            "CAPTURE",
+            "PRESERVE",
+            "REFLECT"
+          ],
+          "ctaCount": 2,
+          "lede": "NOTES-FIRST TIME EVIDENCE"
+        },
+        "needsSmart": false
+      },
+      {
+        "index": 3,
+        "tag": "section",
+        "role": "content",
+        "subrole": null,
+        "confidence": 0.3,
+        "heading": "a timeline with memory",
+        "bounds": {
+          "x": 686.59375,
+          "y": 153.40625,
+          "w": 505.390625,
+          "h": 557.1875
+        },
+        "buttonCount": 0,
+        "cardCount": 14,
+        "slots": {
+          "heading": "a timeline with memory",
+          "subheadings": [
+            "CAPTURE",
+            "PRESERVE",
+            "REFLECT",
+            "RETRIEVE"
+          ],
+          "lede": "WHAT IT IS"
+        },
+        "needsSmart": true
+      },
+      {
+        "index": 4,
+        "tag": "section",
+        "role": "content",
+        "subrole": null,
+        "confidence": 0.3,
+        "heading": "a complete record, not a clean fiction",
+        "bounds": {
+          "x": 64,
+          "y": 800,
+          "w": 1152,
+          "h": 724.125
+        },
+        "buttonCount": 0,
+        "cardCount": 27,
+        "slots": {
+          "heading": "a complete record, not a clean fiction",
+          "subheadings": [
+            "timer-first blocks",
+            "manual time blocks",
+            "notes as evidence",
+            "chat as reconstruction"
+          ],
+          "lede": "WHAT ALIBI DOES"
+        },
+        "needsSmart": true
+      },
+      {
+        "index": 5,
+        "tag": "header",
+        "role": "nav",
+        "subrole": null,
+        "confidence": 0.4,
+        "heading": "a complete record, not a clean fiction",
+        "bounds": {
+          "x": 88,
+          "y": 800,
+          "w": 768,
+          "h": 144
+        },
+        "buttonCount": 0,
+        "cardCount": 0,
+        "slots": {
+          "heading": "a complete record, not a clean fiction",
+          "lede": "WHAT ALIBI DOES"
+        },
+        "needsSmart": true
+      },
+      {
+        "index": 6,
+        "tag": "section",
+        "role": "testimonial",
+        "subrole": null,
+        "confidence": 0.8,
+        "heading": "source-backed memory for real days",
+        "bounds": {
+          "x": 128,
+          "y": 1524.125,
+          "w": 1024,
+          "h": 368.390625
+        },
+        "buttonCount": 1,
+        "cardCount": 1,
+        "slots": {
+          "heading": "source-backed memory for real days",
+          "ctaCount": 1
+        },
+        "needsSmart": false
+      },
+      {
+        "index": 7,
+        "tag": "footer",
+        "role": "footer",
+        "subrole": null,
+        "confidence": 0.95,
+        "heading": null,
+        "bounds": {
+          "x": 0,
+          "y": 1892.515625,
+          "w": 1280,
+          "h": 136.1875
+        },
+        "buttonCount": 0,
+        "cardCount": 1,
+        "slots": {
+          "lede": "alibi - for the days you can't see clearly"
+        },
+        "needsSmart": false
+      }
+    ],
+    "counts": {
+      "content": 3,
+      "nav": 2,
+      "feature-grid": 1,
+      "testimonial": 1,
+      "footer": 1
+    },
+    "readingOrder": [
+      "content",
+      "feature-grid",
+      "nav",
+      "content",
+      "content",
+      "nav",
+      "testimonial",
+      "footer"
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "materialLanguage": {
+    "label": "flat",
+    "confidence": 0,
+    "signals": [],
+    "metrics": {
+      "saturation": 0.596,
+      "shadowProfile": "soft",
+      "avgShadowBlur": 0,
+      "maxShadowBlur": 0,
+      "insetShadows": 0,
+      "avgRadius": 16,
+      "maxRadius": 16,
+      "hasPill": false,
+      "hasBackdropBlur": false,
+      "gradientCount": 4
+    },
+    "alternates": []
+  },
+  "imageryStyle": {
+    "label": "none",
+    "confidence": 0,
+    "counts": {},
+    "aspectRatios": [],
+    "radiusProfile": "none",
+    "signals": []
+  },
+  "backgroundPatterns": {
+    "labels": [
+      "gradient-mesh"
+    ],
+    "counts": {
+      "noise": 0,
+      "dotGrid": 0,
+      "lineGrid": 0,
+      "meshCount": 1,
+      "svgPattern": 0
+    },
+    "gradientTotals": {
+      "radial": 3,
+      "linear": 1
+    },
+    "samples": [
+      {
+        "tag": "gradient-mesh",
+        "value": "radial-gradient(circle at 16% 18%, rgba(191, 125, 173, 0.38) 0px, rgba(191, 125, 173, 0.38) 12%, rgba(0, 0, 0, 0) 28%), radial-gradient(circle at 84% 8%, rgba(147, 165, 228, 0.55) 0px, rgba(147, 165, "
+      }
+    ]
+  }
+}

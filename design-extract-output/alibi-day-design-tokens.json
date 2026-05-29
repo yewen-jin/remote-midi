@@ -1,0 +1,186 @@
+{
+  "$metadata": {
+    "generator": "designlang",
+    "version": "7.0.0",
+    "spec": "https://design-tokens.github.io/community-group/format/",
+    "source": "https://alibi.day",
+    "generatedAt": "2026-05-29T01:00:06.364Z"
+  },
+  "primitive": {
+    "color": {
+      "brand": {
+        "primary": {
+          "$value": "#3253c7",
+          "$type": "color"
+        },
+        "secondary": {
+          "$value": "#081692",
+          "$type": "color"
+        }
+      },
+      "neutral": {
+        "n100": {
+          "$value": "#ffffff",
+          "$type": "color"
+        }
+      },
+      "background": {
+        "bg0": {
+          "$value": "#ffffff",
+          "$type": "color"
+        },
+        "bg1": {
+          "$value": "#4a60c6",
+          "$type": "color"
+        }
+      },
+      "text": {
+        "text0": {
+          "$value": "#162044",
+          "$type": "color"
+        },
+        "text1": {
+          "$value": "#3253c7",
+          "$type": "color"
+        },
+        "text2": {
+          "$value": "#43849d",
+          "$type": "color"
+        },
+        "text3": {
+          "$value": "#ffffff",
+          "$type": "color"
+        },
+        "text4": {
+          "$value": "#bf7dad",
+          "$type": "color"
+        },
+        "text5": {
+          "$value": "#0e3b56",
+          "$type": "color"
+        }
+      }
+    },
+    "spacing": {
+      "s0": {
+        "$value": "2px",
+        "$type": "dimension"
+      },
+      "s1": {
+        "$value": "40px",
+        "$type": "dimension"
+      },
+      "s2": {
+        "$value": "64px",
+        "$type": "dimension"
+      },
+      "s3": {
+        "$value": "80px",
+        "$type": "dimension"
+      },
+      "s4": {
+        "$value": "123px",
+        "$type": "dimension"
+      },
+      "s5": {
+        "$value": "128px",
+        "$type": "dimension"
+      },
+      "s6": {
+        "$value": "449px",
+        "$type": "dimension"
+      }
+    },
+    "radius": {
+      "r0": {
+        "$value": "16px",
+        "$type": "dimension"
+      }
+    },
+    "shadow": {
+      "sh0": {
+        "$value": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(50, 83, 199, 0.06) 0px 1px 3px 0px, rgba(50, 83, 199, 0.09) 0px 6px 20px 0px",
+        "$type": "shadow"
+      },
+      "sh1": {
+        "$value": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(50, 83, 199, 0.2) 0px 2px 6px 0px, rgba(50, 83, 199, 0.16) 0px 4px 14px 0px",
+        "$type": "shadow"
+      },
+      "sh2": {
+        "$value": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(50, 83, 199, 0.06) 0px 1px 3px 0px, rgba(50, 83, 199, 0.07) 0px 3px 8px 0px",
+        "$type": "shadow"
+      },
+      "sh3": {
+        "$value": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(50, 83, 199, 0.08) 0px 2px 6px 0px, rgba(50, 83, 199, 0.12) 0px 12px 32px 0px",
+        "$type": "shadow"
+      },
+      "sh4": {
+        "$value": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(50, 83, 199, 0.05) 0px 1px 2px 0px, rgba(50, 83, 199, 0.08) 0px 2px 5px 0px inset",
+        "$type": "shadow"
+      },
+      "sh5": {
+        "$value": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(50, 83, 199, 0.08) 0px 2px 6px 0px inset",
+        "$type": "shadow"
+      }
+    },
+    "fontFamily": {
+      "f0": {
+        "$value": "Figtree",
+        "$type": "fontFamily"
+      },
+      "f1": {
+        "$value": "JetBrains Mono",
+        "$type": "fontFamily"
+      }
+    }
+  },
+  "semantic": {
+    "color": {
+      "action": {
+        "primary": {
+          "$value": "{primitive.color.brand.primary}",
+          "$type": "color"
+        },
+        "secondary": {
+          "$value": "{primitive.color.brand.secondary}",
+          "$type": "color"
+        }
+      },
+      "surface": {
+        "default": {
+          "$value": "{primitive.color.background.bg0}",
+          "$type": "color"
+        }
+      },
+      "text": {
+        "body": {
+          "$value": "{primitive.color.text.text0}",
+          "$type": "color"
+        }
+      }
+    },
+    "typography": {
+      "body": {
+        "$value": {
+          "fontFamily": "Figtree",
+          "fontSize": "60px",
+          "fontWeight": "900",
+          "lineHeight": "60px"
+        },
+        "$type": "typography"
+      }
+    },
+    "radius": {
+      "control": {
+        "$value": "{primitive.radius.r0}",
+        "$type": "dimension"
+      }
+    },
+    "shadow": {
+      "elevated": {
+        "$value": "{primitive.shadow.sh0}",
+        "$type": "shadow"
+      }
+    }
+  }
+}

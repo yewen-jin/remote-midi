@@ -1,0 +1,88 @@
+{
+  "$schema": "https://designlang.app/schemas/gradients.json",
+  "source": "https://alibi.day",
+  "generated": "2026-05-29T01:00:15.992Z",
+  "count": 4,
+  "gradients": [
+    {
+      "raw": "radial-gradient(circle at 16% 18%, rgba(191, 125, 173, 0.38) 0px, rgba(191, 125, 173, 0.38) 12%, rgba(0, 0, 0, 0) 28%)",
+      "type": "radial",
+      "direction": "circle at 16% 18%",
+      "stops": [
+        {
+          "color": "rgba(191, 125, 173, 0.38)",
+          "position": "0px"
+        },
+        {
+          "color": "rgba(191, 125, 173, 0.38)",
+          "position": "12%"
+        },
+        {
+          "color": "rgba(0, 0, 0, 0)",
+          "position": "28%"
+        }
+      ],
+      "classification": "bold"
+    },
+    {
+      "raw": "radial-gradient(circle at 84% 8%, rgba(147, 165, 228, 0.55) 0px, rgba(147, 165, 228, 0.55) 15%, rgba(0, 0, 0, 0) 32%)",
+      "type": "radial",
+      "direction": "circle at 84% 8%",
+      "stops": [
+        {
+          "color": "rgba(147, 165, 228, 0.55)",
+          "position": "0px"
+        },
+        {
+          "color": "rgba(147, 165, 228, 0.55)",
+          "position": "15%"
+        },
+        {
+          "color": "rgba(0, 0, 0, 0)",
+          "position": "32%"
+        }
+      ],
+      "classification": "bold"
+    },
+    {
+      "raw": "radial-gradient(circle at 74% 82%, rgba(67, 132, 157, 0.34) 0px, rgba(67, 132, 157, 0.34) 14%, rgba(0, 0, 0, 0) 31%)",
+      "type": "radial",
+      "direction": "circle at 74% 82%",
+      "stops": [
+        {
+          "color": "rgba(67, 132, 157, 0.34)",
+          "position": "0px"
+        },
+        {
+          "color": "rgba(67, 132, 157, 0.34)",
+          "position": "14%"
+        },
+        {
+          "color": "rgba(0, 0, 0, 0)",
+          "position": "31%"
+        }
+      ],
+      "classification": "bold"
+    },
+    {
+      "raw": "linear-gradient(135deg, rgb(248, 250, 255) 0%, rgb(244, 240, 255) 42%, rgb(234, 240, 255) 100%)",
+      "type": "linear",
+      "direction": "135deg",
+      "stops": [
+        {
+          "color": "rgb(248, 250, 255)",
+          "position": "0%"
+        },
+        {
+          "color": "rgb(244, 240, 255)",
+          "position": "42%"
+        },
+        {
+          "color": "rgb(234, 240, 255)",
+          "position": "100%"
+        }
+      ],
+      "classification": "bold"
+    }
+  ]
+}

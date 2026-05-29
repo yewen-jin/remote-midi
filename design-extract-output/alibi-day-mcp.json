@@ -1,0 +1,414 @@
+{
+  "colors": {
+    "all": [
+      {
+        "hex": "#162044",
+        "rgb": {
+          "r": 22,
+          "g": 32,
+          "b": 68,
+          "a": 1
+        },
+        "hsl": {
+          "h": 227,
+          "s": 51,
+          "l": 18
+        },
+        "count": 219,
+        "contexts": [
+          "text",
+          "border"
+        ]
+      },
+      {
+        "hex": "#bf7dad",
+        "rgb": {
+          "r": 191,
+          "g": 125,
+          "b": 173,
+          "a": 1
+        },
+        "hsl": {
+          "h": 316,
+          "s": 34,
+          "l": 62
+        },
+        "count": 122,
+        "contexts": [
+          "text",
+          "border"
+        ]
+      },
+      {
+        "hex": "#43849d",
+        "rgb": {
+          "r": 67,
+          "g": 132,
+          "b": 157,
+          "a": 1
+        },
+        "hsl": {
+          "h": 197,
+          "s": 40,
+          "l": 44
+        },
+        "count": 92,
+        "contexts": [
+          "text",
+          "border"
+        ]
+      },
+      {
+        "hex": "#ffffff",
+        "rgb": {
+          "r": 255,
+          "g": 255,
+          "b": 255,
+          "a": 1
+        },
+        "hsl": {
+          "h": 0,
+          "s": 0,
+          "l": 100
+        },
+        "count": 34,
+        "contexts": [
+          "background",
+          "text",
+          "border"
+        ]
+      },
+      {
+        "hex": "#3253c7",
+        "rgb": {
+          "r": 50,
+          "g": 83,
+          "b": 199,
+          "a": 1
+        },
+        "hsl": {
+          "h": 227,
+          "s": 60,
+          "l": 49
+        },
+        "count": 24,
+        "contexts": [
+          "text",
+          "border",
+          "background"
+        ]
+      },
+      {
+        "hex": "#081692",
+        "rgb": {
+          "r": 8,
+          "g": 22,
+          "b": 146,
+          "a": 0.12
+        },
+        "hsl": {
+          "h": 234,
+          "s": 90,
+          "l": 30
+        },
+        "count": 13,
+        "contexts": [
+          "border"
+        ]
+      },
+      {
+        "hex": "#0e3b56",
+        "rgb": {
+          "r": 14,
+          "g": 59,
+          "b": 86,
+          "a": 0.75
+        },
+        "hsl": {
+          "h": 203,
+          "s": 72,
+          "l": 20
+        },
+        "count": 10,
+        "contexts": [
+          "text",
+          "border",
+          "background"
+        ]
+      },
+      {
+        "hex": "#85346b",
+        "rgb": {
+          "r": 133,
+          "g": 52,
+          "b": 107,
+          "a": 0.15
+        },
+        "hsl": {
+          "h": 319,
+          "s": 44,
+          "l": 36
+        },
+        "count": 10,
+        "contexts": [
+          "background"
+        ]
+      },
+      {
+        "hex": "#4a60c6",
+        "rgb": {
+          "r": 74,
+          "g": 96,
+          "b": 198,
+          "a": 0.4
+        },
+        "hsl": {
+          "h": 229,
+          "s": 52,
+          "l": 53
+        },
+        "count": 7,
+        "contexts": [
+          "background",
+          "border"
+        ]
+      }
+    ]
+  },
+  "regions": [
+    {
+      "role": "content",
+      "tag": "main",
+      "bounds": {
+        "x": 0,
+        "y": 0,
+        "w": 1280,
+        "h": 2028.703125
+      },
+      "heading": "the friend who remembers\nyour day",
+      "buttonCount": 4,
+      "cardCount": 50,
+      "className": "alibi-page relative w-full"
+    },
+    {
+      "role": "nav",
+      "tag": "nav",
+      "bounds": {
+        "x": 483,
+        "y": 24,
+        "w": 314,
+        "h": 58.796875
+      },
+      "heading": null,
+      "buttonCount": 1,
+      "cardCount": 1,
+      "className": "alibi-pill fixed left-1/2 top-6 z-50 flex -translate-x-1/2 items-center gap-5 px-6 py-3"
+    },
+    {
+      "role": "features",
+      "tag": "section",
+      "bounds": {
+        "x": 64,
+        "y": 0,
+        "w": 1152,
+        "h": 800
+      },
+      "heading": "the friend who remembers\nyour day",
+      "buttonCount": 2,
+      "cardCount": 18,
+      "className": "mx-auto grid min-h-screen max-w-6xl items-center gap-10 px-6 pb-16 pt-32 lg:grid-cols-[1.05fr_0.95fr]"
+    },
+    {
+      "role": "content",
+      "tag": "section",
+      "bounds": {
+        "x": 686.59375,
+        "y": 153.40625,
+        "w": 505.390625,
+        "h": 557.1875
+      },
+      "heading": "a timeline with memory",
+      "buttonCount": 0,
+      "cardCount": 14,
+      "className": "alibi-card-pop p-6"
+    },
+    {
+      "role": "content",
+      "tag": "section",
+      "bounds": {
+        "x": 64,
+        "y": 800,
+        "w": 1152,
+        "h": 724.125
+      },
+      "heading": "a complete record, not a clean fiction",
+      "buttonCount": 0,
+      "cardCount": 27,
+      "className": "mx-auto max-w-6xl px-6 pb-20"
+    },
+    {
+      "role": "nav",
+      "tag": "header",
+      "bounds": {
+        "x": 88,
+        "y": 800,
+        "w": 768,
+        "h": 144
+      },
+      "heading": "a complete record, not a clean fiction",
+      "buttonCount": 0,
+      "cardCount": 0,
+      "className": "mb-8 max-w-3xl"
+    },
+    {
+      "role": "testimonials",
+      "tag": "section",
+      "bounds": {
+        "x": 128,
+        "y": 1524.125,
+        "w": 1024,
+        "h": 368.390625
+      },
+      "heading": "source-backed memory for real days",
+      "buttonCount": 1,
+      "cardCount": 1,
+      "className": "mx-auto max-w-5xl px-6 pb-20"
+    },
+    {
+      "role": "footer",
+      "tag": "footer",
+      "bounds": {
+        "x": 0,
+        "y": 1892.515625,
+        "w": 1280,
+        "h": 136.1875
+      },
+      "heading": null,
+      "buttonCount": 0,
+      "cardCount": 1,
+      "className": "border-t border-alibi-blue/15 py-8 text-center"
+    }
+  ],
+  "componentClusters": [
+    {
+      "kind": "button",
+      "structuralHash": "a>svg",
+      "instanceCount": 4,
+      "variants": [
+        {
+          "css": {
+            "background": "rgb(50, 83, 199)",
+            "color": "rgb(255, 255, 255)",
+            "padding": "6px 16px 6px 16px",
+            "borderRadius": "3.35544e+07px",
+            "border": "0px solid rgb(255, 255, 255)",
+            "fontSize": "13px",
+            "fontWeight": "700"
+          },
+          "instanceCount": 4
+        }
+      ]
+    },
+    {
+      "kind": "card",
+      "structuralHash": "section>div>div",
+      "instanceCount": 1,
+      "variants": [
+        {
+          "css": {
+            "background": "rgb(255, 255, 255)",
+            "color": "rgb(22, 32, 68)",
+            "padding": "24px 24px 24px 24px",
+            "borderRadius": "16px",
+            "border": "1px solid oklab(0.489841 -0.00941581 -0.184291 / 0.15)",
+            "fontSize": "17px",
+            "fontWeight": "400"
+          },
+          "instanceCount": 1
+        }
+      ]
+    },
+    {
+      "kind": "card",
+      "structuralHash": "div>div",
+      "instanceCount": 4,
+      "variants": [
+        {
+          "css": {
+            "background": "oklab(0.731865 0.00275961 -0.0939116 / 0.08)",
+            "color": "rgb(22, 32, 68)",
+            "padding": "16px 16px 16px 16px",
+            "borderRadius": "16px",
+            "border": "0px solid rgb(22, 32, 68)",
+            "fontSize": "17px",
+            "fontWeight": "400"
+          },
+          "instanceCount": 4
+        }
+      ]
+    },
+    {
+      "kind": "card",
+      "structuralHash": "article>div>p",
+      "instanceCount": 9,
+      "variants": [
+        {
+          "css": {
+            "background": "rgb(255, 255, 255)",
+            "color": "rgb(22, 32, 68)",
+            "padding": "20px 20px 20px 20px",
+            "borderRadius": "16px",
+            "border": "1px solid oklab(0.489841 -0.00941581 -0.184291 / 0.12)",
+            "fontSize": "17px",
+            "fontWeight": "400"
+          },
+          "instanceCount": 9
+        }
+      ]
+    }
+  ],
+  "accessibility": {
+    "remediation": []
+  },
+  "cssHealth": {
+    "sheets": [
+      {
+        "url": "https://www.alibi.day/_next/static/chunks/0kb_n6qgxz4_n.css",
+        "totalBytes": 74647,
+        "usedBytes": 61415,
+        "unusedBytes": 13232,
+        "unusedPercent": 18
+      }
+    ],
+    "totalBytes": 74647,
+    "usedBytes": 61415,
+    "unusedBytes": 13232,
+    "unusedPercent": 18,
+    "importantCount": 1,
+    "duplicates": 724,
+    "vendorPrefixes": {
+      "webkit": 53,
+      "moz": 5,
+      "ms": 0,
+      "o": 0
+    },
+    "keyframes": [],
+    "specificity": {
+      "max": [
+        0,
+        4,
+        2
+      ],
+      "average": [
+        0,
+        0.96,
+        0.21
+      ],
+      "count": 849
+    },
+    "issues": [
+      "1 !important rule",
+      "724 duplicate declarations"
+    ]
+  }
+}

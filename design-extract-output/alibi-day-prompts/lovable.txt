@@ -1,0 +1,12 @@
+Clone the design language of this landing page and build a fresh equivalent.
+Visual feel: flat. Tone: friendly · Headings: all-lowercase · CTA verbs: [object Object], [object Object], [object Object], [object Object]
+Primary palette: #162044, #bf7dad, #43849d, #ffffff, #3253c7.
+Typography: [object Object], [object Object].
+Corner radius vocabulary: 16.
+Shadow vocabulary: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(50, 83, 199, 0.06) 0px 1px 3px 0px, rgba(50, 83, 199, 0.09) 0px 6px 20px 0px | rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(50, 83, 199, 0.2) 0px 2px 6px 0px, rgba(50, 83, 199, 0.16) 0px 4px 14px 0px | rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(50, 83, 199, 0.06) 0px 1px 3px 0px, rgba(50, 83, 199, 0.07) 0px 3px 8px 0px.
+Use: Use plain Tailwind CSS without a component library.
+Page structure:
+- feature-grid — heading: "the friend who remembers
+your day"
+- testimonial — heading: "source-backed memory for real days"
+- footer
