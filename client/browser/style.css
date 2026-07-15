@@ -747,6 +747,10 @@ footer a {
   text-decoration: none;
 }
 
+.footer-github {
+  margin-top: 1.25rem;
+}
+
 /* ── Mobile ──────────────────────────────────────────────────── */
 
 @media (max-width: 600px) {

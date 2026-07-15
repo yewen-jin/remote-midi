@@ -580,6 +580,10 @@ footer {
   color: var(--text-faint);
 }
 
+.footer-github {
+  margin-top: 1.25rem;
+}
+
 /* ── Mobile ──────────────────────────────────────────────────── */
 
 @media (max-width: 600px) {
