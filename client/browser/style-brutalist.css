@@ -192,6 +192,109 @@ select {
   cursor: pointer;
 }
 
+/* ── Custom dropdown ─────────────────────────────────────────── */
+
+select {
+  display: none;
+}
+
+.dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.6em 0.8em;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--fg);
+  background: var(--bg);
+  border: var(--border-width) solid var(--border);
+  cursor: pointer;
+}
+
+.dropdown-btn:focus {
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--shadow);
+  outline: 3px solid var(--accent-text);
+  outline-offset: 1px;
+}
+
+.dropdown-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropdown-caret {
+  flex-shrink: 0;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid var(--fg);
+  border-bottom: 2px solid var(--fg);
+  transform: rotate(45deg) translate(-1px, -1px);
+  transition: transform 0.15s;
+}
+
+.dropdown-btn.is-open .dropdown-caret {
+  transform: rotate(-135deg) translate(-1px, -1px);
+}
+
+.dropdown-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  background: var(--surface);
+  border: var(--border-width) solid var(--border);
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--shadow);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.5em 0.8em;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--fg);
+  background: var(--bg);
+  border: none;
+  border-bottom: var(--border-width) solid var(--border);
+  cursor: pointer;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background: var(--muted);
+}
+
+.dropdown-item.is-selected {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.dropdown-item.is-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .controls {
   margin-top: 0.5rem;
 }
