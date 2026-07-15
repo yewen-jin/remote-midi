@@ -13,26 +13,14 @@
         const savedStyle = localStorage.getItem('style');
         const savedMode = localStorage.getItem('mode');
 
-        const style = savedStyle === 'style2' ? 'style2' : 'brutalist';
-        const mode = ['auto', 'day', 'night'].includes(savedMode)
-          ? savedMode
-          : 'auto';
+        const style = savedStyle === 'brutalist' ? 'brutalist' : 'neumorphism';
+        const mode = savedMode === 'night' ? 'night' : 'day';
 
         document.getElementById('style-link').href =
-          style === 'style2' ? 'style.css' : 'style-brutalist.css';
+          style === 'neumorphism' ? 'style.css' : 'style-brutalist.css';
         root.setAttribute('data-style', style);
 
-        function applyTheme(isLight) {
-          root.setAttribute('data-theme', isLight ? 'day' : 'night');
-        }
-
-        if (mode === 'day') applyTheme(true);
-        else if (mode === 'night') applyTheme(false);
-        else {
-          const mq = matchMedia('(prefers-color-scheme: light)');
-          applyTheme(mq.matches);
-          mq.addEventListener('change', (e) => applyTheme(e.matches));
-        }
+        root.setAttribute('data-theme', mode === 'day' ? 'day' : 'night');
         root.setAttribute('data-mode', mode);
       })();
     </script>
@@ -302,7 +290,8 @@
 
       <!-- Connection diagram -->
       <h2 id="diagram">How it works</h2>
-      <pre class="diagram">Your MIDI Device
+      <pre class="diagram">
+Your MIDI Device
     ↓
 Browser (Sender)
     ↓
@@ -329,7 +318,8 @@ Your DAW (Ableton, Logic, etc.)</pre>
 
       // Update stylesheet if needed (in case localStorage changed since page load)
       if (currentStyle) {
-        styleLink.href = currentStyle === 'style2' ? 'style.css' : 'style-brutalist.css';
+        styleLink.href =
+          currentStyle === 'neumorphism' ? 'style.css' : 'style-brutalist.css';
       }
     </script>
   </body>
