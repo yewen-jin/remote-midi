@@ -287,6 +287,50 @@ select:focus-visible {
   margin-top: 0.5rem;
 }
 
+/* ── Segment toggle (Day / Night) ────────────────────────────── */
+
+.segment-toggle {
+  display: flex;
+  border: var(--border-width) solid var(--border);
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--shadow);
+}
+
+.segment {
+  flex: 1;
+  padding: 0.55em 1em;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--fg);
+  background: var(--bg);
+  border: none;
+  border-right: var(--border-width) solid var(--border);
+  cursor: pointer;
+  transition:
+    background 0.1s,
+    color 0.1s;
+}
+
+.segment:last-child {
+  border-right: none;
+}
+
+.segment:hover {
+  background: var(--muted);
+}
+
+.segment.is-active {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.segment:focus-visible {
+  outline: 3px solid var(--accent-text);
+  outline-offset: -3px;
+}
+
 /* ── Status display ──────────────────────────────────────────── */
 
 .status-grid {

@@ -13,28 +13,16 @@
         const savedStyle = localStorage.getItem('style');
         const savedMode = localStorage.getItem('mode');
 
-        const style = savedStyle === 'style2' ? 'style2' : 'brutalist';
-        const mode = ['auto', 'day', 'night'].includes(savedMode)
-          ? savedMode
-          : 'auto';
+        const style = savedStyle === 'brutalist' ? 'brutalist' : 'neumorphism';
+        const mode = savedMode === 'night' ? 'night' : 'day';
 
         // 1. Stylesheet
         document.getElementById('style-link').href =
-          style === 'style2' ? 'style.css' : 'style-brutalist.css';
+          style === 'neumorphism' ? 'style.css' : 'style-brutalist.css';
         root.setAttribute('data-style', style);
 
-        // 2. Day / Night / Auto (follows prefers-color-scheme)
-        function applyTheme(isLight) {
-          root.setAttribute('data-theme', isLight ? 'day' : 'night');
-        }
-
-        if (mode === 'day') applyTheme(true);
-        else if (mode === 'night') applyTheme(false);
-        else {
-          const mq = matchMedia('(prefers-color-scheme: light)');
-          applyTheme(mq.matches);
-          mq.addEventListener('change', (e) => applyTheme(e.matches));
-        }
+        // 2. Day / Night — defaults to day
+        root.setAttribute('data-theme', mode === 'day' ? 'day' : 'night');
         root.setAttribute('data-mode', mode);
       })();
     </script>
@@ -188,16 +176,34 @@
             <label for="style-select">Style</label>
             <select id="style-select">
               <option value="brutalist">Neo-Brutalist</option>
-              <option value="style2">Style 2</option>
+              <option value="neumorphism">Neumorphism</option>
             </select>
           </div>
           <div class="form-group">
-            <label for="mode-select">Mode</label>
-            <select id="mode-select">
-              <option value="auto">Auto</option>
-              <option value="day">Day</option>
-              <option value="night">Night</option>
-            </select>
+            <label>Mode</label>
+            <div
+              class="segment-toggle"
+              id="mode-toggle"
+              role="group"
+              aria-label="Day or night mode"
+            >
+              <button
+                class="segment"
+                type="button"
+                data-mode="day"
+                aria-pressed="true"
+              >
+                Day
+              </button>
+              <button
+                class="segment"
+                type="button"
+                data-mode="night"
+                aria-pressed="false"
+              >
+                Night
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -225,26 +231,29 @@
         const next = styleSelect.value;
         root.setAttribute('data-style', next);
         localStorage.setItem('style', next);
-        styleLink.href = next === 'style2' ? 'style.css' : 'style-brutalist.css';
+        styleLink.href =
+          next === 'neumorphism' ? 'style.css' : 'style-brutalist.css';
       });
 
-      // ── Mode selector (auto / day / night) ──────────────────────
-      const modeSelect = document.getElementById('mode-select');
+      // ── Mode toggle (day / night) — defaults to day ───────────
+      const modeToggle = document.getElementById('mode-toggle');
+      const segments = modeToggle.querySelectorAll('.segment');
 
-      // Sync dropdown with current state
-      modeSelect.value = root.getAttribute('data-mode');
-
-      modeSelect.addEventListener('change', () => {
-        const next = modeSelect.value;
+      function setMode(next) {
         root.setAttribute('data-mode', next);
+        root.setAttribute('data-theme', next === 'day' ? 'day' : 'night');
         localStorage.setItem('mode', next);
+        segments.forEach((seg) => {
+          const active = seg.dataset.mode === next;
+          seg.setAttribute('aria-pressed', String(active));
+          seg.classList.toggle('is-active', active);
+        });
+      }
 
-        if (next === 'day') root.setAttribute('data-theme', 'day');
-        else if (next === 'night') root.setAttribute('data-theme', 'night');
-        else {
-          const mq = matchMedia('(prefers-color-scheme: light)');
-          root.setAttribute('data-theme', mq.matches ? 'day' : 'night');
-        }
+      setMode(root.getAttribute('data-mode') === 'night' ? 'night' : 'day');
+
+      segments.forEach((seg) => {
+        seg.addEventListener('click', () => setMode(seg.dataset.mode));
       });
     </script>
   </body>
